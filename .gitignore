@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+
+# Local environment overrides (server URL/model/etc.) -- see .env.sample.
+.env
+
+# Plaintext SSH/sudo passwords for remote test targets -- never commit.
+secrets/
