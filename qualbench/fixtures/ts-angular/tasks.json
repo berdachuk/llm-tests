@@ -1,0 +1,15 @@
+{
+  "language": "typescript",
+  "base_dir": "base",
+  "src_root": "src/app/bugs",
+  "tasks": [
+    { "id": "01-price-formatter", "file": "price-formatter.ts", "spec": "price-formatter.spec.ts" },
+    { "id": "02-search-service", "file": "search.service.ts", "spec": "search.service.spec.ts" },
+    { "id": "03-shopping-cart", "file": "shopping-cart.ts", "spec": "shopping-cart.spec.ts" },
+    { "id": "04-password-match-validator", "file": "password-match.validator.ts", "spec": "password-match.validator.spec.ts" },
+    { "id": "05-ticker-component", "file": "ticker.component.ts", "spec": "ticker.component.spec.ts" },
+    { "id": "06-todo-list-component", "file": "todo-list.component.ts", "spec": "todo-list.component.spec.ts" },
+    { "id": "07-counter-display-component", "file": "counter-display.component.ts", "spec": "counter-display.component.spec.ts" },
+    { "id": "08-batch-processor", "file": "batch-processor.ts", "spec": "batch-processor.spec.ts" }
+  ]
+}

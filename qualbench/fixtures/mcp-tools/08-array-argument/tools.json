@@ -1,0 +1,21 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "invite_to_meeting",
+      "description": "Invite a list of people (by email) to an existing meeting.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "meeting_id": { "type": "string" },
+          "attendee_emails": {
+            "type": "array",
+            "items": { "type": "string" },
+            "minItems": 1
+          }
+        },
+        "required": ["meeting_id", "attendee_emails"]
+      }
+    }
+  }
+]

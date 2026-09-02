@@ -1,0 +1,7 @@
+{
+  "required_pattern_groups": [
+    ["hard[- ]?coded", "hardcoding"],
+    ["api key", "secret", "credential"],
+    ["environment variable", "secrets? manager", "vault", "\\bENV\\b", "os\\.environ", "config"]
+  ]
+}

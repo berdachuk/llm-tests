@@ -1,0 +1,20 @@
+// Java / Spring
+@RestController
+@RequestMapping("/api/invoices")
+public class InvoiceController {
+
+    private final InvoiceRepository invoiceRepository;
+
+    public InvoiceController(InvoiceRepository invoiceRepository) {
+        this.invoiceRepository = invoiceRepository;
+    }
+
+    // Any authenticated user can call this endpoint; the invoice id
+    // comes straight from the URL path.
+    @GetMapping("/{invoiceId}")
+    public ResponseEntity<Invoice> getInvoice(@PathVariable Long invoiceId) {
+        Invoice invoice = invoiceRepository.findById(invoiceId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));
+        return ResponseEntity.ok(invoice);
+    }
+}

@@ -1,0 +1,8 @@
+{
+  "expected_tool_name": "apply_discount",
+  "max_tool_calls": 1,
+  "argument_checks": [
+    { "field": "amount_cents", "equals": 4999 },
+    { "field": "discount_rate", "equals": 0.15 }
+  ]
+}

@@ -1,0 +1,31 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "find_customer_by_email",
+      "description": "Look up a customer's internal customer_id by their email address.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "email": { "type": "string" }
+        },
+        "required": ["email"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "issue_refund",
+      "description": "Issue a refund to a customer, identified by their internal customer_id.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "customer_id": { "type": "string" },
+          "amount_cents": { "type": "integer", "minimum": 1 }
+        },
+        "required": ["customer_id", "amount_cents"]
+      }
+    }
+  }
+]

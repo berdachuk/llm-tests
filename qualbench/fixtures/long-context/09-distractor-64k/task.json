@@ -1,0 +1,13 @@
+{
+  "target_tokens": 64000,
+  "position_pct": 0.50,
+  "marker_value": "XK-4001-INDIA-6625-REAL",
+  "decoys": [
+    {
+      "position_pct": 0.20,
+      "module_name": "internal_diagnostics_config.py",
+      "marker_value": "XK-4001-INDIA-0000-OLD",
+      "note": "This value has been superseded; a newer version of this module appears later in the codebase and should be used instead."
+    }
+  ]
+}

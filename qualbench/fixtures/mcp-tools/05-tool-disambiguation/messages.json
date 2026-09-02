@@ -1,0 +1,4 @@
+[
+  { "role": "system", "content": "You are a helpful calendar assistant with access to tools. Use them when appropriate." },
+  { "role": "user", "content": "Please schedule a new meeting called 'Q3 Planning' for 2026-09-10T14:00:00Z." }
+]

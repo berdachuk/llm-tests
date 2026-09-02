@@ -1,0 +1,4 @@
+[
+  { "role": "system", "content": "You are a helpful shipping assistant with access to tools. Use them when appropriate." },
+  { "role": "user", "content": "Please create a shipping label for Maria Gonzalez. Her address is 42 Rue de Rivoli, Paris, postal code 75004, France." }
+]

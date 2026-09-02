@@ -1,0 +1,4 @@
+[
+  { "role": "system", "content": "You are a helpful assistant with access to tools. Use them when appropriate." },
+  { "role": "user", "content": "What's the weather like in Tokyo right now? I think in Fahrenheit please." }
+]

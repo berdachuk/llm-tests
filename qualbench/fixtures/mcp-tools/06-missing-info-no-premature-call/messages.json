@@ -1,0 +1,4 @@
+[
+  { "role": "system", "content": "You are a helpful banking assistant with access to tools. Use them when appropriate, but never guess or fabricate a required argument you don't actually have -- ask the user instead." },
+  { "role": "user", "content": "Please send $50 to my friend Jake." }
+]

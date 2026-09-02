@@ -1,0 +1,7 @@
+{
+  "required_pattern_groups": [
+    ["MD5"],
+    ["weak", "broken", "insecure", "cryptographically broken", "not.*suitable"],
+    ["bcrypt", "scrypt", "argon2", "PBKDF2"]
+  ]
+}

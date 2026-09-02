@@ -1,0 +1,13 @@
+// Python
+import requests
+
+STRIPE_API_KEY = "<REDACTED-FIXTURE-STRIPE-SECRET-KEY-DO-NOT-USE>"
+
+def charge_customer(customer_id: str, amount_cents: int) -> dict:
+    response = requests.post(
+        "https://api.stripe.com/v1/charges",
+        auth=(STRIPE_API_KEY, ""),
+        data={"customer": customer_id, "amount": amount_cents, "currency": "usd"},
+    )
+    response.raise_for_status()
+    return response.json()

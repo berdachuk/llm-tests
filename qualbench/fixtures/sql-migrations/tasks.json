@@ -1,0 +1,36 @@
+{
+  "base_dir": ".",
+  "verify_script": "verify.sh",
+  "tasks": [
+    {
+      "id": "01-add-column-not-null",
+      "dir": "01-add-column-not-null",
+      "description": "Add a NOT NULL column to a populated table"
+    },
+    {
+      "id": "02-unique-constraint-dupes",
+      "dir": "02-unique-constraint-dupes",
+      "description": "Add a UNIQUE constraint to a column with existing duplicates"
+    },
+    {
+      "id": "03-rename-column-view",
+      "dir": "03-rename-column-view",
+      "description": "Rename a column that a view depends on"
+    },
+    {
+      "id": "04-non-idempotent-migration",
+      "dir": "04-non-idempotent-migration",
+      "description": "Make a migration safe to re-run (idempotent)"
+    },
+    {
+      "id": "05-fk-missing-unique-target",
+      "dir": "05-fk-missing-unique-target",
+      "description": "Foreign key referencing a non-unique target column"
+    },
+    {
+      "id": "06-bad-backfill-update",
+      "dir": "06-bad-backfill-update",
+      "description": "Backfill UPDATE with a wrong/missing join condition"
+    }
+  ]
+}

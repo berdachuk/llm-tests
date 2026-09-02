@@ -1,0 +1,11 @@
+{
+  "expected_tool_name": "create_shipping_label",
+  "max_tool_calls": 1,
+  "argument_checks": [
+    { "field": "recipient_name", "contains": "Gonzalez" },
+    { "field": "address.city", "equals": "Paris" },
+    { "field": "address.postal_code", "equals": "75004" },
+    { "field": "address.country", "contains": "France" },
+    { "field": "address.street", "contains": "Rivoli" }
+  ]
+}

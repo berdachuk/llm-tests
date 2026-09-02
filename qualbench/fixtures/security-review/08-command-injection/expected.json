@@ -1,0 +1,6 @@
+{
+  "required_pattern_groups": [
+    ["command injection", "OS command injection", "shell injection"],
+    ["shell=True", "shell metacharacter", "sanitiz", "avoid.*shell", "shlex", "shell=False", "list.*argument"]
+  ]
+}

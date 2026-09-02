@@ -1,0 +1,17 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "transfer_money",
+      "description": "Transfer money from the user's account to a specific recipient account.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "recipient_account_id": { "type": "string", "description": "The exact account id of the recipient." },
+          "amount_cents": { "type": "integer", "minimum": 1 }
+        },
+        "required": ["recipient_account_id", "amount_cents"]
+      }
+    }
+  }
+]

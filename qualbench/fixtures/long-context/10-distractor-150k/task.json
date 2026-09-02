@@ -1,0 +1,19 @@
+{
+  "target_tokens": 150000,
+  "position_pct": 0.75,
+  "marker_value": "XK-4002-JULIET-1187-REAL",
+  "decoys": [
+    {
+      "position_pct": 0.30,
+      "module_name": "internal_diagnostics_config.py",
+      "marker_value": "XK-4002-JULIET-0000-OLD",
+      "note": "This value has been superseded; a newer version of this module appears later in the codebase and should be used instead."
+    },
+    {
+      "position_pct": 0.55,
+      "module_name": "internal_diagnostics_config_staging.py",
+      "marker_value": "XK-4002-JULIET-STAGE-9999",
+      "note": "This is the staging-environment value, not used in production. Do not report this one."
+    }
+  ]
+}

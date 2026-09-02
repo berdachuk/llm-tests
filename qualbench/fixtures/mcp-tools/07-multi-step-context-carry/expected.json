@@ -1,0 +1,8 @@
+{
+  "expected_tool_name": "issue_refund",
+  "max_tool_calls": 1,
+  "argument_checks": [
+    { "field": "customer_id", "equals": "CUST-88213" },
+    { "field": "amount_cents", "equals": 3000 }
+  ]
+}

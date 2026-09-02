@@ -1,0 +1,6 @@
+{
+  "required_pattern_groups": [
+    ["insecure deserialization", "deserializ", "pickle"],
+    ["arbitrary code execution", "remote code execution", "\\bRCE\\b", "code execution"]
+  ]
+}

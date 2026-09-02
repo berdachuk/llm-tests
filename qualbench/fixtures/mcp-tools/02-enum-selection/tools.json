@@ -1,0 +1,31 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "create_ticket",
+      "description": "File a new support ticket in the tracking system.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "priority": { "type": "string", "enum": ["low", "medium", "high", "urgent"] }
+        },
+        "required": ["title", "priority"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "search_knowledge_base",
+      "description": "Search the internal knowledge base for existing articles.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "query": { "type": "string" }
+        },
+        "required": ["query"]
+      }
+    }
+  }
+]

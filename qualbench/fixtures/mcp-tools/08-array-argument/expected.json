@@ -1,0 +1,8 @@
+{
+  "expected_tool_name": "invite_to_meeting",
+  "max_tool_calls": 1,
+  "argument_checks": [
+    { "field": "meeting_id", "equals": "MTG-77" },
+    { "field": "attendee_emails", "set_equals": ["alice@corp.com", "bob@corp.com", "carla@corp.com"] }
+  ]
+}

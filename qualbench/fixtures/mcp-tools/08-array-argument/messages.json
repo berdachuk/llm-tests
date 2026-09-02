@@ -1,0 +1,4 @@
+[
+  { "role": "system", "content": "You are a helpful scheduling assistant with access to tools. Use them when appropriate." },
+  { "role": "user", "content": "For meeting MTG-77, please invite alice@corp.com, bob@corp.com, and carla@corp.com." }
+]

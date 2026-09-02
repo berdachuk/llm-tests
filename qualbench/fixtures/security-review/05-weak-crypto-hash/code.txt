@@ -1,0 +1,15 @@
+// Java / Spring
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.HexFormat;
+
+public class UserRegistrationService {
+
+    public void registerUser(String username, String plainPassword) throws NoSuchAlgorithmException {
+        MessageDigest md = MessageDigest.getInstance("MD5");
+        byte[] hashBytes = md.digest(plainPassword.getBytes());
+        String hashedPassword = HexFormat.of().formatHex(hashBytes);
+
+        userRepository.save(new UserAccount(username, hashedPassword));
+    }
+}

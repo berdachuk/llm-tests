@@ -1,0 +1,19 @@
+{
+  "language": "java",
+  "base_dir": "base",
+  "src_root": "src/main/java/com/qualbench/bugs",
+  "test_root": "src/test/java/com/qualbench/bugs",
+  "build_cmd": ["mvn", "-q", "-o", "test"],
+  "tasks": [
+    { "id": "01-pagination-calculator", "class": "PaginationCalculator" },
+    { "id": "02-discount-calculator", "class": "DiscountCalculator" },
+    { "id": "03-inventory-counter", "class": "InventoryCounter" },
+    { "id": "04-date-range-overlap", "class": "DateRangeOverlap" },
+    { "id": "05-csv-field-parser", "class": "CsvFieldParser" },
+    { "id": "06-moving-average", "class": "MovingAverage" },
+    { "id": "07-money", "class": "Money" },
+    { "id": "08-retrying-operation", "class": "RetryingOperation" },
+    { "id": "09-request-id-generator", "class": "RequestIdGenerator" },
+    { "id": "10-lru-cache", "class": "LruCache" }
+  ]
+}

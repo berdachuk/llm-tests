@@ -1,0 +1,13 @@
+// Python / Flask
+import pickle
+import base64
+from flask import Flask, request
+
+app = Flask(__name__)
+
+@app.route('/session/restore', methods=['POST'])
+def restore_session():
+    encoded_state = request.form.get('state')
+    raw = base64.b64decode(encoded_state)
+    session_obj = pickle.loads(raw)
+    return {"user": session_obj.get("user"), "restored": True}

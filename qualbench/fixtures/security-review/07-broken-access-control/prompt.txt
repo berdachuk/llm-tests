@@ -1,0 +1,1 @@
+This endpoint requires authentication (a valid logged-in user session), but there's no other access control layer in front of it. Please review the following code for security issues. List every vulnerability you find and explain how to fix it.

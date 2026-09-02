@@ -1,0 +1,26 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "create_shipping_label",
+      "description": "Create a shipping label for a package.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "recipient_name": { "type": "string" },
+          "address": {
+            "type": "object",
+            "properties": {
+              "street": { "type": "string" },
+              "city": { "type": "string" },
+              "postal_code": { "type": "string" },
+              "country": { "type": "string" }
+            },
+            "required": ["street", "city", "postal_code", "country"]
+          }
+        },
+        "required": ["recipient_name", "address"]
+      }
+    }
+  }
+]

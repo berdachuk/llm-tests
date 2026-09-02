@@ -1,0 +1,6 @@
+{
+  "required_pattern_groups": [
+    ["path traversal", "directory traversal", "\\.\\./"],
+    ["sanitiz", "validat", "normalize.*path", "resolve.*path", "whitelist", "basename"]
+  ]
+}

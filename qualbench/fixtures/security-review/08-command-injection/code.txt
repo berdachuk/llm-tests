@@ -1,0 +1,15 @@
+// Python / Flask
+import subprocess
+from flask import Flask, request, send_file
+
+app = Flask(__name__)
+
+@app.route('/convert', methods=['POST'])
+def convert_to_pdf():
+    """Converts an uploaded document (already saved under /tmp/uploads/<filename>)
+    to PDF using the system 'libreoffice' CLI, and returns the resulting PDF."""
+    filename = request.form.get('filename')
+    cmd = f"libreoffice --headless --convert-to pdf --outdir /tmp/converted /tmp/uploads/{filename}"
+    subprocess.run(cmd, shell=True, check=True)
+    pdf_name = filename.rsplit('.', 1)[0] + '.pdf'
+    return send_file(f"/tmp/converted/{pdf_name}")

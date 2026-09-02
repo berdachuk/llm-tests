@@ -1,0 +1,23 @@
+[
+  { "role": "system", "content": "You are a helpful customer support assistant with access to tools. Use them when appropriate." },
+  { "role": "user", "content": "My email is jake.holloway@example.com. Please refund me $30 for my last order -- it never arrived." },
+  {
+    "role": "assistant",
+    "content": null,
+    "tool_calls": [
+      {
+        "id": "call_1",
+        "type": "function",
+        "function": {
+          "name": "find_customer_by_email",
+          "arguments": "{\"email\": \"jake.holloway@example.com\"}"
+        }
+      }
+    ]
+  },
+  {
+    "role": "tool",
+    "tool_call_id": "call_1",
+    "content": "{\"customer_id\": \"CUST-88213\", \"name\": \"Jake Holloway\"}"
+  }
+]

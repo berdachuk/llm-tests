@@ -1,0 +1,4 @@
+[
+  { "role": "system", "content": "You are a helpful assistant with access to tools. Use them when appropriate." },
+  { "role": "user", "content": "The item costs $49.99. Can you apply a 15% discount for me using the discount tool?" }
+]

@@ -1,0 +1,4 @@
+[
+  { "role": "system", "content": "You are a helpful support assistant with access to tools. Use them when appropriate." },
+  { "role": "user", "content": "Our production database is completely down and customers can't check out at all. Please file a ticket for this titled 'Production DB outage' -- this needs to be treated as an emergency, drop everything." }
+]

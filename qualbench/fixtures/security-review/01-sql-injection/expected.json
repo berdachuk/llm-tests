@@ -1,0 +1,6 @@
+{
+  "required_pattern_groups": [
+    ["sql injection", "sqli"],
+    ["prepared statement", "parameteriz", "bind variable", "PreparedStatement"]
+  ]
+}

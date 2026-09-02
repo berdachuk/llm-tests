@@ -1,0 +1,31 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "get_calendar_event",
+      "description": "Look up an existing calendar event by its id and return its details. Does NOT create or modify anything.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "event_id": { "type": "string" }
+        },
+        "required": ["event_id"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "create_calendar_event",
+      "description": "Create a brand-new calendar event.",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "start_time": { "type": "string", "description": "ISO 8601 datetime" }
+        },
+        "required": ["title", "start_time"]
+      }
+    }
+  }
+]

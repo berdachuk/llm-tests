@@ -1,0 +1,8 @@
+{
+  "expected_tool_name": "create_ticket",
+  "max_tool_calls": 1,
+  "argument_checks": [
+    { "field": "priority", "equals": "urgent" },
+    { "field": "title", "contains": "outage" }
+  ]
+}

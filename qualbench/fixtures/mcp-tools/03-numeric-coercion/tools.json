@@ -1,0 +1,17 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "apply_discount",
+      "description": "Compute a discounted price. amount_cents is the original price in integer cents. discount_rate is a fraction between 0 and 1 (e.g. 0.2 for 20%).",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "amount_cents": { "type": "integer", "minimum": 0 },
+          "discount_rate": { "type": "number", "minimum": 0, "maximum": 1 }
+        },
+        "required": ["amount_cents", "discount_rate"]
+      }
+    }
+  }
+]

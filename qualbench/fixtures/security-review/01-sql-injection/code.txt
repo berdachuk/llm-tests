@@ -1,0 +1,11 @@
+// Java / JDBC
+public User findUserByUsername(Connection conn, String username) throws SQLException {
+    String query = "SELECT * FROM users WHERE username = '" + username + "'";
+    try (Statement stmt = conn.createStatement();
+         ResultSet rs = stmt.executeQuery(query)) {
+        if (rs.next()) {
+            return new User(rs.getInt("id"), rs.getString("username"), rs.getString("email"));
+        }
+        return null;
+    }
+}

@@ -1,0 +1,13 @@
+// Python / Flask
+import requests
+from flask import Flask, request, jsonify
+
+app = Flask(__name__)
+
+@app.route('/fetch-preview', methods=['GET'])
+def fetch_preview():
+    """Fetches a URL provided by the user and returns a preview of its content,
+    used by the 'link preview' feature when a user pastes a URL into a chat message."""
+    target_url = request.args.get('url')
+    resp = requests.get(target_url, timeout=5)
+    return jsonify({"status_code": resp.status_code, "content": resp.text[:2000]})

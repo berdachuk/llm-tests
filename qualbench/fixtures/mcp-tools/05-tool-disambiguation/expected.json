@@ -1,0 +1,8 @@
+{
+  "expected_tool_name": "create_calendar_event",
+  "max_tool_calls": 1,
+  "argument_checks": [
+    { "field": "title", "contains": "Q3 Planning" },
+    { "field": "start_time", "contains": "2026-09-10" }
+  ]
+}

@@ -1,0 +1,8 @@
+{
+  "expected_tool_name": "get_weather",
+  "max_tool_calls": 1,
+  "argument_checks": [
+    { "field": "city", "contains": "Tokyo" },
+    { "field": "unit", "equals": "fahrenheit" }
+  ]
+}

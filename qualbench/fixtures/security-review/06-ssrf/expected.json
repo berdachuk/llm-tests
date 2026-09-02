@@ -1,0 +1,6 @@
+{
+  "required_pattern_groups": [
+    ["server-side request forgery", "\\bSSRF\\b"],
+    ["allowlist", "whitelist", "block.*internal", "metadata service", "internal network", "169\\.254", "private IP", "deny.*internal"]
+  ]
+}
