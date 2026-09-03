@@ -7,9 +7,14 @@ bugfix, TS/Angular bugfix, SQL migrations, MCP/tool-call, security review,
 and long-context retrieval. See [`qualbench/README.md`](qualbench/README.md)
 for the suite's full design and layout.
 
+**Update:** the full suite was also run against the remote RTX 4090
+(`192.168.0.88`, FP8) as a cross-hardware confirmation -- **46/50, 0 real
+avoidable failures, no new findings** (see the section below).
+
 Full detail lives in `qualbench/results/`:
 - [`comparative-report-20260903.md`](qualbench/results/comparative-report-20260903.md) -- the full FP8-vs-NVFP4 writeup
 - [`run-fp8-final-20260903.md`](qualbench/results/run-fp8-final-20260903.md) / [`run-nvfp4-final-20260903.md`](qualbench/results/run-nvfp4-final-20260903.md) -- per-quantization consolidated run reports
+- [`run-4090-fp8-final-20260903.md`](qualbench/results/run-4090-fp8-final-20260903.md) -- RTX 4090 FP8 confirmation run
 - [`findings.md`](qualbench/results/findings.md) -- every individual finding, reproduced and root-caused
 
 ## Headline results
@@ -170,6 +175,30 @@ fixed per quantization (31.4 GB vs. 21.8 GB) regardless of context-window
 target, so it's the quantization choice -- not the context goal -- that
 sets the RAM floor.
 
+## RTX 4090 confirmation run (FP8, 192.168.0.88)
+
+The full 50-task suite was re-run against the remote RTX 4090 deployment
+(FP8, froggeric v22.4 template, `--kv-reserve-tokens 300000`,
+`--cuda-graph-max-bs 4 --max-running-requests 4`) as a cross-hardware
+check. Result: **46/50, 0 real avoidable failures, no new findings.**
+
+| Category | Pass | Notes |
+|---|---:|---|
+| Java/Spring bugfix | 9/10 | Task 09 failed once; 3/3 pass on rerun -- known non-determinism |
+| TS/Angular bugfix | 7/8 | Task 03 failed; 1/3 pass on rerun -- known `computed()`-vs-getter finding |
+| SQL migrations | 5/6 | Task 05 failed; 2/3 pass on rerun -- known `ADD CONSTRAINT IF NOT EXISTS` hallucination |
+| MCP/tool-call | 7/8 | Task 06 by-design probe, expected |
+| Security review | 8/8 | |
+| Long-context retrieval | 10/10 | No OOM, no restart -- 24.5 GiB VRAM absorbs the sustained-serving pressure that OOM'd the 16 GB card |
+
+Every non-pass matched a finding already documented on the 5060 Ti.
+**SQL task 04 passed** on the 4090 -- consistent with FP8's documented
+occasional-failure behavior; the NVFP4-specific regression (4/4 on the
+5060 Ti) stands. Harness note: the long-context category needs
+`tiktoken` (via `gen_prompt.py`); run the harness with the repo venv
+python (`.venv/bin/python`), not the system python, or that category
+silently runs 0/0 tasks.
+
 ## Bottom line / recommendation
 
 - **Correctness:** FP8 and NVFP4 are equivalent on every task except
@@ -188,10 +217,14 @@ sets the RAM floor.
 
 - Model: `Qwen3.6-35B-A3B`, both quantizations served with froggeric
   v22.4 chat template patched over the stock template.
-- Server: `ft serve --moe-backend offload --cuda-graph-max-bs 2
+- Server (5060 Ti): `ft serve --moe-backend offload --cuda-graph-max-bs 2
   --max-running-requests 2 --kv-reserve-tokens 260000
   --tool-call-parser qwen3_coder --reasoning-parser qwen3`, on
   `http://127.0.0.1:8000`.
+- Server (RTX 4090): `ft serve --moe-backend offload
+  --cuda-graph-max-bs 4 --max-running-requests 4
+  --kv-reserve-tokens 300000 --tool-call-parser qwen3_coder
+  --reasoning-parser qwen3`, on `http://192.168.0.88:8000`.
 - Supporting infra: Docker `qualbench-pg` (Postgres 18-alpine) for the
   SQL migrations category.
 
@@ -205,6 +238,17 @@ sets the RAM floor.
 | OS | Ubuntu 24.04.4 LTS, kernel 6.8.0-138-generic |
 | NVIDIA stack | Driver 595.84, CUDA 13.3 |
 | Model checkpoints on disk | FP8: ~35 GB, NVFP4: ~22 GB |
+
+### Hardware (`192.168.0.88`, RTX 4090)
+
+| Component | Specification |
+|---|---|
+| CPU | Intel Core i9-14900KF, 24 cores / 32 threads, up to 6.0 GHz |
+| RAM | 128 GiB (125 GiB usable), 8 GiB swap |
+| GPU | NVIDIA RTX 4090, 24.5 GiB VRAM, compute capability 8.9 |
+| OS | Ubuntu 24.04.4 LTS, kernel 7.0.0-30-generic |
+| NVIDIA stack | Driver 595.84, CUDA 12.0 |
+| Model | Qwen3.6-35B-A3B-FP8, ~35 GB on disk |
 
 This is a live desktop, not a headless server -- the compositor and
 desktop session keep ~14 GiB of RAM and part of the GPU's VRAM
