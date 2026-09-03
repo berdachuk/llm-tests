@@ -1,0 +1,271 @@
+{
+  "tag": "4090-fp8",
+  "url": "http://192.168.0.88:8000",
+  "model": "qwen3.6-35b-a3b",
+  "started_at": "2026-09-03T11:06:16.556454+00:00",
+  "finished_at": "2026-09-03T11:36:42.599131+00:00",
+  "total_wall_s": 1826.0426602363586,
+  "total_pass": 36,
+  "total_tasks": 40,
+  "categories": [
+    {
+      "category": "java-spring",
+      "n_pass": 9,
+      "n_total": 10,
+      "wall_s": 656.2918691635132,
+      "returncode": 1,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-pagination-calculator",
+          "passed": true,
+          "elapsed_s": 46.1
+        },
+        {
+          "id": "02-discount-calculator",
+          "passed": true,
+          "elapsed_s": 59.7
+        },
+        {
+          "id": "03-inventory-counter",
+          "passed": true,
+          "elapsed_s": 61.4
+        },
+        {
+          "id": "04-date-range-overlap",
+          "passed": true,
+          "elapsed_s": 58.6
+        },
+        {
+          "id": "05-csv-field-parser",
+          "passed": true,
+          "elapsed_s": 66.3
+        },
+        {
+          "id": "06-moving-average",
+          "passed": true,
+          "elapsed_s": 62.7
+        },
+        {
+          "id": "07-money",
+          "passed": true,
+          "elapsed_s": 87.2
+        },
+        {
+          "id": "08-retrying-operation",
+          "passed": true,
+          "elapsed_s": 86.6
+        },
+        {
+          "id": "09-request-id-generator",
+          "passed": false,
+          "elapsed_s": 88.2
+        },
+        {
+          "id": "10-lru-cache",
+          "passed": true,
+          "elapsed_s": 39.4
+        }
+      ]
+    },
+    {
+      "category": "ts-angular",
+      "n_pass": 7,
+      "n_total": 8,
+      "wall_s": 429.8604807853699,
+      "returncode": 1,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-price-formatter",
+          "passed": true,
+          "elapsed_s": 42.0
+        },
+        {
+          "id": "02-search-service",
+          "passed": true,
+          "elapsed_s": 52.8
+        },
+        {
+          "id": "03-shopping-cart",
+          "passed": false,
+          "elapsed_s": 85.1
+        },
+        {
+          "id": "04-password-match-validator",
+          "passed": true,
+          "elapsed_s": 47.0
+        },
+        {
+          "id": "05-ticker-component",
+          "passed": true,
+          "elapsed_s": 40.2
+        },
+        {
+          "id": "06-todo-list-component",
+          "passed": true,
+          "elapsed_s": 52.6
+        },
+        {
+          "id": "07-counter-display-component",
+          "passed": true,
+          "elapsed_s": 65.6
+        },
+        {
+          "id": "08-batch-processor",
+          "passed": true,
+          "elapsed_s": 43.7
+        }
+      ]
+    },
+    {
+      "category": "sql-migrations",
+      "n_pass": 5,
+      "n_total": 6,
+      "wall_s": 336.2855386734009,
+      "returncode": 1,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-add-column-not-null",
+          "passed": true,
+          "elapsed_s": 35.4
+        },
+        {
+          "id": "02-unique-constraint-dupes",
+          "passed": true,
+          "elapsed_s": 72.6
+        },
+        {
+          "id": "03-rename-column-view",
+          "passed": true,
+          "elapsed_s": 29.7
+        },
+        {
+          "id": "04-non-idempotent-migration",
+          "passed": true,
+          "elapsed_s": 73.3
+        },
+        {
+          "id": "05-fk-missing-unique-target",
+          "passed": false,
+          "elapsed_s": 85.6
+        },
+        {
+          "id": "06-bad-backfill-update",
+          "passed": true,
+          "elapsed_s": 39.6
+        }
+      ]
+    },
+    {
+      "category": "mcp-tools",
+      "n_pass": 7,
+      "n_total": 8,
+      "wall_s": 58.74550771713257,
+      "returncode": 1,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-single-tool-required-args",
+          "passed": true,
+          "elapsed_s": null
+        },
+        {
+          "id": "02-enum-selection",
+          "passed": true,
+          "elapsed_s": null
+        },
+        {
+          "id": "03-numeric-coercion",
+          "passed": true,
+          "elapsed_s": null
+        },
+        {
+          "id": "04-nested-object-args",
+          "passed": true,
+          "elapsed_s": null
+        },
+        {
+          "id": "05-tool-disambiguation",
+          "passed": true,
+          "elapsed_s": null
+        },
+        {
+          "id": "06-missing-info-no-premature-call",
+          "passed": false,
+          "elapsed_s": null
+        },
+        {
+          "id": "07-multi-step-context-carry",
+          "passed": true,
+          "elapsed_s": null
+        },
+        {
+          "id": "08-array-argument",
+          "passed": true,
+          "elapsed_s": null
+        }
+      ]
+    },
+    {
+      "category": "security-review",
+      "n_pass": 8,
+      "n_total": 8,
+      "wall_s": 344.7312767505646,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-sql-injection",
+          "passed": true,
+          "elapsed_s": null
+        },
+        {
+          "id": "02-hardcoded-secret",
+          "passed": true,
+          "elapsed_s": null
+        },
+        {
+          "id": "03-path-traversal",
+          "passed": true,
+          "elapsed_s": null
+        },
+        {
+          "id": "04-insecure-deserialization",
+          "passed": true,
+          "elapsed_s": null
+        },
+        {
+          "id": "05-weak-crypto-hash",
+          "passed": true,
+          "elapsed_s": null
+        },
+        {
+          "id": "06-ssrf",
+          "passed": true,
+          "elapsed_s": null
+        },
+        {
+          "id": "07-broken-access-control",
+          "passed": true,
+          "elapsed_s": null
+        },
+        {
+          "id": "08-command-injection",
+          "passed": true,
+          "elapsed_s": null
+        }
+      ]
+    },
+    {
+      "category": "long-context",
+      "n_pass": 0,
+      "n_total": 0,
+      "wall_s": 0.1275465488433838,
+      "returncode": 1,
+      "timed_out": false,
+      "tasks": []
+    }
+  ]
+}

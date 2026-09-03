@@ -289,3 +289,36 @@ run of either quantization on this card.
 
 See `results/run-nvfp4-final-20260903.md` for the consolidated final
 NVFP4 report (46/50).
+
+## RTX 4090 (192.168.0.88) -- FP8 full-suite confirmation run
+
+Full 50-task suite re-run against the remote RTX 4090 server
+(`http://192.168.0.88:8000`, FP8, froggeric v22.4 template,
+`--kv-reserve-tokens 300000`). Result: **46/50**, real avoidable-failure
+count **0/50** -- every non-pass is a previously documented finding:
+
+- **java-spring 09** (`request-id-generator`): 1 fail in official run,
+  3/3 pass on rerun -- known low-frequency non-determinism.
+- **ts-angular 03** (`shopping-cart`): 1 fail in official run, 1/3 pass
+  on rerun -- the known `computed()`-vs-getter inconsistency, same
+  pattern and frequency as on the 5060 Ti (both quantizations).
+- **sql-migrations 05** (`fk-missing-unique-target`): 1 fail in official
+  run, 2/3 pass on rerun -- the known `ADD CONSTRAINT IF NOT EXISTS`
+  invalid-Postgres-syntax hallucination (~40-60% rate on FP8).
+- **mcp-tools 06**: by-design hallucination probe, expected every run.
+
+**Notable:** `sql-migrations/04-non-idempotent-migration` -- the task
+that is a reproducible NVFP4-specific regression on the 5060 Ti (4/4
+fail) and a rare FP8 reasoning-loop failure there (~1/3) -- **passed** on
+the 4090 FP8 run. Consistent with FP8's documented occasional-failure
+behavior; does not change the NVFP4-specific finding.
+
+**Infrastructure:** no OOM, no restart needed on the 4090 (24.5 GiB
+VRAM absorbs the sustained-serving memory pressure that OOM'd the 16 GB
+5060 Ti). Long-context passed 10/10 including both 150K-token tasks.
+Harness note: long-context requires `tiktoken` (via `gen_prompt.py`);
+run the harness with the repo venv python (`.venv/bin/python`), not the
+system python, or that category silently runs 0/0 tasks.
+
+See `results/run-4090-fp8-final-20260903.md` for the consolidated report
+(46/50).

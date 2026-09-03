@@ -9,7 +9,7 @@ deterministic check (compiler/test-runner/regex/schema) decides pass/fail
 
 Last updated: 2026-09-03.
 
-## Status: COMPLETE. FP8 (48/50) and NVFP4 (46/50) both run, one real quantization-specific quality difference found. See `results/comparative-report-20260903.md` for the full comparative writeup.
+## Status: COMPLETE. FP8 (48/50) and NVFP4 (46/50) both run on the 5060 Ti, one real quantization-specific quality difference found. See `results/comparative-report-20260903.md` for the full comparative writeup. **Bonus: full 50-task FP8 confirmation run on the remote RTX 4090 (192.168.0.88) -- 46/50, 0 real avoidable failures, no new findings** (see `results/run-4090-fp8-final-20260903.md`).
 
 ## Layout
 
@@ -161,6 +161,13 @@ NVFP4 report.
   run long-context first or in isolation**, regardless of quantization.
 - Both FP8 and NVFP4 chat templates are now patched to froggeric v22.4
   (`chat_template.jinja`, with `.orig` backups kept alongside).
+- Remote RTX 4090 (`192.168.0.88:8000`, FP8, froggeric v22.4,
+  `--kv-reserve-tokens 300000`): healthy, used for the 4090 confirmation
+  run. No OOM, no restart needed across the full suite.
+- **Harness note:** the `long-context` category imports `tiktoken` (via
+  `gen_prompt.py`). Run the harness with the repo venv python
+  (`.venv/bin/python`), not the system python, or that category silently
+  runs 0/0 tasks.
 
 ## Test plan: COMPLETE
 
@@ -172,6 +179,11 @@ NVFP4 report.
    context run first to avoid the FP8 OOM pattern -- worked).
 5. ~~Produce a comparative report~~ -- done, see
    `results/comparative-report-20260903.md`.
+6. ~~Run the full 50-task suite against the remote RTX 4090 (FP8)~~ --
+   done, 46/50, 0 real avoidable failures, no new findings
+   (`results/run-4090-fp8-final-20260903.md`). Long-context passed 10/10
+   with no OOM and no restart (24.5 GiB VRAM absorbs the
+   sustained-serving pressure that OOM'd the 16 GB card).
 
 No further qualbench work planned unless new findings warrant
 follow-up (e.g. investigating whether a stronger system prompt
