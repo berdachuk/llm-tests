@@ -1,5 +1,8 @@
 # llm-tests
 
+**See [`TEST_RESULTS.md`](TEST_RESULTS.md) for the latest qualbench
+FP8-vs-NVFP4 comparative test results (50-task quality/regression eval).**
+
 Live-server compatibility tests for local/self-hosted LLM deployments,
 focused on the wire protocols coding agents actually speak: OpenAI Chat
 Completions, OpenAI Responses, and Anthropic Messages.
