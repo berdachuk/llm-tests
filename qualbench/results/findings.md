@@ -183,3 +183,47 @@ security-review category may need occasional broadening as new valid
 phrasings are observed across runs -- treat any single-task security-
 review failure as "investigate the actual response first" before
 assuming it's a genuine model quality regression.
+
+## Infrastructure incident (not a model or fixture finding) -- FP8 server OOM during official run
+
+During the official full 50-task FP8 run (java-spring -> ts-angular ->
+sql-migrations -> mcp-tools -> security-review -> long-context, all
+in one continuous server session), the long-context category failed
+0/10: task 01 hit the harness's 600s timeout and every task after it got
+`Connection refused`.
+
+**Root cause (confirmed via `~/qwen36_35b_serve.log`):** genuine
+`torch.OutOfMemoryError: CUDA out of memory` inside the FreeToken
+scheduler subprocess, raised in the linear-attention "gated delta rule"
+kernel (`chunk_gated_delta_rule_fwd_h`) while allocating a 128 MiB
+tensor. At the moment of the crash the process already held 14.46 GiB of
+the RTX 5060 Ti's 16.3 GiB capacity -- after ~47 minutes of continuous
+serving across the first 5 categories, there wasn't enough headroom left
+for the long-context tasks' larger activation buffers (some prompts are
+up to ~150k tokens). The scheduler subprocess died; the API server
+correctly detected the dead worker and shut itself down cleanly (no
+zombie process, no leftover GPU allocation once the process exited --
+confirmed via `nvidia-smi` after kill, only ~970 MiB desktop/X11 usage
+remained).
+
+**Resolution:** restarted the FP8 server fresh, verified healthy via a
+real `/v1/chat/completions` round trip (not just `/v1/models`), then
+re-ran *only* the long-context category in isolation. It passed 10/10
+cleanly, including both 150k-token tasks, with GPU memory holding
+steady around 15.6-15.7 GiB throughout -- i.e. right at the edge of the
+card's capacity, but stable when long-context runs against a freshly-
+loaded server rather than one that has already served ~2000s of prior
+traffic across other categories.
+
+**Disposition:** hardware/infrastructure constraint specific to this
+16 GB card under the offload-MoE serving configuration, not a model
+quality issue or fixture bug. **Actionable for the NVFP4 run:** run
+long-context either first (right after server start) or as its own
+isolated invocation, rather than last in a single long continuous
+session, to avoid the same OOM. Since NVFP4 quantization should use
+less VRAM for weights than FP8, this specific crash may not reproduce
+on NVFP4 at all -- worth explicitly noting in the comparative report
+either way.
+
+See `results/run-fp8-final-20260903.md` for the consolidated final FP8
+report (48/50, combining the two runs across the restart).

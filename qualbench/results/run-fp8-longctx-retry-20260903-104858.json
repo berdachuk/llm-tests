@@ -1,0 +1,72 @@
+{
+  "tag": "fp8-longctx-retry",
+  "url": "http://127.0.0.1:8000",
+  "model": "qwen3.6-35b-a3b",
+  "started_at": "2026-09-03T07:28:45.858436+00:00",
+  "finished_at": "2026-09-03T07:48:58.379258+00:00",
+  "total_wall_s": 1212.520807504654,
+  "total_pass": 10,
+  "total_tasks": 10,
+  "categories": [
+    {
+      "category": "long-context",
+      "n_pass": 10,
+      "n_total": 10,
+      "wall_s": 1212.5207455158234,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-8k-pos10",
+          "passed": true,
+          "elapsed_s": 87.6
+        },
+        {
+          "id": "02-8k-pos50",
+          "passed": true,
+          "elapsed_s": 73.4
+        },
+        {
+          "id": "03-8k-pos90",
+          "passed": true,
+          "elapsed_s": 90.6
+        },
+        {
+          "id": "04-64k-pos10",
+          "passed": true,
+          "elapsed_s": 75.4
+        },
+        {
+          "id": "05-64k-pos50",
+          "passed": true,
+          "elapsed_s": 117.3
+        },
+        {
+          "id": "06-64k-pos90",
+          "passed": true,
+          "elapsed_s": 104.9
+        },
+        {
+          "id": "07-150k-pos10",
+          "passed": true,
+          "elapsed_s": 164.0
+        },
+        {
+          "id": "08-150k-pos50",
+          "passed": true,
+          "elapsed_s": 178.6
+        },
+        {
+          "id": "09-distractor-64k",
+          "passed": true,
+          "elapsed_s": 115.1
+        },
+        {
+          "id": "10-distractor-150k",
+          "passed": true,
+          "elapsed_s": 204.9
+        }
+      ]
+    }
+  ]
+}

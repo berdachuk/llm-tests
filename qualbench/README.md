@@ -7,9 +7,9 @@ prompt is sent to a live server, the response is extracted, and a
 deterministic check (compiler/test-runner/regex/schema) decides pass/fail
 -- no LLM-judge fallback has been needed so far.
 
-Last updated: 2026-09-02.
+Last updated: 2026-09-03.
 
-## Status: fixtures + per-category harnesses complete (50/50 tasks written and verified). Unified runner not yet built. No NVFP4 run yet.
+## Status: official full 50-task FP8 run complete (48/50 -- both non-passes are known/expected, see below). Unified runner built. NVFP4 run not yet started.
 
 ## Layout
 
@@ -17,17 +17,16 @@ Last updated: 2026-09-02.
 fixtures/
   java-spring/       10 tasks -- planted bugs in a Spring/Java class, fix
                       must make its existing JUnit test class pass (mvn).
-    base/             the Spring project itself (own nested git repo).
-    check.py          model-in-the-loop harness (own nested git repo).
+    base/             the Spring project itself.
+    check.py          model-in-the-loop harness.
     tasks.json        task manifest for check.py.
   ts-angular/         8 tasks -- planted bugs in an Angular file, fix must
                       make its existing spec pass (ng test / vitest).
-    base/             the Angular app itself (own nested git repo).
-    check.py          model-in-the-loop harness (own nested git repo).
+    base/             the Angular app itself.
+    check.py          model-in-the-loop harness.
     tasks.json        task manifest for check.py.
   sql-migrations/     6 tasks -- planted bugs in a Postgres migration
                       script, fix must apply cleanly + pass check.sql.
-                      Own nested git repo (fixtures + harness together).
     NN-*/              seed.sql, up.sql (buggy), up.fixed.sql (reference),
                        check.sql, README.md per task.
     verify.sh          generic dry-run+validate runner (no model calls).
@@ -35,84 +34,96 @@ fixtures/
     tasks.json          task manifest for check.py.
   mcp-tools/          8 tasks -- given a tool-call schema + user request,
                       the model must emit the right tool call (or none).
-                      Own nested git repo.
   security-review/    8 tasks -- planted vulnerabilities (SQLi, SSRF,
                       hardcoded secrets, etc.), model must name the issue;
                       graded by regex recall against required phrasings.
-                      Own nested git repo.
   long-context/       10 tasks -- needle-in-haystack retrieval at 8K/64K/
                       150K tokens x position 10%/50%/90%, plus 2 tasks
-                      with decoy markers. Own nested git repo.
-harness/              (empty) -- unified runner across all 6 categories,
-                      not yet written.
-results/              (empty) -- aggregated run reports land here once the
-                      unified runner exists.
+                      with decoy markers.
+harness/
+  run_all.py          unified runner: shells out to each category's own
+                      check.py --all, parses PASS/FAIL lines, writes a
+                      combined report to results/.
+results/              aggregated run reports (JSON + Markdown per run),
+                      plus findings.md (detailed reproduced-failure log).
 ```
 
-Each `fixtures/<category>/` is its **own separate git repository** (not a
-submodule, just an independent `git init`), following the pattern
-established when the Java/TS `base/` app fixtures were first built. This
-top-level `qualbench/` directory is also its own separate git repo,
-tracking only files that live directly under it (this README, `results/`,
-`harness/`) -- it does not attempt to absorb the nested per-category repos.
+All qualbench content (fixtures, harnesses, `base/` app projects, results)
+now lives as ordinary tracked files inside the main `llm-tests` git repo
+-- there are no nested git repositories under `qualbench/` anymore.
 
-## Results so far (single-run pass counts against the live FP8 server)
+## Official FP8 run (2026-09-03) -- 48/50
 
-| Category | Tasks | Pass rate (1 run) | Notes |
+| Category | Pass | Total | Notes |
 |---|---|---|---|
-| Java/Spring bugfix | 10 | 10/10 | Stable. |
-| TS/Angular bugfix | 8 | 8/8 | Task 03 (`shopping-cart`) showed one transient failure across repeated runs -- see `results/findings.md`. |
-| SQL migrations | 6 | 4/6 (varies 1-3/3 per task on repeat runs) | Tasks 02, 03, 04, 05 have real, reproducible FP8 quality issues at temp=0. See `results/findings.md`. |
-| MCP/tool-call | 8 | 7/8 (by design) | Task 06 is an intentional hallucination probe (model wrongly calls a money-transfer tool with incomplete info) and is *expected* to fail -- this is scored as a real finding, not a fixture bug. |
-| Security review | 8 | 8/8 | Stable across repeated checks. |
-| Long-context retrieval | 10 | 10/10 | Stable; model correctly rejects decoy markers even when the decoy's own note explicitly points to it. |
+| Java/Spring bugfix | 10 | 10 | Stable. |
+| TS/Angular bugfix | 8 | 8 | Stable in this run (task 03 `shopping-cart` has a known ~1/5 non-determinism, see `results/findings.md`). |
+| SQL migrations | 5 | 6 | Task 04 failed: known non-deterministic reasoning-loop finding, see `results/findings.md`. |
+| MCP/tool-call | 7 | 8 | Task 06 is an intentional hallucination probe, *expected* to fail every run -- not a real finding. |
+| Security review | 8 | 8 | Stable. |
+| Long-context retrieval | 10 | 10 | **Retry run** after an FP8 server OOM crash mid-suite -- see incident note below and `results/findings.md`. |
 
-**Total: 50/50 tasks written, individually verified against the live FP8
-server at least once; 4 categories fully stable, 2 categories (TS, SQL)
-show genuine model non-determinism / correctness gaps worth reporting.**
+**Real avoidable-failure count: 0/50.** Both non-passes are expected
+(one by design, one a previously-documented low-frequency model
+inconsistency), not new findings.
 
-See `results/findings.md` for the detailed, reproduced failure analyses
+See `results/run-fp8-final-20260903.md` for the full consolidated report
+and `results/findings.md` for detailed, reproduced failure analyses
 (exact bad output extracted, root cause, whether it recurs).
 
-## Environment (as of last check, 2026-09-02)
+### Infrastructure incident: FP8 server OOM during long-context
 
-- FP8 server: `http://127.0.0.1:8000`, model id `qwen3.6-35b-a3b`, healthy.
+Running all 6 categories back-to-back in one continuous server session
+(~47 min) left too little free VRAM on the 16GB card by the time
+long-context's larger prompts (up to 150K tokens) were reached --
+the server crashed with a genuine `torch.OutOfMemoryError` in the
+scheduler process. Restarting the server fresh and re-running
+long-context in isolation passed 10/10 cleanly, with GPU memory holding
+at ~15.6-15.7 of 16.3 GiB throughout. See `results/findings.md` for full
+details. **For the NVFP4 run, run long-context first (or in its own
+isolated invocation) to avoid the same risk.**
+
+## Environment (as of last check, 2026-09-03)
+
+- FP8 server: `http://127.0.0.1:8000`, model id `qwen3.6-35b-a3b`, healthy
+  (restarted once after the OOM incident above).
 - Docker `qualbench-pg` (Postgres 18-alpine, port 15432): running, healthy.
   Does **not** survive a host reboot (`--rm` flag) -- restart with:
   ```
   docker run --rm -d --name qualbench-pg -e POSTGRES_PASSWORD=qualbench \
     -e POSTGRES_DB=qualbench -p 15432:5432 postgres:18-alpine
   ```
-- RAM: 42Gi used / 4.4Gi free / 20Gi available out of 62Gi. Swap: ~1.3MiB
-  of 64Gi used (excellent headroom for the full run).
+- RAM: ~13-46Gi available out of 62Gi depending on category (long-context
+  is the heaviest); swap stayed under ~2Gi of 63Gi throughout the run --
+  acceptable headroom.
+- GPU: RTX 5060 Ti, 16.3 GiB total. Model + reserved KV cache alone uses
+  ~14.5-15 GiB at idle; long-context tasks push usage to ~15.6-15.7 GiB.
+  **Very little headroom -- this is the binding constraint**, see OOM
+  incident above.
 - NVFP4 model / chat template: **not yet checked or patched**. Must run
   the same froggeric-template verification workflow used for FP8 before
   the NVFP4 leg of the comparison.
 
 ## Test plan / remaining work
 
-1. **Write the unified qualbench runner** (`harness/run_all.py` or
-   similar) that invokes each category's `check.py --all` (and the SQL
-   category's `check.py`, which wraps `verify.sh`), captures pass/fail +
-   timing for all 50 tasks in one pass, and writes a report to
-   `results/`. This is the main remaining piece of infrastructure.
-2. **Re-verify RAM/swap headroom** immediately before the full run (state
-   drifts across long sessions; last verified figures are above).
+1. ~~Write the unified qualbench runner~~ -- done: `harness/run_all.py`.
+2. ~~Run the full 50-task suite against FP8~~ -- done, 48/50, see above.
 3. **Check/patch the NVFP4 chat template**: locate
    `~/llm_models/Qwen3.6-35B-A3B-NVFP4/chat_template.jinja`, run the same
    `check_applied.py` + froggeric-template workflow already used for the
    FP8 model directory, patch if the vendor template is still in place.
-4. **Run the full 50-task suite against FP8** via the unified runner.
-   Expect ~75-90 minutes based on measured per-task timings (average
-   ~90s/task across categories already exercised).
-5. **Stop FP8, start NVFP4** with the same serving flags (`ft serve`,
-   same `--tool-call-parser`/`--reasoning-parser`/etc.), confirm healthy.
-6. **Run the full 50-task suite against NVFP4** via the unified runner.
-7. **Produce a comparative report**: pass rate per category, timing, and
-   peak RAM/VRAM + swap usage, FP8 vs NVFP4. Call out any category where
-   NVFP4 regresses relative to FP8's already-known findings (e.g. does
-   NVFP4 also hallucinate `ADD CONSTRAINT ... IF NOT EXISTS`, or is that
-   FP8-specific?).
+4. **Stop FP8, start NVFP4** with the same serving flags (`ft serve`,
+   same `--tool-call-parser`/`--reasoning-parser`/etc.), confirm healthy
+   via a real `/v1/chat/completions` round trip (not just `/v1/models`).
+5. **Run the full 50-task suite against NVFP4** via the unified runner --
+   run long-context first or in isolation to avoid the FP8 OOM pattern.
+6. **Produce a comparative report**: pass rate per category, timing, and
+   peak RAM/VRAM + swap usage, FP8 vs NVFP4. Specifically check whether
+   NVFP4 reproduces FP8's known findings (SQL task 05's `ADD CONSTRAINT
+   ... IF NOT EXISTS` hallucination, TS task 03's computed()-vs-getter
+   inconsistency, SQL task 04's reasoning-loop non-termination) and
+   whether NVFP4 (using less VRAM for weights) avoids the long-context
+   OOM risk seen on FP8.
 
 ## Design notes for future task authors
 
