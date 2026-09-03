@@ -99,6 +99,77 @@ This is a fixed hardware/serving-config constraint, not a quantization
 difference -- always run long-context first or in its own isolated
 server session on this hardware.
 
+## Real memory footprint: measured, not estimated
+
+All figures below are read directly from `ft serve` startup logs and
+`nvidia-smi`/`free -h` on `berdachuk-pc`, not calculated or assumed.
+
+### VRAM: KV cache scaling and steady-state/peak usage
+
+KV cache size scales linearly with `--kv-reserve-tokens`, confirmed
+across every tested reservation point on this card:
+
+| `--kv-reserve-tokens` | KV cache size (measured) | GiB per 1M tokens |
+|---:|---:|---:|
+| 8,192 (default floor) | 0.16 GiB | ~19.5 |
+| 120,051 | 2.29 GiB | ~19.1 |
+| 260,029 (selected/validated) | 4.96 GiB | ~19.1 |
+| 300,000 | 5.72 GiB | ~19.1 |
+
+At ~1.907x10^-5 GiB/token, reserving the model's full native
+262,144-token context would cost only ~5.0 GiB of KV cache by itself.
+KV cache is *not* the binding constraint on this card -- core weights
+and the GPU-resident MoE expert cache already consume nearly the whole
+16.3 GiB before a single KV token is reserved:
+
+| VRAM state (FP8 and NVFP4, both at the 260K config) | Size |
+|---|---:|
+| Free VRAM before model load (desktop already using the rest) | 14.24-14.51 GiB of 16.3 GiB total |
+| Free VRAM after full init, before CUDA graph capture | 1.16-1.18 GiB |
+| Free VRAM after CUDA graph capture | 1.07-1.15 GiB |
+| **Steady-state VRAM used (idle, no requests in flight)** | **~14.7-14.75 GiB of 16.3 GiB** |
+| **Peak VRAM during an actual 150K-token long-context request** | **~15.6-15.7 GiB of 16.3 GiB** |
+
+At peak, only **~0.6-0.7 GiB of margin** remains on this 16.3 GiB card --
+which is exactly the margin that ran out during the FP8 run's OOM
+incident above, after ~47 minutes of continuous prior serving. This
+VRAM profile is identical between FP8 and NVFP4: `--kv-reserve-tokens`
+dominates the allocation, not weight precision.
+
+### System RAM: the MoE expert pool is the real quantization-dependent cost
+
+NVFP4's smaller weight footprint does not reduce VRAM pressure (above),
+but it does substantially reduce the **host RAM** cost of the MoE
+expert pool that lives outside VRAM. Measured directly from server
+startup logs:
+
+| Quantization | Expert pool size (RAM) | Idle desktop RAM already in use | Total system RAM in this box |
+|---|---:|---:|---:|
+| FP8 | 31.4 GB | ~14 GiB of 62 GiB | 64 GiB (62 GiB usable) + 64 GiB swap |
+| NVFP4 | 21.8 GB | ~14 GiB of 62 GiB | 64 GiB (62 GiB usable) + 64 GiB swap |
+
+The OS and background processes alone use ~14 GiB before any model
+loads. Add the FP8 expert pool and **~45 GB is committed before the
+server handles a single request** (vs. ~35 GB for NVFP4) -- this is why
+64 GB, not 32 GB, was the correct RAM target for this hardware.
+
+### Minimum / recommended / maximum-tested memory requirements
+
+| | VRAM | System RAM |
+|---|---|---|
+| **Minimum to load the server at all** (default 8,330-token effective context, no tuning) | ~14.3 GiB free -- nearly the whole 16.3 GiB card; weights + MoE cache dominate even at minimal context, not KV cache | 31.4 GB (FP8) / 21.8 GB (NVFP4) for the expert pool, plus OS overhead -- 64 GB was the tested floor |
+| **Recommended: validated for 92K+ single requests** (`--kv-reserve-tokens 260000`) | ~14.7-14.75 GiB steady state, up to ~15.6-15.7 GiB under an actual long prompt, out of 16.3 GiB total | Same 64 GB box; raising KV reservation has no RAM cost -- that cost is VRAM-only |
+| **Maximum verified in this test** | 92,436-token single request confirmed end-to-end (throughput benchmark); 150K-token prompts confirmed to pass in isolation (qualbench long-context category); full 262,144-token native context was **not** independently verified | Not applicable -- RAM cost is fixed by quantization choice, not by KV reservation |
+
+**Takeaway:** on a 16 GB consumer card, VRAM is the scarce resource at
+every context size, not just at the maximum -- the "minimum" and
+"recommended" VRAM requirements are much closer together than the raw
+KV-cache math alone would suggest, because weights and the MoE expert
+cache already claim nearly the whole card. System RAM, by contrast, is
+fixed per quantization (31.4 GB vs. 21.8 GB) regardless of context-window
+target, so it's the quantization choice -- not the context goal -- that
+sets the RAM floor.
+
 ## Bottom line / recommendation
 
 - **Correctness:** FP8 and NVFP4 are equivalent on every task except
@@ -121,7 +192,22 @@ server session on this hardware.
   --max-running-requests 2 --kv-reserve-tokens 260000
   --tool-call-parser qwen3_coder --reasoning-parser qwen3`, on
   `http://127.0.0.1:8000`.
-- Hardware: `berdachuk-pc`, RTX 5060 Ti 16GB.
 - Supporting infra: Docker `qualbench-pg` (Postgres 18-alpine) for the
   SQL migrations category.
+
+### Hardware (`berdachuk-pc`)
+
+| Component | Specification |
+|---|---|
+| CPU | Intel Core i5-13400, 10 cores / 16 threads, up to 4.6 GHz |
+| RAM | 64 GiB total (62 GiB usable), 64 GiB swap |
+| GPU | NVIDIA GeForce RTX 5060 Ti, 16.3 GiB (16,311 MiB) VRAM, compute capability 12.0 (Blackwell) |
+| OS | Ubuntu 24.04.4 LTS, kernel 6.8.0-138-generic |
+| NVIDIA stack | Driver 595.84, CUDA 13.3 |
+| Model checkpoints on disk | FP8: ~35 GB, NVFP4: ~22 GB |
+
+This is a live desktop, not a headless server -- the compositor and
+desktop session keep ~14 GiB of RAM and part of the GPU's VRAM
+occupied even at idle, which is why the memory figures above are
+reported as measured values rather than theoretical card/RAM totals.
 </content>
