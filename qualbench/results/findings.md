@@ -227,3 +227,65 @@ either way.
 
 See `results/run-fp8-final-20260903.md` for the consolidated final FP8
 report (48/50, combining the two runs across the restart).
+
+## NVFP4 -- SQL migrations task 04 (`non-idempotent-migration`) -- new, NVFP4-specific finding
+
+Unlike FP8 (which showed an occasional reasoning-loop non-termination on
+this task, ~1/3 frequency, other runs passing cleanly), the NVFP4
+quantization shows a **different and much more consistent** failure
+mode on the same task: **4/4 fail** across the official run + 3
+dedicated reruns, always with the identical root cause.
+
+**Observed pattern:** the model's fix correctly recognizes and guards
+the later statements against re-application --
+`CREATE INDEX ... ON accounts (is_active)` becomes idempotent (or is
+otherwise handled), and `CREATE TABLE account_tiers` / the `INSERT`
+seed get proper `IF NOT EXISTS` / `ON CONFLICT DO NOTHING` guards -- but
+consistently leaves the **very first statement** unguarded:
+```sql
+ALTER TABLE accounts ADD COLUMN is_active BOOLEAN NOT NULL DEFAULT true;
+```
+with no `ADD COLUMN IF NOT EXISTS`. Since this is the first line of the
+migration, the second application fails immediately with
+`ERROR: column "is_active" of relation "accounts" already exists`,
+before any of the (correctly-guarded) later statements even get a
+chance to run.
+
+**Frequency:** 4/4 (official run + 3 reruns), all with the exact same
+root cause -- this task is currently the single most reliably-failing
+task in the entire 50-task suite for NVFP4.
+
+**Disposition:** a genuine, highly reproducible NVFP4-specific quality
+regression relative to FP8 on this exact task. FP8 fails here rarely and
+via a different mechanism (decision-paralysis / non-termination); NVFP4
+fails here consistently and via a specific omission (forgetting to guard
+only the first of several statements needing idempotency guards, despite
+correctly guarding the rest). Worth flagging prominently in the
+comparative report as the clearest quality difference found between the
+two quantizations.
+
+## NVFP4 -- SQL migrations task 05 (`fk-missing-unique-target`) -- confirms FP8 finding, not FP8-specific
+
+Re-ran 3x after the official run's failure. Result: 2/3 pass, 1/3 fail
+with the exact same invalid-Postgres-syntax hallucination already
+documented for FP8 above (`ALTER TABLE ... ADD CONSTRAINT IF NOT EXISTS
+...`, which does not exist in Postgres). Frequency is comparable to
+FP8's ~40-60% failure rate on this task. **This confirms the finding is
+a model-family characteristic that persists across both quantizations,
+not an FP8-specific artifact.**
+
+## NVFP4 -- long-context OOM risk
+
+Running long-context first (immediately after a fresh server restart)
+rather than last avoided any OOM crash on NVFP4, matching the mitigation
+already established for FP8. GPU usage during NVFP4 long-context peaked
+at ~15.7 of 16.3 GiB -- essentially identical to FP8's footprint. The
+NVFP4-quantized weights did not meaningfully reduce VRAM pressure in
+this configuration, most likely because `--kv-reserve-tokens 260000`
+(not model-weight size) is the dominant allocation. The OOM risk is
+therefore a fixed hardware/serving-config constraint independent of
+quantization -- run long-context first (or in isolation) for any future
+run of either quantization on this card.
+
+See `results/run-nvfp4-final-20260903.md` for the consolidated final
+NVFP4 report (46/50).

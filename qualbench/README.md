@@ -9,7 +9,7 @@ deterministic check (compiler/test-runner/regex/schema) decides pass/fail
 
 Last updated: 2026-09-03.
 
-## Status: official full 50-task FP8 run complete (48/50 -- both non-passes are known/expected, see below). Unified runner built. NVFP4 run not yet started.
+## Status: COMPLETE. FP8 (48/50) and NVFP4 (46/50) both run, one real quantization-specific quality difference found. See `results/comparative-report-20260903.md` for the full comparative writeup.
 
 ## Layout
 
@@ -52,7 +52,30 @@ All qualbench content (fixtures, harnesses, `base/` app projects, results)
 now lives as ordinary tracked files inside the main `llm-tests` git repo
 -- there are no nested git repositories under `qualbench/` anymore.
 
-## Official FP8 run (2026-09-03) -- 48/50
+## Comparative results (2026-09-03): FP8 48/50, NVFP4 46/50
+
+**One real, newly-found quantization-specific quality difference:** SQL
+task 04 (`non-idempotent-migration`) fails consistently on NVFP4 (4/4
+across the official run + 3 reruns, via a specific repeatable
+omission -- guards every statement except the first `ADD COLUMN`), but
+only rarely on FP8 (~1/3, via an unrelated reasoning-loop mechanism).
+Everything else that differs between the two is either by-design
+(mcp-tools task 06) or a shared model-family characteristic that
+reproduces at comparable rates on both quantizations (SQL task 05's
+`ADD CONSTRAINT ... IF NOT EXISTS` hallucination, TS task 03's
+computed()-vs-getter inconsistency).
+
+NVFP4 is consistently ~1.5-2x faster than FP8 across every category,
+with no VRAM-usage penalty (`--kv-reserve-tokens`, not weight size,
+dominates VRAM allocation on this card at this context length).
+
+**Full details:** `results/comparative-report-20260903.md` (bottom-line
+recommendation + full analysis), `results/run-fp8-final-20260903.md` +
+`results/run-nvfp4-final-20260903.md` (per-run reports), and
+`results/findings.md` (every individual finding, reproduced and
+root-caused).
+
+## FP8 run (2026-09-03) -- 48/50
 
 | Category | Pass | Total | Notes |
 |---|---|---|---|
@@ -80,13 +103,47 @@ the server crashed with a genuine `torch.OutOfMemoryError` in the
 scheduler process. Restarting the server fresh and re-running
 long-context in isolation passed 10/10 cleanly, with GPU memory holding
 at ~15.6-15.7 of 16.3 GiB throughout. See `results/findings.md` for full
-details. **For the NVFP4 run, run long-context first (or in its own
-isolated invocation) to avoid the same risk.**
+details.
+
+## NVFP4 run (2026-09-03) -- 46/50
+
+Chat template was found stock/unpatched on the NVFP4 model directory;
+patched with the same froggeric v22.4 template used for FP8 (byte-
+identical original templates confirmed via diff, so this was a safe
+like-for-like fix) before running.
+
+Long-context was deliberately run **first**, immediately after a fresh
+server start, to avoid the FP8 OOM pattern above -- this worked, no
+crash, whole 50-task suite completed in one server session (no restart
+needed).
+
+| Category | Pass | Total | Notes |
+|---|---|---|---|
+| Java/Spring bugfix | 10 | 10 | Stable, ~2x faster than FP8. |
+| TS/Angular bugfix | 7/8 official, 8/8 on rerun | 8 | Task 03 failed once, 3/3 pass on rerun -- known non-determinism, not new. |
+| SQL migrations | 4/6 official; task 04 confirmed 0/4, task 05 confirmed 2/3 on rerun | 6 | **Task 04 is a new, NVFP4-specific finding** (see below). Task 05 matches FP8's already-known finding. |
+| MCP/tool-call | 7 | 8 | Task 06 by design, expected. |
+| Security review | 8 | 8 | Stable. |
+| Long-context retrieval | 10 | 10 | No OOM (run first, see above). |
+
+**New finding -- SQL task 04 (`non-idempotent-migration`) is
+NVFP4-specific:** the model consistently (4/4) guards every statement
+except the very first `ALTER TABLE accounts ADD COLUMN is_active ...`,
+so the second application of the migration fails immediately. FP8 fails
+here rarely (~1/3) and via an unrelated mechanism (reasoning-loop
+non-termination). This is the clearest quantization-specific quality
+difference found in the whole suite -- see `results/findings.md` for
+full detail.
+
+See `results/run-nvfp4-final-20260903.md` for the full consolidated
+NVFP4 report.
 
 ## Environment (as of last check, 2026-09-03)
 
-- FP8 server: `http://127.0.0.1:8000`, model id `qwen3.6-35b-a3b`, healthy
-  (restarted once after the OOM incident above).
+- Server: `http://127.0.0.1:8000`, model id `qwen3.6-35b-a3b`. Both FP8
+  and NVFP4 model directories confirmed healthy at various points in
+  this session (only one is loaded at a time; switching requires a
+  server restart with a different `--model-path`).
 - Docker `qualbench-pg` (Postgres 18-alpine, port 15432): running, healthy.
   Does **not** survive a host reboot (`--rm` flag) -- restart with:
   ```
@@ -94,36 +151,31 @@ isolated invocation) to avoid the same risk.**
     -e POSTGRES_DB=qualbench -p 15432:5432 postgres:18-alpine
   ```
 - RAM: ~13-46Gi available out of 62Gi depending on category (long-context
-  is the heaviest); swap stayed under ~2Gi of 63Gi throughout the run --
+  is the heaviest); swap stayed under ~2Gi of 63Gi throughout both runs --
   acceptable headroom.
 - GPU: RTX 5060 Ti, 16.3 GiB total. Model + reserved KV cache alone uses
-  ~14.5-15 GiB at idle; long-context tasks push usage to ~15.6-15.7 GiB.
-  **Very little headroom -- this is the binding constraint**, see OOM
-  incident above.
-- NVFP4 model / chat template: **not yet checked or patched**. Must run
-  the same froggeric-template verification workflow used for FP8 before
-  the NVFP4 leg of the comparison.
+  ~14.7 GiB at idle **for both quantizations** (NVFP4's smaller weights
+  didn't reduce VRAM pressure here -- `--kv-reserve-tokens 260000`
+  dominates the allocation); long-context tasks push usage to
+  ~15.6-15.7 GiB on both. **Very little headroom on this card -- always
+  run long-context first or in isolation**, regardless of quantization.
+- Both FP8 and NVFP4 chat templates are now patched to froggeric v22.4
+  (`chat_template.jinja`, with `.orig` backups kept alongside).
 
-## Test plan / remaining work
+## Test plan: COMPLETE
 
 1. ~~Write the unified qualbench runner~~ -- done: `harness/run_all.py`.
-2. ~~Run the full 50-task suite against FP8~~ -- done, 48/50, see above.
-3. **Check/patch the NVFP4 chat template**: locate
-   `~/llm_models/Qwen3.6-35B-A3B-NVFP4/chat_template.jinja`, run the same
-   `check_applied.py` + froggeric-template workflow already used for the
-   FP8 model directory, patch if the vendor template is still in place.
-4. **Stop FP8, start NVFP4** with the same serving flags (`ft serve`,
-   same `--tool-call-parser`/`--reasoning-parser`/etc.), confirm healthy
-   via a real `/v1/chat/completions` round trip (not just `/v1/models`).
-5. **Run the full 50-task suite against NVFP4** via the unified runner --
-   run long-context first or in isolation to avoid the FP8 OOM pattern.
-6. **Produce a comparative report**: pass rate per category, timing, and
-   peak RAM/VRAM + swap usage, FP8 vs NVFP4. Specifically check whether
-   NVFP4 reproduces FP8's known findings (SQL task 05's `ADD CONSTRAINT
-   ... IF NOT EXISTS` hallucination, TS task 03's computed()-vs-getter
-   inconsistency, SQL task 04's reasoning-loop non-termination) and
-   whether NVFP4 (using less VRAM for weights) avoids the long-context
-   OOM risk seen on FP8.
+2. ~~Run the full 50-task suite against FP8~~ -- done, 48/50.
+3. ~~Check/patch the NVFP4 chat template~~ -- done, was stock/unpatched,
+   now froggeric v22.4.
+4. ~~Run the full 50-task suite against NVFP4~~ -- done, 46/50 (long-
+   context run first to avoid the FP8 OOM pattern -- worked).
+5. ~~Produce a comparative report~~ -- done, see
+   `results/comparative-report-20260903.md`.
+
+No further qualbench work planned unless new findings warrant
+follow-up (e.g. investigating whether a stronger system prompt
+mitigates NVFP4's SQL task 04 regression).
 
 ## Design notes for future task authors
 
