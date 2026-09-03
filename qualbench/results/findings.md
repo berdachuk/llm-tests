@@ -148,7 +148,6 @@ shows the same pattern.
 
 - **Java/Spring** (10/10, including the `InventoryCounter` concurrency
   race -- correctly fixed every observed run).
-- **Security review** (8/8).
 - **Long-context retrieval** (10/10, including both distractor tasks --
   model correctly ignores decoy markers even when the decoy's own note
   text points at it).
@@ -156,3 +155,31 @@ shows the same pattern.
   probe and is expected to fail every run -- not tracked here as a
   "finding" since it's the task's designed purpose, see
   `fixtures/mcp-tools/README.md`).
+
+## Fixture robustness gap (not a model finding) -- security-review task 07
+
+After the unified runner (`harness/run_all.py`) was built and re-run
+against the full security-review category, task 07
+(`broken-access-control`) failed on its first re-verification, having
+originally passed 8/8. Investigation:
+
+- The model's fix was substantively correct every time: query the invoice
+  repository by *both* invoice ID and the authenticated user's ID (a
+  textbook ownership check), e.g. "Query the repository using both the
+  invoice ID and the authenticated user's ID" / `findByInvoiceIdAndOwnerId(...)`.
+- `expected.json`'s required-phrase group 2 only recognized a fixed set
+  of phrasings (`"belongs to.*(user|customer)"`, `"owns? the invoice"`,
+  etc.) and didn't anticipate this equally-valid paraphrase describing
+  the *mechanism* (querying by two IDs together) rather than naming the
+  concept ("ownership") directly.
+- **This was a fixture gap, not a model regression** -- broadened the
+  regex group to also match `"invoice.*(and|with).*(user|owner).*id"` /
+  `"(user|owner).*id.*and.*invoice"`, re-verified 8/8 passes cleanly
+  afterward. Kept the check strict (still requires the two-ID-together
+  concept, not just any mention of "invoice" and "id" separately).
+
+This is a useful reminder that regex-recall grading for the
+security-review category may need occasional broadening as new valid
+phrasings are observed across runs -- treat any single-task security-
+review failure as "investigate the actual response first" before
+assuming it's a genuine model quality regression.
