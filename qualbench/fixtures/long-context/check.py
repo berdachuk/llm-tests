@@ -18,6 +18,16 @@ import gen_prompt
 HERE = Path(__file__).parent
 
 
+class TruncatedResponseError(RuntimeError):
+    pass
+
+
+def artifact_snippet(text: str, limit: int = 2000) -> str:
+    if len(text) <= limit:
+        return text
+    return text[:limit] + "... [truncated]"
+
+
 def load_task(task_dir: Path) -> dict:
     return json.loads((task_dir / "task.json").read_text())
 
@@ -46,7 +56,14 @@ def call_model(base_url: str, model: str, prompt: str, timeout: int) -> str:
     )
     resp.raise_for_status()
     data = resp.json()
-    message = data["choices"][0]["message"]
+    choice = data["choices"][0]
+    message = choice["message"]
+    if choice.get("finish_reason") == "length":
+        content = message.get("content") or ""
+        if not content.strip():
+            content = message.get("reasoning_content") or ""
+        snippet = content.strip()[:200]
+        raise TruncatedResponseError(f"truncated: finish_reason=length (content: {snippet!r})")
     content = message.get("content") or ""
     if not content.strip():
         content = message.get("reasoning_content") or ""
@@ -57,23 +74,38 @@ def normalize(line: str) -> str:
     return line.strip().strip('"\'`.,;: ')
 
 
-def run_check(task_dir: Path, base_url: str, model: str, timeout: int) -> tuple[bool, list[str], float]:
+def run_check(task_dir: Path, base_url: str, model: str, timeout: int) -> tuple[bool, list[str], float, dict]:
     task = load_task(task_dir)
     prompt = build_prompt(task)
+    artifact: dict = {
+        "task_id": task_dir.name,
+        "category": "long-context",
+        "expected_marker": task["marker_value"],
+        "target_tokens": task["target_tokens"],
+        "position_pct": task["position_pct"],
+    }
 
     t0 = time.time()
     try:
         response_text = call_model(base_url, model, prompt, timeout)
+    except TruncatedResponseError as e:
+        artifact["error"] = str(e)
+        return False, [str(e)], time.time() - t0, artifact
     except Exception as e:  # noqa: BLE001
-        return False, [f"request failed: {e}"], time.time() - t0
+        msg = f"request failed: {e}"
+        artifact["error"] = msg
+        return False, [msg], time.time() - t0, artifact
     elapsed = time.time() - t0
+    artifact["response_length"] = len(response_text)
+    artifact["response_excerpt"] = artifact_snippet(response_text)
 
     lines = [l for l in response_text.splitlines() if l.strip()]
     first_line = normalize(lines[0]) if lines else ""
     expected = task["marker_value"]
+    artifact["first_line"] = first_line
 
     if first_line == expected:
-        return True, [], elapsed
+        return True, [], elapsed, artifact
 
     # also accept if the exact expected value appears anywhere in the
     # response (slightly more lenient, but still exact-match on the value
@@ -91,8 +123,9 @@ def run_check(task_dir: Path, base_url: str, model: str, timeout: int) -> tuple[
             decoy_hit = d["marker_value"]
     if decoy_hit:
         reasons.append(f"(note: response contains decoy value {decoy_hit!r} instead)")
+        artifact["decoy_hit"] = decoy_hit
 
-    return False, reasons, elapsed
+    return False, reasons, elapsed, artifact
 
 
 def main() -> int:
@@ -103,6 +136,7 @@ def main() -> int:
     parser.add_argument("--model", default="qwen3.6-35b-a3b")
     parser.add_argument("--timeout", type=int, default=600)
     parser.add_argument("--show-response", action="store_true")
+    parser.add_argument("--emit-artifacts", action="store_true")
     args = parser.parse_args()
 
     if args.all:
@@ -115,11 +149,13 @@ def main() -> int:
 
     all_passed = True
     for task_dir in task_dirs:
-        passed, reasons, elapsed = run_check(task_dir, args.url, args.model, args.timeout)
+        passed, reasons, elapsed, artifact = run_check(task_dir, args.url, args.model, args.timeout)
         status = "PASS" if passed else "FAIL"
         print(f"[{status}] {task_dir.name} ({elapsed:.1f}s)")
         for r in reasons:
             print(f"    - {r}")
+        if args.emit_artifacts:
+            print(f"[ARTIFACT] {task_dir.name} {json.dumps(artifact, ensure_ascii=True)}")
         all_passed = all_passed and passed
 
     return 0 if all_passed else 1

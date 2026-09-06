@@ -1,0 +1,1114 @@
+{
+  "tag": "4090-fp8-full",
+  "url": "http://192.168.0.88:8000",
+  "model": "qwen3.6-35b-a3b",
+  "notes": "full run after reboot, freetoken main af71ba4",
+  "selected_categories": [
+    "java-spring",
+    "ts-angular",
+    "sql-migrations",
+    "mcp-tools",
+    "security-review",
+    "long-context"
+  ],
+  "timeout_override_s": null,
+  "runner_python": "3.12.3",
+  "suite_git_commit": "671c3b9a6c730467ca7964ed5b4c4211dd51f906",
+  "suite_git_dirty": true,
+  "preflight": {
+    "checked_at": "2026-09-05T16:17:50.600585+00:00",
+    "models_url": "http://192.168.0.88:8000/v1/models",
+    "requested_model": "qwen3.6-35b-a3b",
+    "requested_model_found": true,
+    "available_model_ids": [
+      "qwen3.6-35b-a3b"
+    ],
+    "selected_model_entry": {
+      "id": "qwen3.6-35b-a3b",
+      "object": "model",
+      "created": 1788625070,
+      "owned_by": "FreeToken",
+      "root": "/mnt/data/berda-models/models/Qwen3.6-35B-A3B-FP8",
+      "max_model_len": 262144,
+      "context_length": 262144,
+      "supported_reasoning_efforts": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "default_reasoning_effort": "medium"
+    }
+  },
+  "started_at": "2026-09-05T16:17:50.609789+00:00",
+  "finished_at": "2026-09-05T16:57:32.741354+00:00",
+  "total_wall_s": 2382.1315422058105,
+  "total_pass": 42,
+  "total_tasks": 50,
+  "categories": [
+    {
+      "category": "java-spring",
+      "n_pass": 8,
+      "n_total": 10,
+      "wall_s": 606.5060997009277,
+      "returncode": 1,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-pagination-calculator",
+          "passed": true,
+          "elapsed_s": 37.0,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-pagination-calculator",
+            "category": "java-spring",
+            "class_name": "PaginationCalculator",
+            "response_length": 650,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\n/**\n * Computes pagination metadata for a result set.\n */\npublic class PaginationCalculator {\n\n    /**\n     * Returns the total number of pages needed to display {@code totalItems}\n     * items at {@code pageSize} items per page. Must round UP (a partial\n     * last page still counts as a full page).\n     */\n    public int totalPages(int totalItems, int pageSize) {\n        if (pageSize <= 0) {\n            throw new IllegalArgumentException(\"pageSize must be positive\");\n        }\n        if (totalItems <= 0) {\n            return 0;\n        }\n        return (totalItems + pageSize - 1) / pageSize;\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\n/**\n * Computes pagination metadata for a result set.\n */\npublic class PaginationCalculator {\n\n    /**\n     * Returns the total number of pages needed to display {@code totalItems}\n     * items at {@code pageSize} items per page. Must round UP (a partial\n     * last page still counts as a full page).\n     */\n    public int totalPages(int totalItems, int pageSize) {\n        if (pageSize <= 0) {\n            throw new IllegalArgumentException(\"pageSize must be positive\");\n        }\n        if (totalItems <= 0) {\n            return 0;\n        }\n        return (totalItems + pageSize - 1) / pageSize;\n    }\n}\n",
+            "candidate_length": 639,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=PaginationCalculatorTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "02-discount-calculator",
+          "passed": false,
+          "elapsed_s": 95.3,
+          "reasons": [
+            "truncated: finish_reason=length (content: 'The user wants me to fix a bug in `DiscountCalculator.java` so that it passes the provided tests.\\nI need to output only the corrected `DiscountCalculator.java` inside a single markdown code block.\\n\\nLe')"
+          ],
+          "artifact": {
+            "task_id": "02-discount-calculator",
+            "category": "java-spring",
+            "class_name": "DiscountCalculator",
+            "error": "truncated: finish_reason=length (content: 'The user wants me to fix a bug in `DiscountCalculator.java` so that it passes the provided tests.\\nI need to output only the corrected `DiscountCalculator.java` inside a single markdown code block.\\n\\nLe')"
+          }
+        },
+        {
+          "id": "03-inventory-counter",
+          "passed": true,
+          "elapsed_s": 64.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-inventory-counter",
+            "category": "java-spring",
+            "class_name": "InventoryCounter",
+            "response_length": 988,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.concurrent.atomic.AtomicInteger;\n\n/**\n * Thread-safe counter tracking available inventory across concurrent\n * reservation attempts.\n */\npublic class InventoryCounter {\n\n    private int available;\n\n    public InventoryCounter(int initialStock) {\n        this.available = initialStock;\n    }\n\n    /**\n     * Attempts to reserve {@code quantity} units. Returns true and\n     * decrements available stock if enough units are available; returns\n     * false (and leaves stock unchanged) otherwise. Must be safe to call\n     * concurrently from many threads without ever allowing available stock\n     * to go negative or losing a reservation that should have succeeded.\n     */\n    public synchronized boolean reserve(int quantity) {\n        if (available >= quantity) {\n            available -= quantity;\n            return true;\n        }\n        return false;\n    }\n\n    public int getAvailable() {\n        return available;\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.concurrent.atomic.AtomicInteger;\n\n/**\n * Thread-safe counter tracking available inventory across concurrent\n * reservation attempts.\n */\npublic class InventoryCounter {\n\n    private int available;\n\n    public InventoryCounter(int initialStock) {\n        this.available = initialStock;\n    }\n\n    /**\n     * Attempts to reserve {@code quantity} units. Returns true and\n     * decrements available stock if enough units are available; returns\n     * false (and leaves stock unchanged) otherwise. Must be safe to call\n     * concurrently from many threads without ever allowing available stock\n     * to go negative or losing a reservation that should have succeeded.\n     */\n    public synchronized boolean reserve(int quantity) {\n        if (available >= quantity) {\n            available -= quantity;\n            return true;\n        }\n        return false;\n    }\n\n    public int getAvailable() {\n        return available;\n    }\n}\n",
+            "candidate_length": 977,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=InventoryCounterTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "04-date-range-overlap",
+          "passed": true,
+          "elapsed_s": 56.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-date-range-overlap",
+            "category": "java-spring",
+            "class_name": "DateRangeOverlap",
+            "response_length": 614,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.time.LocalDate;\n\n/**\n * Checks whether two date ranges (inclusive on both ends) overlap.\n */\npublic class DateRangeOverlap {\n\n    /**\n     * Returns true if [startA, endA] and [startB, endB] share at least one\n     * day in common. Both ranges are inclusive of their start and end\n     * dates. A range that merely touches at a single shared boundary day\n     * counts as overlapping.\n     */\n    public boolean overlaps(LocalDate startA, LocalDate endA, LocalDate startB, LocalDate endB) {\n        return !startA.isAfter(endB) && !startB.isAfter(endA);\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.time.LocalDate;\n\n/**\n * Checks whether two date ranges (inclusive on both ends) overlap.\n */\npublic class DateRangeOverlap {\n\n    /**\n     * Returns true if [startA, endA] and [startB, endB] share at least one\n     * day in common. Both ranges are inclusive of their start and end\n     * dates. A range that merely touches at a single shared boundary day\n     * counts as overlapping.\n     */\n    public boolean overlaps(LocalDate startA, LocalDate endA, LocalDate startB, LocalDate endB) {\n        return !startA.isAfter(endB) && !startB.isAfter(endA);\n    }\n}\n",
+            "candidate_length": 603,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=DateRangeOverlapTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "05-csv-field-parser",
+          "passed": true,
+          "elapsed_s": 49.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-csv-field-parser",
+            "category": "java-spring",
+            "class_name": "CsvFieldParser",
+            "response_length": 1138,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.ArrayList;\nimport java.util.List;\n\n/**\n * Splits a single line of naive CSV into fields, respecting double-quoted\n * fields that may themselves contain commas.\n */\npublic class CsvFieldParser {\n\n    /**\n     * Splits {@code line} on commas, except commas that appear inside a\n     * double-quoted field (e.g. {@code a,\"b,c\",d} -> [\"a\", \"b,c\", \"d\"]).\n     * Surrounding quotes on a quoted field are stripped from the result.\n     */\n    public List<String> parseLine(String line) {\n        List<String> fields = new ArrayList<>();\n        StringBuilder currentField = new StringBuilder();\n        boolean inQuotes = false;\n\n        for (int i = 0; i < line.length(); i++) {\n            char c = line.charAt(i);\n            if (c == '\"') {\n                inQuotes = !inQuotes;\n            } else if (c == ',' && !inQuotes) {\n                fields.add(currentField.toString());\n                currentField.setLength(0);\n            } else {\n                currentField.append(c);\n            }\n        }\n        fields.add(currentField.toString());\n        return fields;\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.ArrayList;\nimport java.util.List;\n\n/**\n * Splits a single line of naive CSV into fields, respecting double-quoted\n * fields that may themselves contain commas.\n */\npublic class CsvFieldParser {\n\n    /**\n     * Splits {@code line} on commas, except commas that appear inside a\n     * double-quoted field (e.g. {@code a,\"b,c\",d} -> [\"a\", \"b,c\", \"d\"]).\n     * Surrounding quotes on a quoted field are stripped from the result.\n     */\n    public List<String> parseLine(String line) {\n        List<String> fields = new ArrayList<>();\n        StringBuilder currentField = new StringBuilder();\n        boolean inQuotes = false;\n\n        for (int i = 0; i < line.length(); i++) {\n            char c = line.charAt(i);\n            if (c == '\"') {\n                inQuotes = !inQuotes;\n            } else if (c == ',' && !inQuotes) {\n                fields.add(currentField.toString());\n                currentField.setLength(0);\n            } else {\n                currentField.append(c);\n            }\n        }\n        fields.add(currentField.toString());\n        return fields;\n    }\n}\n",
+            "candidate_length": 1127,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=CsvFieldParserTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "06-moving-average",
+          "passed": true,
+          "elapsed_s": 47.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-moving-average",
+            "category": "java-spring",
+            "class_name": "MovingAverage",
+            "response_length": 1025,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.ArrayDeque;\nimport java.util.Deque;\n\n/**\n * Maintains a simple moving average over the last {@code windowSize}\n * values added.\n */\npublic class MovingAverage {\n\n    private final int windowSize;\n    private final Deque<Double> window = new ArrayDeque<>();\n    private double sum = 0.0;\n\n    public MovingAverage(int windowSize) {\n        if (windowSize <= 0) {\n            throw new IllegalArgumentException(\"windowSize must be positive\");\n        }\n        this.windowSize = windowSize;\n    }\n\n    /**\n     * Adds a new value, evicting the oldest value once the window exceeds\n     * {@code windowSize} entries, and returns the current average over the\n     * values currently in the window.\n     */\n    public double add(double value) {\n        window.addLast(value);\n        sum += value;\n        if (window.size() > windowSize) {\n            double removed = window.removeFirst();\n            sum -= removed;\n        }\n        return sum / window.size();\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.ArrayDeque;\nimport java.util.Deque;\n\n/**\n * Maintains a simple moving average over the last {@code windowSize}\n * values added.\n */\npublic class MovingAverage {\n\n    private final int windowSize;\n    private final Deque<Double> window = new ArrayDeque<>();\n    private double sum = 0.0;\n\n    public MovingAverage(int windowSize) {\n        if (windowSize <= 0) {\n            throw new IllegalArgumentException(\"windowSize must be positive\");\n        }\n        this.windowSize = windowSize;\n    }\n\n    /**\n     * Adds a new value, evicting the oldest value once the window exceeds\n     * {@code windowSize} entries, and returns the current average over the\n     * values currently in the window.\n     */\n    public double add(double value) {\n        window.addLast(value);\n        sum += value;\n        if (window.size() > windowSize) {\n            double removed = window.removeFirst();\n            sum -= removed;\n        }\n        return sum / window.size();\n    }\n}\n",
+            "candidate_length": 1014,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=MovingAverageTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "07-money",
+          "passed": false,
+          "elapsed_s": 88.6,
+          "reasons": [
+            "truncated: finish_reason=length (content: 'The user wants me to fix a bug in `Money.java` so that it passes the provided tests.\\nThe tests check:\\n1. `equals` works correctly for amounts with different scales (e.g., 2.50 vs 2.5).\\n2. `hashCode` i')"
+          ],
+          "artifact": {
+            "task_id": "07-money",
+            "category": "java-spring",
+            "class_name": "Money",
+            "error": "truncated: finish_reason=length (content: 'The user wants me to fix a bug in `Money.java` so that it passes the provided tests.\\nThe tests check:\\n1. `equals` works correctly for amounts with different scales (e.g., 2.50 vs 2.5).\\n2. `hashCode` i')"
+          }
+        },
+        {
+          "id": "08-retrying-operation",
+          "passed": true,
+          "elapsed_s": 59.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-retrying-operation",
+            "category": "java-spring",
+            "class_name": "RetryingOperation",
+            "response_length": 1248,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.concurrent.Callable;\n\n/**\n * Retries a flaky operation up to a fixed number of times, re-throwing the\n * last failure if every attempt fails.\n */\npublic class RetryingOperation {\n\n    /**\n     * Calls {@code operation} up to {@code maxAttempts} times. Returns the\n     * first successful result. If every attempt throws, re-throws the\n     * exception from the LAST attempt (not the first), wrapped in a\n     * RuntimeException if it isn't one already.\n     */\n    public <T> T runWithRetry(Callable<T> operation, int maxAttempts) {\n        if (maxAttempts <= 0) {\n            throw new IllegalArgumentException(\"maxAttempts must be positive\");\n        }\n        Exception lastFailure = null;\n        for (int attempt = 1; attempt <= maxAttempts; attempt++) {\n            try {\n                return operation.call();\n            } catch (Exception e) {\n                lastFailure = e;\n            }\n        }\n        if (lastFailure != null) {\n            if (lastFailure instanceof RuntimeException) {\n                throw (RuntimeException) lastFailure;\n            } else {\n                throw new RuntimeException(lastFailure);\n            }\n        }\n        return null;\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.concurrent.Callable;\n\n/**\n * Retries a flaky operation up to a fixed number of times, re-throwing the\n * last failure if every attempt fails.\n */\npublic class RetryingOperation {\n\n    /**\n     * Calls {@code operation} up to {@code maxAttempts} times. Returns the\n     * first successful result. If every attempt throws, re-throws the\n     * exception from the LAST attempt (not the first), wrapped in a\n     * RuntimeException if it isn't one already.\n     */\n    public <T> T runWithRetry(Callable<T> operation, int maxAttempts) {\n        if (maxAttempts <= 0) {\n            throw new IllegalArgumentException(\"maxAttempts must be positive\");\n        }\n        Exception lastFailure = null;\n        for (int attempt = 1; attempt <= maxAttempts; attempt++) {\n            try {\n                return operation.call();\n            } catch (Exception e) {\n                lastFailure = e;\n            }\n        }\n        if (lastFailure != null) {\n            if (lastFailure instanceof RuntimeException) {\n                throw (RuntimeException) lastFailure;\n            } else {\n                throw new RuntimeException(lastFailure);\n            }\n        }\n        return null;\n    }\n}\n",
+            "candidate_length": 1237,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=RetryingOperationTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "09-request-id-generator",
+          "passed": true,
+          "elapsed_s": 65.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "09-request-id-generator",
+            "category": "java-spring",
+            "class_name": "RequestIdGenerator",
+            "response_length": 466,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport org.springframework.stereotype.Component;\n\n@Component\npublic class RequestIdGenerator {\n\n    private final ThreadLocal<String> currentUserId = new ThreadLocal<>();\n    private int sequence = 0;\n\n    public void startRequest(String userId) {\n        currentUserId.set(userId);\n    }\n\n    public synchronized String generateId() {\n        sequence++;\n        return \"REQ-\" + currentUserId.get() + \"-\" + sequence;\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport org.springframework.stereotype.Component;\n\n@Component\npublic class RequestIdGenerator {\n\n    private final ThreadLocal<String> currentUserId = new ThreadLocal<>();\n    private int sequence = 0;\n\n    public void startRequest(String userId) {\n        currentUserId.set(userId);\n    }\n\n    public synchronized String generateId() {\n        sequence++;\n        return \"REQ-\" + currentUserId.get() + \"-\" + sequence;\n    }\n}\n",
+            "candidate_length": 455,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=RequestIdGeneratorTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "10-lru-cache",
+          "passed": true,
+          "elapsed_s": 42.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "10-lru-cache",
+            "category": "java-spring",
+            "class_name": "LruCache",
+            "response_length": 1152,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.LinkedHashMap;\nimport java.util.Map;\n\n/**\n * A fixed-capacity cache that evicts the Least Recently Used entry when\n * full. \"Recently used\" must be updated on both writes (put) AND reads\n * (get) -- reading an entry counts as using it, so it should not be the\n * next one evicted.\n */\npublic class LruCache<K, V> {\n\n    private final int capacity;\n    private final Map<K, V> map;\n\n    public LruCache(int capacity) {\n        if (capacity <= 0) {\n            throw new IllegalArgumentException(\"capacity must be positive\");\n        }\n        this.capacity = capacity;\n        this.map = new LinkedHashMap<>(capacity, 0.75f, true) {\n            @Override\n            protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {\n                return size() > LruCache.this.capacity;\n            }\n        };\n    }\n\n    public void put(K key, V value) {\n        map.put(key, value);\n    }\n\n    public V get(K key) {\n        return map.get(key);\n    }\n\n    public boolean containsKey(K key) {\n        return map.containsKey(key);\n    }\n\n    public int size() {\n        return map.size();\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.LinkedHashMap;\nimport java.util.Map;\n\n/**\n * A fixed-capacity cache that evicts the Least Recently Used entry when\n * full. \"Recently used\" must be updated on both writes (put) AND reads\n * (get) -- reading an entry counts as using it, so it should not be the\n * next one evicted.\n */\npublic class LruCache<K, V> {\n\n    private final int capacity;\n    private final Map<K, V> map;\n\n    public LruCache(int capacity) {\n        if (capacity <= 0) {\n            throw new IllegalArgumentException(\"capacity must be positive\");\n        }\n        this.capacity = capacity;\n        this.map = new LinkedHashMap<>(capacity, 0.75f, true) {\n            @Override\n            protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {\n                return size() > LruCache.this.capacity;\n            }\n        };\n    }\n\n    public void put(K key, V value) {\n        map.put(key, value);\n    }\n\n    public V get(K key) {\n        return map.get(key);\n    }\n\n    public boolean containsKey(K key) {\n        return map.containsKey(key);\n    }\n\n    public int size() {\n        return map.size();\n    }\n}\n",
+            "candidate_length": 1141,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=LruCacheTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        }
+      ],
+      "artifact_count": 10,
+      "logs": []
+    },
+    {
+      "category": "ts-angular",
+      "n_pass": 8,
+      "n_total": 8,
+      "wall_s": 395.43669033050537,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-price-formatter",
+          "passed": true,
+          "elapsed_s": 32.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-price-formatter",
+            "category": "ts-angular",
+            "file_name": "price-formatter.ts",
+            "spec_name": "price-formatter.spec.ts",
+            "response_length": 339,
+            "response_excerpt": "```ts\n/**\n * Formats a price in cents (integer) as a currency string, e.g.\n * formatPrice(1050) -> \"$10.50\", formatPrice(5) -> \"$0.05\".\n */\nexport function formatPrice(cents: number): string {\n  const dollars = Math.floor(cents / 100);\n  const remainder = cents % 100;\n  return `$${dollars}.${remainder.toString().padStart(2, '0')}`;\n}\n```",
+            "candidate_ts": "/**\n * Formats a price in cents (integer) as a currency string, e.g.\n * formatPrice(1050) -> \"$10.50\", formatPrice(5) -> \"$0.05\".\n */\nexport function formatPrice(cents: number): string {\n  const dollars = Math.floor(cents / 100);\n  const remainder = cents % 100;\n  return `$${dollars}.${remainder.toString().padStart(2, '0')}`;\n}\n",
+            "candidate_length": 330,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/price-formatter.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "02-search-service",
+          "passed": true,
+          "elapsed_s": 61.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-search-service",
+            "category": "ts-angular",
+            "file_name": "search.service.ts",
+            "spec_name": "search.service.spec.ts",
+            "response_length": 1531,
+            "response_excerpt": "```ts\nimport { Injectable } from '@angular/core';\nimport { Observable, Subject } from 'rxjs';\nimport { map, switchMap } from 'rxjs/operators';\n\n/**\n * A minimal \"search as you type\" service: emits the latest search results\n * for the most recently issued query term, discarding results from any\n * earlier, now-superseded queries (a classic race condition when a slow\n * earlier request resolves AFTER a fast later request).\n */\n@Injectable({ providedIn: 'root' })\nexport class SearchService {\n  private readonly queries = new Subject<string>();\n\n  /** Simulates a backend call whose latency depends on the query string. */\n  search(term: string): Observable<string[]> {\n    return new Observable<string[]>((subscriber) => {\n      const delayMs = term.length * 10;\n      const timer = setTimeout(() => {\n        subscriber.next([`${term}-result-1`, `${term}-result-2`]);\n        subscriber.complete();\n      }, delayMs);\n      return () => clearTimeout(timer);\n    });\n  }\n\n  /** Call this whenever the user types a new query term. */\n  setQuery(term: string): void {\n    this.queries.next(term);\n  }\n\n  /**\n   * Stream of results for the LATEST issued query only. If an older query\n   * is still in flight when a newer one is issued, the older query's\n   * results must never be emitted here -- only the newest query's results\n   * should ever reach subscribers.\n   */\n  results(): Observable<string[]> {\n    return this.queries.pipe(\n      switchMap((term) => this.search(term)),\n      map((results) => results),\n    );\n  }\n}\n```",
+            "candidate_ts": "import { Injectable } from '@angular/core';\nimport { Observable, Subject } from 'rxjs';\nimport { map, switchMap } from 'rxjs/operators';\n\n/**\n * A minimal \"search as you type\" service: emits the latest search results\n * for the most recently issued query term, discarding results from any\n * earlier, now-superseded queries (a classic race condition when a slow\n * earlier request resolves AFTER a fast later request).\n */\n@Injectable({ providedIn: 'root' })\nexport class SearchService {\n  private readonly queries = new Subject<string>();\n\n  /** Simulates a backend call whose latency depends on the query string. */\n  search(term: string): Observable<string[]> {\n    return new Observable<string[]>((subscriber) => {\n      const delayMs = term.length * 10;\n      const timer = setTimeout(() => {\n        subscriber.next([`${term}-result-1`, `${term}-result-2`]);\n        subscriber.complete();\n      }, delayMs);\n      return () => clearTimeout(timer);\n    });\n  }\n\n  /** Call this whenever the user types a new query term. */\n  setQuery(term: string): void {\n    this.queries.next(term);\n  }\n\n  /**\n   * Stream of results for the LATEST issued query only. If an older query\n   * is still in flight when a newer one is issued, the older query's\n   * results must never be emitted here -- only the newest query's results\n   * should ever reach subscribers.\n   */\n  results(): Observable<string[]> {\n    return this.queries.pipe(\n      switchMap((term) => this.search(term)),\n      map((results) => results),\n    );\n  }\n}\n",
+            "candidate_length": 1522,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/search.service.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "03-shopping-cart",
+          "passed": true,
+          "elapsed_s": 118.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-shopping-cart",
+            "category": "ts-angular",
+            "file_name": "shopping-cart.ts",
+            "spec_name": "shopping-cart.spec.ts",
+            "response_length": 814,
+            "response_excerpt": "```ts\nimport { Injectable, computed, signal } from '@angular/core';\n\nexport interface CartItem {\n  id: string;\n  price: number; // in cents\n  quantity: number;\n}\n\n/**\n * Signal-based shopping cart. `total` must always reflect the current sum\n * of price * quantity across all items, recomputed reactively whenever\n * items change.\n */\n@Injectable({ providedIn: 'root' })\nexport class ShoppingCart {\n  private readonly _items = signal<CartItem[]>([]);\n  readonly items = this._items.asReadonly();\n\n  get total(): number {\n    return this._items().reduce((sum, item) => sum + item.price * item.quantity, 0);\n  }\n\n  addItem(item: CartItem): void {\n    this._items.update((items) => [...items, item]);\n  }\n\n  removeItem(id: string): void {\n    this._items.update((items) => items.filter((i) => i.id !== id));\n  }\n}\n```",
+            "candidate_ts": "import { Injectable, computed, signal } from '@angular/core';\n\nexport interface CartItem {\n  id: string;\n  price: number; // in cents\n  quantity: number;\n}\n\n/**\n * Signal-based shopping cart. `total` must always reflect the current sum\n * of price * quantity across all items, recomputed reactively whenever\n * items change.\n */\n@Injectable({ providedIn: 'root' })\nexport class ShoppingCart {\n  private readonly _items = signal<CartItem[]>([]);\n  readonly items = this._items.asReadonly();\n\n  get total(): number {\n    return this._items().reduce((sum, item) => sum + item.price * item.quantity, 0);\n  }\n\n  addItem(item: CartItem): void {\n    this._items.update((items) => [...items, item]);\n  }\n\n  removeItem(id: string): void {\n    this._items.update((items) => items.filter((i) => i.id !== id));\n  }\n}\n",
+            "candidate_length": 805,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/shopping-cart.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "04-password-match-validator",
+          "passed": true,
+          "elapsed_s": 41.5,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-password-match-validator",
+            "category": "ts-angular",
+            "file_name": "password-match.validator.ts",
+            "spec_name": "password-match.validator.spec.ts",
+            "response_length": 1078,
+            "response_excerpt": "```ts\nimport { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';\n\n/**\n * A cross-field validator to be applied at the FormGroup level, checking\n * that the 'password' and 'confirmPassword' controls have matching\n * values. Should set a `passwordMismatch` error on the confirmPassword\n * control when they differ, and clear it when they match.\n */\nexport function passwordMatchValidator(): ValidatorFn {\n  return (group: AbstractControl): ValidationErrors | null => {\n    const password = group.get('password');\n    const confirmPassword = group.get('confirmPassword');\n    if (!password || !confirmPassword) {\n      return null;\n    }\n\n    if (password.value !== confirmPassword.value) {\n      confirmPassword.setErrors({ passwordMismatch: true });\n      return { passwordMismatch: true };\n    }\n\n    if (confirmPassword.hasError('passwordMismatch')) {\n      const errors = { ...confirmPassword.errors };\n      delete errors['passwordMismatch'];\n      confirmPassword.setErrors(Object.keys(errors).length ? errors : null);\n    }\n    return null;\n  };\n}\n```",
+            "candidate_ts": "import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';\n\n/**\n * A cross-field validator to be applied at the FormGroup level, checking\n * that the 'password' and 'confirmPassword' controls have matching\n * values. Should set a `passwordMismatch` error on the confirmPassword\n * control when they differ, and clear it when they match.\n */\nexport function passwordMatchValidator(): ValidatorFn {\n  return (group: AbstractControl): ValidationErrors | null => {\n    const password = group.get('password');\n    const confirmPassword = group.get('confirmPassword');\n    if (!password || !confirmPassword) {\n      return null;\n    }\n\n    if (password.value !== confirmPassword.value) {\n      confirmPassword.setErrors({ passwordMismatch: true });\n      return { passwordMismatch: true };\n    }\n\n    if (confirmPassword.hasError('passwordMismatch')) {\n      const errors = { ...confirmPassword.errors };\n      delete errors['passwordMismatch'];\n      confirmPassword.setErrors(Object.keys(errors).length ? errors : null);\n    }\n    return null;\n  };\n}\n",
+            "candidate_length": 1069,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/password-match.validator.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "05-ticker-component",
+          "passed": true,
+          "elapsed_s": 22.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-ticker-component",
+            "category": "ts-angular",
+            "file_name": "ticker.component.ts",
+            "spec_name": "ticker.component.spec.ts",
+            "response_length": 917,
+            "response_excerpt": "```ts\nimport { Component, OnDestroy, OnInit, signal } from '@angular/core';\nimport { Subscription, interval } from 'rxjs';\n\n/**\n * Displays a tick counter that increments once per second while the\n * component is alive. The subscription to the ticking interval MUST be\n * torn down when the component is destroyed -- otherwise the interval\n * keeps firing and updating state forever, leaking memory/CPU for every\n * instance ever created (a very common Angular component bug).\n */\n@Component({\n  selector: 'app-ticker',\n  standalone: true,\n  template: `<span>{{ count() }}</span>`,\n})\nexport class TickerComponent implements OnInit, OnDestroy {\n  readonly count = signal(0);\n\n  private subscription?: Subscription;\n\n  ngOnInit(): void {\n    this.subscription = interval(1000).subscribe(() => {\n      this.count.update((c) => c + 1);\n    });\n  }\n\n  ngOnDestroy(): void {\n    this.subscription?.unsubscribe();\n  }\n}\n```",
+            "candidate_ts": "import { Component, OnDestroy, OnInit, signal } from '@angular/core';\nimport { Subscription, interval } from 'rxjs';\n\n/**\n * Displays a tick counter that increments once per second while the\n * component is alive. The subscription to the ticking interval MUST be\n * torn down when the component is destroyed -- otherwise the interval\n * keeps firing and updating state forever, leaking memory/CPU for every\n * instance ever created (a very common Angular component bug).\n */\n@Component({\n  selector: 'app-ticker',\n  standalone: true,\n  template: `<span>{{ count() }}</span>`,\n})\nexport class TickerComponent implements OnInit, OnDestroy {\n  readonly count = signal(0);\n\n  private subscription?: Subscription;\n\n  ngOnInit(): void {\n    this.subscription = interval(1000).subscribe(() => {\n      this.count.update((c) => c + 1);\n    });\n  }\n\n  ngOnDestroy(): void {\n    this.subscription?.unsubscribe();\n  }\n}\n",
+            "candidate_length": 908,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/ticker.component.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "06-todo-list-component",
+          "passed": true,
+          "elapsed_s": 45.0,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-todo-list-component",
+            "category": "ts-angular",
+            "file_name": "todo-list.component.ts",
+            "spec_name": "todo-list.component.spec.ts",
+            "response_length": 1241,
+            "response_excerpt": "```ts\nimport { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';\n\nexport interface Todo {\n  id: number;\n  text: string;\n  done: boolean;\n}\n\n/**\n * An OnPush component that displays a list of todos and lets the parent\n * toggle one via `toggle`. Because it runs OnPush, Angular only checks\n * this component for changes when one of its @Input() REFERENCES changes\n * (or a signal/event fires) -- mutating the existing array/object in\n * place is not enough to trigger a re-render from a parent's perspective,\n * and (worse here) corrupts the parent's original array unexpectedly.\n */\n@Component({\n  selector: 'app-todo-list',\n  standalone: true,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    @for (todo of todos; track todo.id) {\n      <label>\n        <input type=\"checkbox\" [checked]=\"todo.done\" (change)=\"onToggle(todo.id)\" />\n        {{ todo.text }}\n      </label>\n    }\n  `,\n})\nexport class TodoListComponent {\n  @Input() todos: Todo[] = [];\n  @Output() toggle = new EventEmitter<Todo[]>();\n\n  onToggle(id: number): void {\n    const newTodos = this.todos.map((todo) =>\n      todo.id === id ? { ...todo, done: !todo.done } : todo\n    );\n    this.toggle.emit(newTodos);\n  }\n}\n```",
+            "candidate_ts": "import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';\n\nexport interface Todo {\n  id: number;\n  text: string;\n  done: boolean;\n}\n\n/**\n * An OnPush component that displays a list of todos and lets the parent\n * toggle one via `toggle`. Because it runs OnPush, Angular only checks\n * this component for changes when one of its @Input() REFERENCES changes\n * (or a signal/event fires) -- mutating the existing array/object in\n * place is not enough to trigger a re-render from a parent's perspective,\n * and (worse here) corrupts the parent's original array unexpectedly.\n */\n@Component({\n  selector: 'app-todo-list',\n  standalone: true,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    @for (todo of todos; track todo.id) {\n      <label>\n        <input type=\"checkbox\" [checked]=\"todo.done\" (change)=\"onToggle(todo.id)\" />\n        {{ todo.text }}\n      </label>\n    }\n  `,\n})\nexport class TodoListComponent {\n  @Input() todos: Todo[] = [];\n  @Output() toggle = new EventEmitter<Todo[]>();\n\n  onToggle(id: number): void {\n    const newTodos = this.todos.map((todo) =>\n      todo.id === id ? { ...todo, done: !todo.done } : todo\n    );\n    this.toggle.emit(newTodos);\n  }\n}\n",
+            "candidate_length": 1232,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/todo-list.component.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "07-counter-display-component",
+          "passed": true,
+          "elapsed_s": 38.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-counter-display-component",
+            "category": "ts-angular",
+            "file_name": "counter-display.component.ts",
+            "spec_name": "counter-display.component.spec.ts",
+            "response_length": 611,
+            "response_excerpt": "```ts\nimport { Component } from '@angular/core';\nimport { CounterService } from './counter.service';\n\n/**\n * Displays and increments the shared app-wide counter. Every instance of\n * this component (e.g. two siblings on the same page) must read/write the\n * SAME underlying counter, since CounterService is `providedIn: 'root'`.\n */\n@Component({\n  selector: 'app-counter-display',\n  standalone: true,\n  template: `\n    <button (click)=\"counter.increment()\">+1</button>\n    <span>{{ counter.count() }}</span>\n  `,\n})\nexport class CounterDisplayComponent {\n  constructor(readonly counter: CounterService) {}\n}\n```",
+            "candidate_ts": "import { Component } from '@angular/core';\nimport { CounterService } from './counter.service';\n\n/**\n * Displays and increments the shared app-wide counter. Every instance of\n * this component (e.g. two siblings on the same page) must read/write the\n * SAME underlying counter, since CounterService is `providedIn: 'root'`.\n */\n@Component({\n  selector: 'app-counter-display',\n  standalone: true,\n  template: `\n    <button (click)=\"counter.increment()\">+1</button>\n    <span>{{ counter.count() }}</span>\n  `,\n})\nexport class CounterDisplayComponent {\n  constructor(readonly counter: CounterService) {}\n}\n",
+            "candidate_length": 602,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/counter-display.component.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "08-batch-processor",
+          "passed": true,
+          "elapsed_s": 35.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-batch-processor",
+            "category": "ts-angular",
+            "file_name": "batch-processor.ts",
+            "spec_name": "batch-processor.spec.ts",
+            "response_length": 594,
+            "response_excerpt": "```ts\n/**\n * Processes a list of items one at a time by calling an async\n * `processOne` function for each, collecting all results in the same\n * order as the input. If any item fails, the whole batch should fail\n * (reject) with that error -- partial/incomplete results must never be\n * returned as if the batch succeeded.\n */\nexport async function processBatch<T, R>(\n  items: T[],\n  processOne: (item: T) => Promise<R>,\n): Promise<R[]> {\n  const results: R[] = [];\n  for (const item of items) {\n    const result = await processOne(item);\n    results.push(result);\n  }\n  return results;\n}\n```",
+            "candidate_ts": "/**\n * Processes a list of items one at a time by calling an async\n * `processOne` function for each, collecting all results in the same\n * order as the input. If any item fails, the whole batch should fail\n * (reject) with that error -- partial/incomplete results must never be\n * returned as if the batch succeeded.\n */\nexport async function processBatch<T, R>(\n  items: T[],\n  processOne: (item: T) => Promise<R>,\n): Promise<R[]> {\n  const results: R[] = [];\n  for (const item of items) {\n    const result = await processOne(item);\n    results.push(result);\n  }\n  return results;\n}\n",
+            "candidate_length": 585,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/batch-processor.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        }
+      ],
+      "artifact_count": 8,
+      "logs": []
+    },
+    {
+      "category": "sql-migrations",
+      "n_pass": 0,
+      "n_total": 6,
+      "wall_s": 380.6883261203766,
+      "returncode": 1,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-add-column-not-null",
+          "passed": false,
+          "elapsed_s": 47.1,
+          "reasons": [
+            "verify.sh failed (exit 1):",
+            "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/01-add-column-not-null =="
+          ],
+          "artifact": {
+            "task_id": "01-add-column-not-null",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/01-add-column-not-null",
+            "response_length": 89,
+            "response_excerpt": "```sql\nALTER TABLE orders ADD COLUMN shipping_status TEXT NOT NULL DEFAULT 'pending';\n```",
+            "candidate_sql": "ALTER TABLE orders ADD COLUMN shipping_status TEXT NOT NULL DEFAULT 'pending';\n",
+            "candidate_length": 79,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/01-add-column-not-null",
+                "up.candidate.sql"
+              ],
+              "returncode": 1,
+              "output_tail": "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/01-add-column-not-null ==\n== Migration file: up.candidate.sql ==\nFAIL: could not create scratch database\npsql: error: connection to server at \"127.0.0.1\", port 15432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?"
+            }
+          }
+        },
+        {
+          "id": "02-unique-constraint-dupes",
+          "passed": false,
+          "elapsed_s": 78.6,
+          "reasons": [
+            "verify.sh failed (exit 1):",
+            "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes =="
+          ],
+          "artifact": {
+            "task_id": "02-unique-constraint-dupes",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes",
+            "response_length": 168,
+            "response_excerpt": "```sql\nUPDATE users SET email = 'alice+3@example.com' WHERE id = 3 AND email = 'alice@example.com';\nALTER TABLE users ADD CONSTRAINT users_email_key UNIQUE (email);\n```",
+            "candidate_sql": "UPDATE users SET email = 'alice+3@example.com' WHERE id = 3 AND email = 'alice@example.com';\nALTER TABLE users ADD CONSTRAINT users_email_key UNIQUE (email);\n",
+            "candidate_length": 158,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes",
+                "up.candidate.sql"
+              ],
+              "returncode": 1,
+              "output_tail": "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes ==\n== Migration file: up.candidate.sql ==\nFAIL: could not create scratch database\npsql: error: connection to server at \"127.0.0.1\", port 15432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?"
+            }
+          }
+        },
+        {
+          "id": "03-rename-column-view",
+          "passed": false,
+          "elapsed_s": 72.8,
+          "reasons": [
+            "verify.sh failed (exit 1):",
+            "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view =="
+          ],
+          "artifact": {
+            "task_id": "03-rename-column-view",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view",
+            "response_length": 360,
+            "response_excerpt": "```sql\nDROP VIEW IF EXISTS low_stock_products;\nALTER TABLE products ADD COLUMN IF NOT EXISTS quantity_in_stock INTEGER NOT NULL DEFAULT 0;\nUPDATE products SET quantity_in_stock = qty;\nALTER TABLE products DROP COLUMN IF EXISTS qty;\nCREATE VIEW low_stock_products AS\n    SELECT id, name, quantity_in_stock\n    FROM products\n    WHERE quantity_in_stock < 10;\n```",
+            "candidate_sql": "DROP VIEW IF EXISTS low_stock_products;\nALTER TABLE products ADD COLUMN IF NOT EXISTS quantity_in_stock INTEGER NOT NULL DEFAULT 0;\nUPDATE products SET quantity_in_stock = qty;\nALTER TABLE products DROP COLUMN IF EXISTS qty;\nCREATE VIEW low_stock_products AS\n    SELECT id, name, quantity_in_stock\n    FROM products\n    WHERE quantity_in_stock < 10;\n",
+            "candidate_length": 350,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view",
+                "up.candidate.sql"
+              ],
+              "returncode": 1,
+              "output_tail": "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view ==\n== Migration file: up.candidate.sql ==\nFAIL: could not create scratch database\npsql: error: connection to server at \"127.0.0.1\", port 15432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?"
+            }
+          }
+        },
+        {
+          "id": "04-non-idempotent-migration",
+          "passed": false,
+          "elapsed_s": 79.9,
+          "reasons": [
+            "truncated: finish_reason=length (content: 'The user wants me to fix a bug in a PostgreSQL migration script.\\nThe existing schema has an `accounts` table with `id` and `name`.\\nThe pending migration adds a column `is_active` to `accounts`, create')"
+          ],
+          "artifact": {
+            "task_id": "04-non-idempotent-migration",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/04-non-idempotent-migration",
+            "error": "truncated: finish_reason=length (content: 'The user wants me to fix a bug in a PostgreSQL migration script.\\nThe existing schema has an `accounts` table with `id` and `name`.\\nThe pending migration adds a column `is_active` to `accounts`, create')"
+          }
+        },
+        {
+          "id": "05-fk-missing-unique-target",
+          "passed": false,
+          "elapsed_s": 58.9,
+          "reasons": [
+            "verify.sh failed (exit 1):",
+            "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/05-fk-missing-unique-target =="
+          ],
+          "artifact": {
+            "task_id": "05-fk-missing-unique-target",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/05-fk-missing-unique-target",
+            "response_length": 274,
+            "response_excerpt": "```sql\nALTER TABLE warehouses ADD CONSTRAINT warehouses_code_unique UNIQUE (code);\n\nALTER TABLE shipments ADD COLUMN warehouse_code TEXT;\n\nALTER TABLE shipments\n    ADD CONSTRAINT fk_shipments_warehouse_code\n    FOREIGN KEY (warehouse_code) REFERENCES warehouses (code);\n```",
+            "candidate_sql": "ALTER TABLE warehouses ADD CONSTRAINT warehouses_code_unique UNIQUE (code);\n\nALTER TABLE shipments ADD COLUMN warehouse_code TEXT;\n\nALTER TABLE shipments\n    ADD CONSTRAINT fk_shipments_warehouse_code\n    FOREIGN KEY (warehouse_code) REFERENCES warehouses (code);\n",
+            "candidate_length": 264,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/05-fk-missing-unique-target",
+                "up.candidate.sql"
+              ],
+              "returncode": 1,
+              "output_tail": "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/05-fk-missing-unique-target ==\n== Migration file: up.candidate.sql ==\nFAIL: could not create scratch database\npsql: error: connection to server at \"127.0.0.1\", port 15432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?"
+            }
+          }
+        },
+        {
+          "id": "06-bad-backfill-update",
+          "passed": false,
+          "elapsed_s": 43.2,
+          "reasons": [
+            "verify.sh failed (exit 1):",
+            "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/06-bad-backfill-update =="
+          ],
+          "artifact": {
+            "task_id": "06-bad-backfill-update",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/06-bad-backfill-update",
+            "response_length": 119,
+            "response_excerpt": "```sql\nUPDATE orders\nSET discount_percent = dc.percent\nFROM discount_codes dc\nWHERE orders.discount_code = dc.code;\n```",
+            "candidate_sql": "UPDATE orders\nSET discount_percent = dc.percent\nFROM discount_codes dc\nWHERE orders.discount_code = dc.code;\n",
+            "candidate_length": 109,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/06-bad-backfill-update",
+                "up.candidate.sql"
+              ],
+              "returncode": 1,
+              "output_tail": "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/06-bad-backfill-update ==\n== Migration file: up.candidate.sql ==\nFAIL: could not create scratch database\npsql: error: connection to server at \"127.0.0.1\", port 15432 failed: Connection refused\n\tIs the server running on that host and accepting TCP/IP connections?"
+            }
+          }
+        }
+      ],
+      "artifact_count": 6,
+      "logs": [
+        "== Migration file: up.candidate.sql ==",
+        "FAIL: could not create scratch database",
+        "psql: error: connection to server at \"127.0.0.1\", port 15432 failed: Connection refused",
+        "\tIs the server running on that host and accepting TCP/IP connections?",
+        "== Migration file: up.candidate.sql ==",
+        "FAIL: could not create scratch database",
+        "psql: error: connection to server at \"127.0.0.1\", port 15432 failed: Connection refused",
+        "\tIs the server running on that host and accepting TCP/IP connections?",
+        "== Migration file: up.candidate.sql ==",
+        "FAIL: could not create scratch database",
+        "psql: error: connection to server at \"127.0.0.1\", port 15432 failed: Connection refused",
+        "\tIs the server running on that host and accepting TCP/IP connections?",
+        "== Migration file: up.candidate.sql ==",
+        "FAIL: could not create scratch database",
+        "psql: error: connection to server at \"127.0.0.1\", port 15432 failed: Connection refused",
+        "\tIs the server running on that host and accepting TCP/IP connections?",
+        "== Migration file: up.candidate.sql ==",
+        "FAIL: could not create scratch database",
+        "psql: error: connection to server at \"127.0.0.1\", port 15432 failed: Connection refused",
+        "\tIs the server running on that host and accepting TCP/IP connections?"
+      ]
+    },
+    {
+      "category": "mcp-tools",
+      "n_pass": 8,
+      "n_total": 8,
+      "wall_s": 46.73089861869812,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-single-tool-required-args",
+          "passed": true,
+          "elapsed_s": 5.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-single-tool-required-args",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "get_weather"
+            ],
+            "response_excerpt": "The user wants to know the weather in Tokyo and requested the temperature in Fahrenheit.\nI have a tool `get_weather` that takes `city` and `unit` as arguments.\nI will call `get_weather` with `city=\"Tokyo\"` and `unit=\"fahrenheit\"`."
+          }
+        },
+        {
+          "id": "02-enum-selection",
+          "passed": true,
+          "elapsed_s": 5.9,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-enum-selection",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "create_ticket"
+            ],
+            "response_excerpt": "The user wants to file a support ticket for a production database outage.\nThe title is specified as 'Production DB outage'.\nThe priority is described as \"emergency\" and \"drop everything\", which corresponds to the \"urgent\" enum value in the tool definition.\n\nI need to call `create_ticket` with:\n- title: \"Production DB outage\"\n- priority: \"urgent\""
+          }
+        },
+        {
+          "id": "03-numeric-coercion",
+          "passed": true,
+          "elapsed_s": 6.0,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-numeric-coercion",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "apply_discount"
+            ],
+            "response_excerpt": "The user wants to apply a 15% discount to an item costing $49.99.\nI need to convert the price to cents: $49.99 = 4999 cents.\nThe discount rate is 15%, which is 0.15.\nI will use the `apply_discount` tool with `amount_cents` = 4999 and `discount_rate` = 0.15."
+          }
+        },
+        {
+          "id": "04-nested-object-args",
+          "passed": true,
+          "elapsed_s": 7.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-nested-object-args",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "create_shipping_label"
+            ],
+            "response_excerpt": "The user wants to create a shipping label for Maria Gonzalez.\nI have the following information:\n- Recipient Name: Maria Gonzalez\n- Street: 42 Rue de Rivoli\n- City: Paris\n- Postal Code: 75004\n- Country: France\n\nI need to use the `create_shipping_label` tool.\nThe parameters required are `recipient_name` and `address`.\n`address` is an object with `street`, `city`, `postal_code`, and `country`.\n\nI have all the required information."
+          }
+        },
+        {
+          "id": "05-tool-disambiguation",
+          "passed": true,
+          "elapsed_s": 5.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-tool-disambiguation",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "create_calendar_event"
+            ],
+            "response_excerpt": "The user wants to create a new calendar event.\nI have the title: 'Q3 Planning'.\nI have the start time: '2026-09-10T14:00:00Z'.\nI should use the `create_calendar_event` tool."
+          }
+        },
+        {
+          "id": "06-missing-info-no-premature-call",
+          "passed": true,
+          "elapsed_s": 5.0,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-missing-info-no-premature-call",
+            "category": "mcp-tools",
+            "finish_reason": "stop",
+            "tool_call_count": 0,
+            "tool_call_names": [],
+            "response_excerpt": "I can help you with that. To send the money, I need the recipient's account ID. Could you please provide Jake's account ID?"
+          }
+        },
+        {
+          "id": "07-multi-step-context-carry",
+          "passed": true,
+          "elapsed_s": 5.2,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-multi-step-context-carry",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "issue_refund"
+            ],
+            "response_excerpt": "The user wants a refund of $30. The tool `issue_refund` requires the amount in cents. $30 is 3000 cents. I have the customer_id \"CUST-88213\". I will now issue the refund."
+          }
+        },
+        {
+          "id": "08-array-argument",
+          "passed": true,
+          "elapsed_s": 6.6,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-array-argument",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "invite_to_meeting"
+            ],
+            "response_excerpt": "The user wants to invite three people to a meeting with ID \"MTG-77\".\nThe emails are alice@corp.com, bob@corp.com, and carla@corp.com.\nI need to use the `invite_to_meeting` tool.\nParameters:\n- meeting_id: \"MTG-77\"\n- attendee_emails: [\"alice@corp.com\", \"bob@corp.com\", \"carla@corp.com\"]"
+          }
+        }
+      ],
+      "artifact_count": 8,
+      "logs": []
+    },
+    {
+      "category": "security-review",
+      "n_pass": 8,
+      "n_total": 8,
+      "wall_s": 328.1951308250427,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-sql-injection",
+          "passed": true,
+          "elapsed_s": 24.2,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-sql-injection",
+            "category": "security-review",
+            "response_length": 1061,
+            "response_excerpt": "**Vulnerability:** SQL Injection\n\n**Explanation:** The `username` parameter is directly concatenated into the SQL string. An attacker can supply malicious input (e.g., `' OR '1'='1' --`) to alter the query's logic, potentially bypassing authentication, exfiltrating data, or modifying/deleting records.\n\n**Fix:** Use a `PreparedStatement` with parameterized queries (`?` placeholders). This forces the JDBC driver to send the query structure and user input separately to the database, ensuring input is always treated as data, not executable SQL.\n\n**Corrected Code:**\n```java\npublic User findUserByUsername(Connection conn, String username) throws SQLException {\n    String query = \"SELECT * FROM users WHERE username = ?\";\n    try (PreparedStatement pstmt = conn.prepareStatement(query)) {\n        pstmt.setString(1, username);\n        try (ResultSet rs = pstmt.executeQuery()) {\n            if (rs.next()) {\n                return new User(rs.getInt(\"id\"), rs.getString(\"username\"), rs.getString(\"email\"));\n            }\n        }\n    }\n    return null;\n}\n```"
+          }
+        },
+        {
+          "id": "02-hardcoded-secret",
+          "passed": true,
+          "elapsed_s": 43.0,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-hardcoded-secret",
+            "category": "security-review",
+            "response_length": 2035,
+            "response_excerpt": "Here are the security vulnerabilities found in the code, along with fixes:\n\n**1. Hardcoded Secret/Credential Exposure**\n- **Issue:** `STRIPE_API_KEY` is embedded directly in the source code. If committed to version control or leaked, it grants full unauthorized access to the Stripe account.\n- **Fix:** Never hardcode secrets. Load the key from a secure runtime source:\n  ```python\n  import os\n  STRIPE_API_KEY = os.environ.get(\"STRIPE_API_KEY\")\n  if not STRIPE_API_KEY:\n      raise ValueError(\"STRIPE_API_KEY environment variable is not set\")\n  ```\n\n**2. Missing Request Timeout (Denial of Service Risk)**\n- **Issue:** `requests.post()` lacks a `timeout` parameter. If the Stripe API or network stalls, the thread/process will hang indefinitely, exhausting resources and enabling a DoS condition.\n- **Fix:** Always specify connect and read timeouts:\n  ```python\n  response = requests.post(\n      \"https://api.stripe.com/v1/charges\",\n      auth=(STRIPE_API_KEY, \"\"),\n      data={\"customer\": customer_id, \"amount\": amount_cents, \"currency\": \"usd\"},\n      timeout=(5, 10)  # 5s connect, 10s read\n  )\n  ```\n\n**3. Unhandled Error / Potential Information Disclosure**\n- **Issue:** `response.raise_for_status()` throws a raw `requests.HTTPError` on failure. If uncaught, stack traces or sensitive API payloads may leak to logs or end-users.\n- **Fix:** Wrap in a `try/except` block, sanitize logs, and return a generic client error:\n  ```python\n  try:\n      response.raise_for_status()\n      return response.json()\n  except requests.exceptions.HTTPError as e:\n      # Log securely (no secrets/stack traces)\n      logger.error(\"Stripe API request failed\", exc_info=False)\n      raise HTTPError(\"Payment processing failed\", status_code=502)\n  ```\n\n**Additional Recommendations:**\n- Keep SSL verification enabled (default in `requests`); do not set `verify=False`.\n- Validate `customer_id` and `amount_cents` client-side before making the request.\n- If this fixture key was ever used in production, rotate it i... [truncated]"
+          }
+        },
+        {
+          "id": "03-path-traversal",
+          "passed": true,
+          "elapsed_s": 40.6,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-path-traversal",
+            "category": "security-review",
+            "response_length": 2989,
+            "response_excerpt": "Here are the security vulnerabilities found in the code, along with fixes:\n\n### 1. Path Traversal (Directory Traversal)\n- **Issue:** `req.query.file` is directly joined to `UPLOADS_DIR` without validation. Attackers can use `../../` to read arbitrary system files.\n- **Fix:** Resolve the full path and verify it starts with the allowed directory. Reject requests that escape the base path.\n\n### 2. Denial of Service (Memory Exhaustion)\n- **Issue:** `fs.readFile()` loads the entire file into memory. Serving large files will crash the Node.js process.\n- **Fix:** Use `fs.createReadStream()` and pipe it directly to the response. Implement a file size limit.\n\n### 3. Missing `Content-Type` & MIME Sniffing\n- **Issue:** `res.send(data)` sends raw bytes without headers. Browsers may guess the MIME type, potentially executing malicious scripts if a `.js` or `.html` file is served.\n- **Fix:** Explicitly set `Content-Type: application/octet-stream` and `Content-Disposition: attachment` to force safe downloads.\n\n### 4. Unauthenticated/Unrestricted Access\n- **Issue:** The endpoint is publicly accessible. Any user can download any file in the directory.\n- **Fix:** Add authentication middleware and verify the requesting user has permission to access the specific file.\n\n### 5. Insecure Error Handling\n- **Issue:** While the client message is generic, unhandled `err` objects could leak stack traces or internal paths if not caught properly.\n- **Fix:** Log errors server-side only. Return generic messages to the client.\n\n---\n\n### Secure Implementation Example\n```javascript\nconst express = require('express');\nconst fs = require('fs');\nconst path = require('path');\nconst app = express();\n\nconst UPLOADS_DIR = path.resolve('/var/app/uploads');\nconst MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 MB limit\n\napp.get('/download', (req, res) => {\n    const filename = req.query.file;\n    if (!filename || typeof filename !== 'string') {\n        return res.status(400).send('Invalid filename');\n    }\n\n    const... [truncated]"
+          }
+        },
+        {
+          "id": "04-insecure-deserialization",
+          "passed": true,
+          "elapsed_s": 39.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-insecure-deserialization",
+            "category": "security-review",
+            "response_length": 1348,
+            "response_excerpt": "### Vulnerabilities Found:\n1. **Insecure Deserialization (CWE-502)**: `pickle.loads()` is used on untrusted user input. Pickle can execute arbitrary Python code during deserialization, leading to Remote Code Execution (RCE).\n2. **Missing Integrity/Authentication**: Base64 is an encoding, not a security measure. The payload is unsigned and unencrypted, allowing attackers to forge arbitrary session data.\n\n### How to Fix:\n1. **Replace `pickle` with `json`**: JSON safely parses data without code execution capabilities.\n2. **Validate structure**: Ensure the deserialized data matches expected types and keys before use.\n3. **Use secure session handling**: Prefer Flask's built-in secure session cookies or signed tokens (e.g., JWT) instead of manual serialization.\n\n### Fixed Code:\n```python\nimport json\nimport base64\nfrom flask import Flask, request\n\napp = Flask(__name__)\n\n@app.route('/session/restore', methods=['POST'])\ndef restore_session():\n    encoded_state = request.form.get('state')\n    try:\n        raw = base64.b64decode(encoded_state)\n        session_obj = json.loads(raw)\n        if not isinstance(session_obj, dict) or \"user\" not in session_obj:\n            return {\"error\": \"Invalid state\"}, 400\n        return {\"user\": session_obj[\"user\"], \"restored\": True}\n    except Exception:\n        return {\"error\": \"Invalid state\"}, 400\n```"
+          }
+        },
+        {
+          "id": "05-weak-crypto-hash",
+          "passed": true,
+          "elapsed_s": 58.2,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-weak-crypto-hash",
+            "category": "security-review",
+            "response_length": 3097,
+            "response_excerpt": "**1. Use of MD5 for Password Hashing (Critical)**\n- **Issue:** MD5 is cryptographically broken, extremely fast, and trivially cracked with modern hardware or rainbow tables. It is explicitly deprecated for password storage.\n- **Fix:** Replace with a dedicated password hashing algorithm designed for passwords, such as Argon2id, bcrypt, or scrypt.\n\n**2. Missing Salt (Critical)**\n- **Issue:** Hashing passwords without a unique, random salt per user allows attackers to use precomputed tables and easily identify users with identical passwords.\n- **Fix:** Use a password hashing library that automatically generates, embeds, and verifies a unique salt for each password.\n\n**3. No Key Stretching/Work Factor (Critical)**\n- **Issue:** MD5 computes hashes in nanoseconds, enabling billions of guesses per second. Password hashing requires deliberate computational cost to thwart brute-force attacks.\n- **Fix:** Use algorithms with configurable work factors (e.g., bcrypt cost factor, Argon2 memory/time parameters) to slow down guessing.\n\n**4. Inconsistent Character Encoding (Medium)**\n- **Issue:** `plainPassword.getBytes()` uses the JVM\u2019s default charset, which varies by OS/environment, causing hash mismatches across deployments.\n- **Fix:** Explicitly specify UTF-8: `plainPassword.getBytes(StandardCharsets.UTF_8)`. (Note: Modern password libraries handle encoding safely, making this moot if you switch libraries.)\n\n**5. Missing Input Validation (Medium)**\n- **Issue:** No validation on password length/complexity or username format, risking weak passwords or DoS via excessively long inputs.\n- **Fix:** Enforce minimum/maximum lengths, complexity rules, and reject inputs exceeding safe limits (e.g., 72-128 chars) before hashing.\n\n### Recommended Fix (Spring Security)\nSpring Security provides battle-tested `PasswordEncoder` implementations that handle salting, work factors, and encoding automatically:\n\n```java\nimport org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;\nimport ... [truncated]"
+          }
+        },
+        {
+          "id": "06-ssrf",
+          "passed": true,
+          "elapsed_s": 41.5,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-ssrf",
+            "category": "security-review",
+            "response_length": 3148,
+            "response_excerpt": "### \ud83d\udd34 Critical: Server-Side Request Forgery (SSRF)\n**Issue:** The server makes HTTP requests to user-controlled URLs. Attackers can target internal services (e.g., `http://169.254.169.254/`, `http://localhost:6379/`), bypass network firewalls, or scan internal infrastructure.\n**Fix:** Validate the URL scheme, resolve the hostname, and block private/reserved IP ranges. Disable automatic redirects.\n\n### \ud83d\udfe0 High: Unsafe URL Schemes\n**Issue:** No scheme validation allows `file://`, `gopher://`, `dict://`, or `ftp://` URLs, enabling local file reads or protocol-level attacks.\n**Fix:** Explicitly allow only `http` and `https` schemes.\n\n### \ud83d\udfe0 High: Unrestricted Redirects\n**Issue:** `requests.get()` follows redirects by default. An attacker can use a redirect chain to bypass initial URL validation or reach internal endpoints.\n**Fix:** Set `allow_redirects=False` and reject `3xx` responses.\n\n### \ud83d\udfe1 Medium: Denial of Service (DoS)\n**Issue:** Large responses, slow servers, or DNS rebinding attacks can exhaust server memory, CPU, or network bandwidth.\n**Fix:** Enforce strict timeouts, limit response size, add rate limiting, and consider using a secure proxy for external fetches.\n\n---\n\n### \u2705 Secure Implementation\n```python\nimport requests\nfrom flask import Flask, request, jsonify\nfrom urllib.parse import urlparse\nimport ipaddress\nimport socket\n\napp = Flask(__name__)\n\nPRIVATE_IPS = [\n    ipaddress.ip_network('10.0.0.0/8'),\n    ipaddress.ip_network('172.16.0.0/12'),\n    ipaddress.ip_network('192.168.0.0/16'),\n    ipaddress.ip_network('127.0.0.0/8'),\n    ipaddress.ip_network('169.254.0.0/16'),\n    ipaddress.ip_network('::1/128'),\n    ipaddress.ip_network('fe80::/10'),\n]\n\ndef is_safe_url(url: str) -> bool:\n    parsed = urlparse(url)\n    if parsed.scheme not in ('http', 'https'):\n        return False\n    \n    try:\n        host = socket.gethostbyname(parsed.hostname)\n        ip = ipaddress.ip_address(host)\n        return not any(ip in net for net in PRIVATE_IPS)\n    except (socket.gaier... [truncated]"
+          }
+        },
+        {
+          "id": "07-broken-access-control",
+          "passed": true,
+          "elapsed_s": 32.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-broken-access-control",
+            "category": "security-review",
+            "response_length": 1594,
+            "response_excerpt": "**Vulnerability: Insecure Direct Object Reference (IDOR) / Broken Access Control**\n\n- **Issue:** The endpoint enforces authentication but lacks authorization. Any authenticated user can access, enumerate, or modify any invoice by simply changing the `invoiceId` in the URL. The application trusts the client-supplied ID without verifying the user's relationship to that resource.\n- **Fix:** Implement authorization checks that tie the requested resource to the authenticated user. Query the database using both the `invoiceId` and the current user's ID, or delegate the check to a security framework.\n\n**Remediation Example:**\n```java\n@GetMapping(\"/{invoiceId}\")\npublic ResponseEntity<Invoice> getInvoice(\n        @PathVariable Long invoiceId, \n        @AuthenticationPrincipal User currentUser) { // or use SecurityContextHolder\n    \n    // Only return if the invoice belongs to the authenticated user\n    Invoice invoice = invoiceRepository.findByInvoiceIdAndOwnerId(invoiceId, currentUser.getId())\n            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));\n            \n    return ResponseEntity.ok(invoice);\n}\n```\n\n**Alternative (Spring Security Method-Level):**\n```java\n@PreAuthorize(\"@invoiceService.hasAccess(#invoiceId, authentication.principal)\")\n@GetMapping(\"/{invoiceId}\")\npublic ResponseEntity<Invoice> getInvoice(@PathVariable Long invoiceId) { ... }\n```\n\n**Key Takeaway:** Authentication verifies *who* the user is; authorization verifies *what* they are allowed to access. Always validate resource ownership or permissions before returning sensitive data."
+          }
+        },
+        {
+          "id": "08-command-injection",
+          "passed": true,
+          "elapsed_s": 48.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-command-injection",
+            "category": "security-review",
+            "response_length": 2811,
+            "response_excerpt": "### 1. Command Injection (Critical)\n**Issue:** `shell=True` with unsanitized `filename` allows arbitrary OS command execution. An attacker can inject shell metacharacters (e.g., `filename=\"test.pdf; cat /etc/passwd\"`).\n**Fix:** Remove `shell=True` and pass the command as a list of arguments. `subprocess` will handle quoting safely.\n\n### 2. Path Traversal (High)\n**Issue:** `filename` is directly interpolated into filesystem paths. Attackers can use `../` to escape `/tmp/uploads/` and read/write arbitrary files.\n**Fix:** Strip directory components with `os.path.basename()` and validate against a strict whitelist (e.g., alphanumeric, dots, hyphens only).\n\n### 3. Unsafe Output Path Resolution (Medium)\n**Issue:** `pdf_name` is derived from user input and passed directly to `send_file`. If traversal isn't fully blocked, the response could leak files outside `/tmp/converted/`.\n**Fix:** Validate `pdf_name` identically to `filename`, and verify the resolved path stays within the intended directory using `os.path.realpath()`.\n\n### 4. Missing Input Validation (Medium)\n**Issue:** No checks for file existence, allowed extensions, or length. This enables resource exhaustion or processing of malicious payloads.\n**Fix:** Validate that the file exists, has an allowed extension, and matches a safe regex pattern before processing.\n\n---\n\n### Secure Implementation\n```python\nimport os\nimport re\nimport subprocess\nfrom flask import Flask, request, send_file\n\napp = Flask(__name__)\n\nALLOWED_EXTENSIONS = {'.docx', '.doc', '.txt', '.odt', '.rtf'}\nSAFE_FILENAME_RE = re.compile(r'^[a-zA-Z0-9_.-]+$')\n\n@app.route('/convert', methods=['POST'])\ndef convert_to_pdf():\n    filename = request.form.get('filename', '')\n    \n    # 1. Validate extension & format\n    _, ext = os.path.splitext(filename)\n    if ext.lower() not in ALLOWED_EXTENSIONS or not SAFE_FILENAME_RE.match(filename):\n        return \"Invalid filename\", 400\n        \n    # 2. Prevent path traversal\n    safe_filename = os.path.basename(filena... [truncated]"
+          }
+        }
+      ],
+      "artifact_count": 8,
+      "logs": []
+    },
+    {
+      "category": "long-context",
+      "n_pass": 10,
+      "n_total": 10,
+      "wall_s": 624.567521572113,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-8k-pos10",
+          "passed": true,
+          "elapsed_s": 41.0,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-8k-pos10",
+            "category": "long-context",
+            "expected_marker": "XK-1001-ALFA-9273-NEEDLE",
+            "target_tokens": 8000,
+            "position_pct": 0.1,
+            "response_length": 503,
+            "response_excerpt": "XK-1001-ALFA-9273-NEEDLE\nThe codebase exhibits several critical issues: unbounded memory growth in the payment deduplication cache, event bus dead-letter queue, and audit log buffer due to missing cleanup or thread-safe flushing mechanisms. Additionally, the saga orchestrator is incomplete (lacks step execution and compensation logic), the search index relies on inefficient O(N) linear scans, and the event bus `publish` method is vulnerable to race conditions during concurrent subscription updates.",
+            "first_line": "XK-1001-ALFA-9273-NEEDLE"
+          }
+        },
+        {
+          "id": "02-8k-pos50",
+          "passed": true,
+          "elapsed_s": 40.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-8k-pos50",
+            "category": "long-context",
+            "expected_marker": "XK-1002-BRAVO-4418-NEEDLE",
+            "target_tokens": 8000,
+            "position_pct": 0.5,
+            "response_length": 498,
+            "response_excerpt": "XK-1002-BRAVO-4418-NEEDLE\nThe codebase consists of highly repetitive, versioned service stubs with several concurrency and lifecycle flaws. Notable issues include unbounded memory growth in deduplication caches and retry queues, thread-safety gaps in shared dictionary access, and performance bottlenecks from coarse-grained locking and linear search operations. Additionally, critical components like the saga orchestrator and audit logger lack actual execution logic and proper shutdown handling.",
+            "first_line": "XK-1002-BRAVO-4418-NEEDLE"
+          }
+        },
+        {
+          "id": "03-8k-pos90",
+          "passed": true,
+          "elapsed_s": 40.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-8k-pos90",
+            "category": "long-context",
+            "expected_marker": "XK-1003-CHARLIE-8801-NEEDLE",
+            "target_tokens": 8000,
+            "position_pct": 0.9,
+            "response_length": 604,
+            "response_excerpt": "XK-1003-CHARLIE-8801-NEEDLE\nThe codebase consists of repetitive, largely incomplete service stubs that suffer from unbounded memory leaks in deduplication caches and queues, alongside missing thread-safety in the event bus and audit log flush methods. Critical business logic for job assignment, saga execution, and inventory persistence is entirely absent, while performance is bottlenecked by global locks on hot paths and O(N) linear search in the search module. Overall, the architecture requires significant refactoring to address concurrency hazards, memory management, and functional completeness.",
+            "first_line": "XK-1003-CHARLIE-8801-NEEDLE"
+          }
+        },
+        {
+          "id": "04-64k-pos10",
+          "passed": true,
+          "elapsed_s": 60.0,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-64k-pos10",
+            "category": "long-context",
+            "expected_marker": "XK-2001-DELTA-5567-NEEDLE",
+            "target_tokens": 64000,
+            "position_pct": 0.1,
+            "response_length": 656,
+            "response_excerpt": "XK-2001-DELTA-5567-NEEDLE\n\nThe codebase contains several thread-safety vulnerabilities, most notably in `PaymentWebhookHandler` (unsynchronized deduplication cache), `SearchIndexWriter` (concurrent dictionary iteration), `AuditLog` (unsynchronized buffer flush), and `EventBus` (concurrent handler list modification). Performance and memory concerns include unbounded growth of the deduplication and dynamic lock dictionaries, O(N) linear search in the catalog, and missing execution logic in the saga orchestrator. Overall, the repetitive structure highlights consistent architectural patterns but recurring synchronization oversights across the services.",
+            "first_line": "XK-2001-DELTA-5567-NEEDLE"
+          }
+        },
+        {
+          "id": "05-64k-pos50",
+          "passed": true,
+          "elapsed_s": 42.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-64k-pos50",
+            "category": "long-context",
+            "expected_marker": "XK-2002-ECHO-3392-NEEDLE",
+            "target_tokens": 64000,
+            "position_pct": 0.5,
+            "response_length": 569,
+            "response_excerpt": "XK-2002-ECHO-3392-NEEDLE\n\nThe codebase consists of 311 highly repetitive service modules that increment only version numbers while sharing identical logic. Key issues include unbounded memory growth in deduplication caches, dead-letter queues, and retry buffers; missing thread-safety on shared dictionaries like `_seen_recently`; and incomplete implementations for core orchestration, scheduling, and compensation workflows. While some components use locks correctly, the overall design lacks production-ready TTL eviction, bounded buffers, and actual execution paths.",
+            "first_line": "XK-2002-ECHO-3392-NEEDLE"
+          }
+        },
+        {
+          "id": "06-64k-pos90",
+          "passed": true,
+          "elapsed_s": 53.6,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-64k-pos90",
+            "category": "long-context",
+            "expected_marker": "XK-2003-FOXTROT-7714-NEEDLE",
+            "target_tokens": 64000,
+            "position_pct": 0.9,
+            "response_length": 599,
+            "response_excerpt": "XK-2003-FOXTROT-7714-NEEDLE\nThe codebase consists of 311 highly repetitive, versioned service modules with identical logic, creating significant maintenance overhead. Key technical issues include unbounded memory growth in deduplication and dead-letter queues, race conditions in payment webhooks due to unprotected shared dictionaries, and a saga orchestrator that only initializes instances without executing or compensating steps. Performance bottlenecks stem from coarse-grained global locks in caching and rate-limiting components, alongside inefficient linear search scans in the index writer.",
+            "first_line": "XK-2003-FOXTROT-7714-NEEDLE"
+          }
+        },
+        {
+          "id": "07-150k-pos10",
+          "passed": true,
+          "elapsed_s": 88.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-150k-pos10",
+            "category": "long-context",
+            "expected_marker": "XK-3001-GOLF-2256-NEEDLE",
+            "target_tokens": 150000,
+            "position_pct": 0.1,
+            "response_length": 611,
+            "response_excerpt": "XK-3001-GOLF-2256-NEEDLE\n\nThe codebase contains numerous repetitive service modules that share common architectural patterns but exhibit several critical issues. Key thread-safety violations include unprotected concurrent access to dictionaries and lists in `payment_webhook_handler`, `search_index_writer`, `audit_log`, and `event_bus`, which will cause race conditions or crashes under load. Additionally, unbounded in-memory caches (`_seen_recently`, `_dead_letter`) lack eviction policies, guaranteeing eventual memory exhaustion, while the search index performs lock-free iteration over its document store.",
+            "first_line": "XK-3001-GOLF-2256-NEEDLE"
+          }
+        },
+        {
+          "id": "08-150k-pos50",
+          "passed": true,
+          "elapsed_s": 90.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-150k-pos50",
+            "category": "long-context",
+            "expected_marker": "XK-3002-HOTEL-9938-NEEDLE",
+            "target_tokens": 150000,
+            "position_pct": 0.5,
+            "response_length": 717,
+            "response_excerpt": "XK-3002-HOTEL-9938-NEEDLE\n\nThe codebase is a highly repetitive, versioned duplication of 11 core service templates, likely generated to test context-window handling. While most modules implement basic thread safety with `threading.Lock`, several contain subtle concurrency bugs: a TOCTOU race in the payment webhook deduplication check, unprotected lazy lock creation in the inventory service, and an unprotected iteration over subscribers in the event bus publish method. Additionally, several services are incomplete or inefficient, such as the saga orchestrator lacking execution/compensation logic, the job scheduler ignoring its priority field, and the audit log's `flush` method being non-atomic across threads.",
+            "first_line": "XK-3002-HOTEL-9938-NEEDLE"
+          }
+        },
+        {
+          "id": "09-distractor-64k",
+          "passed": true,
+          "elapsed_s": 70.5,
+          "reasons": [],
+          "artifact": {
+            "task_id": "09-distractor-64k",
+            "category": "long-context",
+            "expected_marker": "XK-4001-INDIA-6625-REAL",
+            "target_tokens": 64000,
+            "position_pct": 0.5,
+            "response_length": 561,
+            "response_excerpt": "XK-4001-INDIA-6625-REAL\nThe codebase consists of hundreds of repetitive template modules that share several critical architectural and concurrency flaws. Notable issues include unbounded memory growth in the payment webhook deduplication cache, race conditions in the audit log's buffer flushing, and a notification dispatcher that silently drops failed messages without processing a retry queue. Additionally, the search index relies on inefficient linear string scanning, and the job scheduler stores priority values but never actually sorts or utilizes them.",
+            "first_line": "XK-4001-INDIA-6625-REAL"
+          }
+        },
+        {
+          "id": "10-distractor-150k",
+          "passed": true,
+          "elapsed_s": 96.9,
+          "reasons": [],
+          "artifact": {
+            "task_id": "10-distractor-150k",
+            "category": "long-context",
+            "expected_marker": "XK-4002-JULIET-1187-REAL",
+            "target_tokens": 150000,
+            "position_pct": 0.75,
+            "response_length": 594,
+            "response_excerpt": "XK-4002-JULIET-1187-REAL\n\nThe codebase is composed of hundreds of nearly identical template modules, primarily serving as a context-window stress test. Notable technical issues include an unbounded deduplication cache in the payment handler that will cause memory leaks, a race condition in the audit log where buffer appends lack synchronization, and the job scheduler's failure to implement actual priority-based queueing despite storing priority fields. Most services rely on in-memory state without persistence, proper eviction policies, or robust concurrency controls for shared resources.",
+            "first_line": "XK-4002-JULIET-1187-REAL"
+          }
+        }
+      ],
+      "artifact_count": 10,
+      "logs": []
+    }
+  ]
+}

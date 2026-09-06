@@ -10,11 +10,22 @@ import argparse
 import json
 import re
 import sys
+import time
 from pathlib import Path
 
 import requests
 
 HERE = Path(__file__).parent
+
+
+class TruncatedResponseError(RuntimeError):
+    pass
+
+
+def artifact_snippet(text: str, limit: int = 2000) -> str:
+    if len(text) <= limit:
+        return text
+    return text[:limit] + "... [truncated]"
 
 
 def load_task(task_dir: Path) -> tuple[str, str, dict]:
@@ -42,7 +53,14 @@ def call_model(base_url: str, model: str, code: str, prompt: str, timeout: int) 
     )
     resp.raise_for_status()
     data = resp.json()
-    message = data["choices"][0]["message"]
+    choice = data["choices"][0]
+    message = choice["message"]
+    if choice.get("finish_reason") == "length":
+        content = message.get("content") or ""
+        if not content.strip():
+            content = message.get("reasoning_content") or ""
+        snippet = content.strip()[:200]
+        raise TruncatedResponseError(f"truncated: finish_reason=length (content: {snippet!r})")
     # Some reasoning models return the whole answer via reasoning_content
     # and leave content empty if the token budget was exhausted mid-
     # thought. Fall back to reasoning_content so grading still sees the
@@ -59,6 +77,8 @@ def run_check(task_dir: Path, base_url: str, model: str, timeout: int) -> tuple[
 
     try:
         response_text = call_model(base_url, model, code, prompt, timeout)
+    except TruncatedResponseError as e:
+        return False, [str(e)], ""
     except Exception as e:  # noqa: BLE001
         return False, [f"request failed: {e}"], ""
 
@@ -91,6 +111,7 @@ def main() -> int:
     parser.add_argument("--model", default="qwen3.6-35b-a3b")
     parser.add_argument("--timeout", type=int, default=180)
     parser.add_argument("--show-response", action="store_true")
+    parser.add_argument("--emit-artifacts", action="store_true")
     args = parser.parse_args()
 
     if args.all:
@@ -103,15 +124,29 @@ def main() -> int:
 
     all_passed = True
     for task_dir in task_dirs:
+        t0 = time.time()
         passed, reasons, response_text = run_check(task_dir, args.url, args.model, args.timeout)
+        elapsed = time.time() - t0
+        artifact = {
+            "task_id": task_dir.name,
+            "category": "security-review",
+            "response_length": len(response_text),
+            "response_excerpt": artifact_snippet(response_text),
+        }
+        if reasons:
+            artifact["reason_count"] = len(reasons)
+            if reasons[0].startswith("request failed:") or reasons[0].startswith("truncated:"):
+                artifact["error"] = reasons[0]
         status = "PASS" if passed else "FAIL"
-        print(f"[{status}] {task_dir.name}")
+        print(f"[{status}] {task_dir.name} ({elapsed:.1f}s)")
         for r in reasons:
             print(f"    - {r}")
         if args.show_response:
             print("    --- response ---")
             for line in response_text.splitlines():
                 print(f"    {line}")
+        if args.emit_artifacts:
+            print(f"[ARTIFACT] {task_dir.name} {json.dumps(artifact, ensure_ascii=True)}")
         all_passed = all_passed and passed
 
     return 0 if all_passed else 1

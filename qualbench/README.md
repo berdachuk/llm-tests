@@ -42,8 +42,10 @@ fixtures/
                       with decoy markers.
 harness/
   run_all.py          unified runner: shells out to each category's own
-                      check.py --all, parses PASS/FAIL lines, writes a
-                      combined report to results/.
+                      check.py --all, does a /v1/models preflight for the
+                      requested model, parses PASS/FAIL + failure reasons,
+                      captures per-task artifacts emitted by each checker,
+                      and writes a combined report to results/.
 results/              aggregated run reports (JSON + Markdown per run),
                       plus findings.md (detailed reproduced-failure log).
 ```
@@ -51,6 +53,41 @@ results/              aggregated run reports (JSON + Markdown per run),
 All qualbench content (fixtures, harnesses, `base/` app projects, results)
 now lives as ordinary tracked files inside the main `llm-tests` git repo
 -- there are no nested git repositories under `qualbench/` anymore.
+
+## CI and local sanity checks
+
+The lightweight CI workflow is defined at `.github/workflows/ci.yml` and runs:
+
+1. `ruff check . --select E9,F63,F7,F82`
+2. `python -m py_compile` for `run_all.py` and all category `check.py` files
+3. `python -m pytest -q qualbench/tests`
+
+Run the same checks locally:
+
+```bash
+python -m pip install -r requirements.txt ruff
+ruff check . --select E9,F63,F7,F82
+python -m py_compile \
+  qualbench/harness/run_all.py \
+  qualbench/fixtures/java-spring/check.py \
+  qualbench/fixtures/ts-angular/check.py \
+  qualbench/fixtures/sql-migrations/check.py \
+  qualbench/fixtures/mcp-tools/check.py \
+  qualbench/fixtures/security-review/check.py \
+  qualbench/fixtures/long-context/check.py
+python -m pytest -q qualbench/tests
+```
+
+Quick live-server smoke run (single category):
+
+```bash
+python qualbench/harness/run_all.py \
+  --tag local-smoke \
+  --categories mcp-tools \
+  --url http://127.0.0.1:8000 \
+  --model qwen3.6-35b-a3b \
+  --timeout 30
+```
 
 ## Comparative results (2026-09-03): FP8 48/50, NVFP4 46/50
 

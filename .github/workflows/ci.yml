@@ -1,0 +1,42 @@
+name: ci
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  python-checks:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install -r requirements.txt ruff
+
+      - name: Ruff (high-signal checks)
+        run: ruff check . --select E9,F63,F7,F82
+
+      - name: Syntax compile check
+        run: |
+          python -m py_compile \
+            qualbench/harness/run_all.py \
+            qualbench/fixtures/java-spring/check.py \
+            qualbench/fixtures/ts-angular/check.py \
+            qualbench/fixtures/sql-migrations/check.py \
+            qualbench/fixtures/mcp-tools/check.py \
+            qualbench/fixtures/security-review/check.py \
+            qualbench/fixtures/long-context/check.py
+
+      - name: Offline qualbench tests
+        run: python -m pytest -q qualbench/tests

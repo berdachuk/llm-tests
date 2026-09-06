@@ -30,6 +30,16 @@ HERE = Path(__file__).parent
 BUG_COMMENT_RE = re.compile(r"[ \t]*//\s*BUG:.*(?:\n[ \t]*//.*)*\n?")
 
 
+class TruncatedResponseError(RuntimeError):
+    pass
+
+
+def artifact_snippet(text: str, limit: int = 2000) -> str:
+    if len(text) <= limit:
+        return text
+    return text[:limit] + "... [truncated]"
+
+
 def load_manifest() -> dict:
     return json.loads((HERE / "tasks.json").read_text())
 
@@ -85,7 +95,14 @@ Fix the bug in `{class_name}.java` so that all tests in `{class_name}Test.java` 
     )
     resp.raise_for_status()
     data = resp.json()
-    message = data["choices"][0]["message"]
+    choice = data["choices"][0]
+    message = choice["message"]
+    if choice.get("finish_reason") == "length":
+        content = message.get("content") or ""
+        if not content.strip():
+            content = message.get("reasoning_content") or ""
+        snippet = content.strip()[:200]
+        raise TruncatedResponseError(f"truncated: finish_reason=length (content: {snippet!r})")
     content = message.get("content") or ""
     if not content.strip():
         content = message.get("reasoning_content") or ""
@@ -93,7 +110,7 @@ Fix the bug in `{class_name}.java` so that all tests in `{class_name}Test.java` 
 
 
 def run_task(task: dict, manifest: dict, base_url: str, model: str, timeout: int,
-             keep_scratch: bool = False) -> tuple[bool, list[str], float]:
+             keep_scratch: bool = False) -> tuple[bool, list[str], float, dict]:
     class_name = task["class"]
     base_dir = HERE / manifest["base_dir"]
     src_file = base_dir / manifest["src_root"] / f"{class_name}.java"
@@ -102,15 +119,34 @@ def run_task(task: dict, manifest: dict, base_url: str, model: str, timeout: int
     buggy_source = strip_bug_comments(src_file.read_text())
     test_source = test_file.read_text()
 
+    artifact: dict = {
+        "task_id": task["id"],
+        "category": "java-spring",
+        "class_name": class_name,
+    }
+
     t0 = time.time()
     try:
         response_text = call_model(base_url, model, buggy_source, test_source, class_name, timeout)
+    except TruncatedResponseError as e:
+        artifact["error"] = str(e)
+        return False, [str(e)], time.time() - t0, artifact
     except Exception as e:  # noqa: BLE001
-        return False, [f"request failed: {e}"], time.time() - t0
+        msg = f"request failed: {e}"
+        artifact["error"] = msg
+        return False, [msg], time.time() - t0, artifact
+
+    artifact["response_length"] = len(response_text)
+    artifact["response_excerpt"] = artifact_snippet(response_text)
 
     fixed_code = extract_java_code(response_text, class_name)
     if fixed_code is None:
-        return False, ["could not extract Java code from model response"], time.time() - t0
+        msg = "could not extract Java code from model response"
+        artifact["error"] = msg
+        return False, [msg], time.time() - t0, artifact
+
+    artifact["candidate_java"] = fixed_code
+    artifact["candidate_length"] = len(fixed_code)
 
     scratch = Path(tempfile.mkdtemp(prefix=f"qualbench-java-{task['id']}-"))
     try:
@@ -124,12 +160,19 @@ def run_task(task: dict, manifest: dict, base_url: str, model: str, timeout: int
             cwd=scratch, capture_output=True, text=True, timeout=180,
         )
         elapsed = time.time() - t0
+        artifact["verifier"] = {
+            "command": ["mvn", "-q", "-o", "-Dtest=" + f"{class_name}Test", "test"],
+            "returncode": result.returncode,
+        }
         if result.returncode == 0:
-            return True, [], elapsed
+            return True, [], elapsed, artifact
         tail = "\n".join((result.stdout + result.stderr).splitlines()[-25:])
-        return False, [f"mvn test failed (exit {result.returncode}):", tail], elapsed
+        artifact["verifier"]["output_tail"] = tail
+        return False, [f"mvn test failed (exit {result.returncode}):", tail], elapsed, artifact
     except subprocess.TimeoutExpired:
-        return False, ["mvn test timed out"], time.time() - t0
+        msg = "mvn test timed out"
+        artifact["error"] = msg
+        return False, [msg], time.time() - t0, artifact
     finally:
         if keep_scratch:
             print(f"    (scratch kept at {scratch})")
@@ -145,6 +188,7 @@ def main() -> int:
     parser.add_argument("--model", default="qwen3.6-35b-a3b")
     parser.add_argument("--timeout", type=int, default=180)
     parser.add_argument("--keep-scratch", action="store_true")
+    parser.add_argument("--emit-artifacts", action="store_true")
     args = parser.parse_args()
 
     manifest = load_manifest()
@@ -163,11 +207,15 @@ def main() -> int:
 
     all_passed = True
     for task in tasks:
-        passed, reasons, elapsed = run_task(task, manifest, args.url, args.model, args.timeout, args.keep_scratch)
+        passed, reasons, elapsed, artifact = run_task(
+            task, manifest, args.url, args.model, args.timeout, args.keep_scratch
+        )
         status = "PASS" if passed else "FAIL"
         print(f"[{status}] {task['id']} ({elapsed:.1f}s)")
         for r in reasons:
             print(f"    {r}")
+        if args.emit_artifacts:
+            print(f"[ARTIFACT] {task['id']} {json.dumps(artifact, ensure_ascii=True)}")
         all_passed = all_passed and passed
 
     return 0 if all_passed else 1

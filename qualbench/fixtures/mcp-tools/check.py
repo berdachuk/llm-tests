@@ -13,12 +13,19 @@ from __future__ import annotations
 import argparse
 import json
 import sys
+import time
 from pathlib import Path
 
 import requests
 from jsonschema import Draft7Validator, ValidationError
 
 HERE = Path(__file__).parent
+
+
+def artifact_snippet(text: str, limit: int = 2000) -> str:
+    if len(text) <= limit:
+        return text
+    return text[:limit] + "... [truncated]"
 
 
 def load_task(task_dir: Path) -> tuple[list, list, dict]:
@@ -38,6 +45,7 @@ def call_model(base_url: str, model: str, tools: list, messages: list, timeout: 
             "tool_choice": "auto",
             "temperature": 0,
             "max_tokens": 1024,
+            "reasoning_effort": "low",
         },
         timeout=timeout,
     )
@@ -74,26 +82,54 @@ def tool_schema_by_name(tools: list, name: str) -> dict | None:
     return None
 
 
-def run_check(task_dir: Path, base_url: str, model: str, timeout: int) -> tuple[bool, list[str]]:
+def run_check(task_dir: Path, base_url: str, model: str, timeout: int) -> tuple[bool, list[str], dict]:
     tools, messages, expected = load_task(task_dir)
     reasons: list[str] = []
+    artifact: dict = {
+        "task_id": task_dir.name,
+        "category": "mcp-tools",
+    }
 
     try:
         response = call_model(base_url, model, tools, messages, timeout)
     except Exception as e:  # noqa: BLE001
-        return False, [f"request failed: {e}"]
+        msg = f"request failed: {e}"
+        artifact["error"] = msg
+        return False, [msg], artifact
+
+    choice = response["choices"][0]
+    message = choice["message"]
+    finish_reason = choice.get("finish_reason")
+    artifact["finish_reason"] = finish_reason
+    if finish_reason == "length":
+        content = (message.get("content") or "").strip()
+        if not content:
+            content = (message.get("reasoning_content") or "").strip()
+        snippet = content[:200]
+        msg = f"truncated: finish_reason=length (content: {snippet!r})"
+        artifact["error"] = msg
+        artifact["response_excerpt"] = artifact_snippet(content)
+        return False, [msg], artifact
 
     tool_calls = extract_tool_calls(response)
+    artifact["tool_call_count"] = len(tool_calls)
+    artifact["tool_call_names"] = [tc["function"]["name"] for tc in tool_calls]
+    if message.get("content"):
+        artifact["response_excerpt"] = artifact_snippet(str(message.get("content")))
+    elif message.get("reasoning_content"):
+        artifact["response_excerpt"] = artifact_snippet(str(message.get("reasoning_content")))
 
     if expected.get("expected_no_call"):
         if tool_calls:
             names = [tc["function"]["name"] for tc in tool_calls]
-            return False, [f"expected no tool call, but model called: {names}"]
-        return True, []
+            return False, [f"expected no tool call, but model called: {names}"], artifact
+        return True, [], artifact
 
     if not tool_calls:
-        content = response["choices"][0]["message"].get("content", "")
-        return False, [f"expected a tool call but none was made (content: {content[:200]!r})"]
+        content = message.get("content") or ""
+        if not content.strip():
+            content = message.get("reasoning_content") or ""
+        return False, [f"expected a tool call but none was made (content: {content[:200]!r})"], artifact
 
     expected_name = expected.get("expected_tool_name")
     if expected_name is not None:
@@ -157,7 +193,7 @@ def run_check(task_dir: Path, base_url: str, model: str, timeout: int) -> tuple[
                             f"(order-independent), got {actual!r}"
                         )
 
-    return (len(reasons) == 0), reasons
+    return (len(reasons) == 0), reasons, artifact
 
 
 def main() -> int:
@@ -167,6 +203,7 @@ def main() -> int:
     parser.add_argument("--url", default="http://127.0.0.1:8000")
     parser.add_argument("--model", default="qwen3.6-35b-a3b")
     parser.add_argument("--timeout", type=int, default=120)
+    parser.add_argument("--emit-artifacts", action="store_true")
     args = parser.parse_args()
 
     if args.all:
@@ -179,11 +216,15 @@ def main() -> int:
 
     all_passed = True
     for task_dir in task_dirs:
-        passed, reasons = run_check(task_dir, args.url, args.model, args.timeout)
+        t0 = time.time()
+        passed, reasons, artifact = run_check(task_dir, args.url, args.model, args.timeout)
+        elapsed = time.time() - t0
         status = "PASS" if passed else "FAIL"
-        print(f"[{status}] {task_dir.name}")
+        print(f"[{status}] {task_dir.name} ({elapsed:.1f}s)")
         for r in reasons:
             print(f"    - {r}")
+        if args.emit_artifacts:
+            print(f"[ARTIFACT] {task_dir.name} {json.dumps(artifact, ensure_ascii=True)}")
         all_passed = all_passed and passed
 
     return 0 if all_passed else 1
