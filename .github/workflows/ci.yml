@@ -36,7 +36,12 @@ jobs:
             qualbench/fixtures/sql-migrations/check.py \
             qualbench/fixtures/mcp-tools/check.py \
             qualbench/fixtures/security-review/check.py \
-            qualbench/fixtures/long-context/check.py
+            qualbench/fixtures/long-context/check.py \
+            qualbench/fixtures/multimodal/check.py \
+            qualbench/fixtures/multimodal/mm_common.py \
+            qualbench/fixtures/multimodal/variance_report.py \
+            qualbench/fixtures/multimodal/dashboard.py \
+            qualbench/fixtures/multimodal/prep_mmmu.py
 
       - name: Offline qualbench tests
         run: python -m pytest -q qualbench/tests

@@ -40,7 +40,17 @@ CATEGORIES = {
     "mcp-tools": {"dir": "mcp-tools", "timeout": 120},
     "security-review": {"dir": "security-review", "timeout": 180},
     "long-context": {"dir": "long-context", "timeout": 600},
+    # One "task" here is a visual-domain bucket of many images, so the
+    # per-task budget covers a whole bucket rather than a single prompt.
+    # Opt-in (see OPT_IN_CATEGORIES): it needs a vision-enabled server and
+    # media staged outside git, so it must not silently join the default
+    # 50-task text run that every historical baseline is measured against.
+    "multimodal": {"dir": "multimodal", "timeout": 900},
 }
+
+# Categories excluded from the default "run everything" selection. Request
+# them explicitly with --categories.
+OPT_IN_CATEGORIES = {"multimodal"}
 
 TASK_LINE_RE = re.compile(r"^\[(PASS|FAIL)\]\s+(\S+)(?:\s+\(([\d.]+)s\))?\s*$")
 ARTIFACT_LINE_RE = re.compile(r"^\[ARTIFACT\]\s+(\S+)\s+(.+)$")
@@ -242,7 +252,8 @@ def main() -> int:
     parser.add_argument("--tag", required=True,
                          help="Short label for this run, e.g. 'fp8' or 'nvfp4' -- used in the output filename.")
     parser.add_argument("--categories", default=None,
-                         help="Comma-separated subset of category ids to run (default: all).")
+                         help="Comma-separated subset of category ids to run "
+                              f"(default: all except opt-in {sorted(OPT_IN_CATEGORIES)}).")
     parser.add_argument("--timeout", type=int, default=None,
                          help="Override every category's per-task --timeout.")
     parser.add_argument("--preflight-timeout", type=float, default=30.0,
@@ -255,7 +266,7 @@ def main() -> int:
         if unknown:
             parser.error(f"unknown category id(s): {unknown}. Known: {list(CATEGORIES)}")
     else:
-        selected = list(CATEGORIES)
+        selected = [c for c in CATEGORIES if c not in OPT_IN_CATEGORIES]
 
     print("=== Preflight: checking server model list ===", flush=True)
     try:

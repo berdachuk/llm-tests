@@ -1,0 +1,63 @@
+{
+  "_README": [
+    "Reference numbers the dashboard compares our local runs against.",
+    "",
+    "IMPORTANT -- these are NOT measured by this suite and are NOT verified by it.",
+    "Every entry must carry a 'source' URL and an 'as_of' date so a reader can",
+    "check it. Entries with source set to null are placeholders: the dashboard",
+    "renders them as 'unverified' and they must not be cited as fact.",
+    "",
+    "Equally important -- a published MMMU score is NOT directly comparable to",
+    "this suite's number. Published scores are the full 900-item validation set",
+    "(or the withheld 10.5k test set) scored with the official prompt and",
+    "parser. This suite runs a 60-item stratified subset with its own prompt",
+    "and answer extraction. Treat the comparison as an order-of-magnitude",
+    "sanity check ('are we in the right neighbourhood, or is vision broken?'),",
+    "never as a leaderboard claim. The 'comparability' field records this per",
+    "entry."
+  ],
+  "benchmarks": {
+    "mmmu-val": {
+      "display_name": "MMMU (validation)",
+      "metric": "accuracy",
+      "n_items_official": 900,
+      "maps_to_suite": "mmmu-subset",
+      "notes": "Official split has 900 items across 30 subjects; answers public.",
+      "entries": [
+        {
+          "model": "PLACEHOLDER -- fill in a comparable open VLM",
+          "accuracy": null,
+          "source": null,
+          "as_of": null,
+          "comparability": "different-subset",
+          "notes": "Replace with a sourced number, e.g. from the MMMU leaderboard or the model's own card."
+        }
+      ]
+    },
+    "video-mme": {
+      "display_name": "Video-MME (short/medium/long)",
+      "metric": "accuracy",
+      "n_items_official": 2700,
+      "maps_to_suite": "video-mme-subset",
+      "notes": "Video media is not staged locally yet; only annotations are present.",
+      "entries": [
+        {
+          "model": "PLACEHOLDER -- fill in a comparable open VLM",
+          "accuracy": null,
+          "source": null,
+          "as_of": null,
+          "comparability": "different-subset",
+          "notes": "Replace with a sourced number."
+        }
+      ]
+    }
+  },
+  "self_reported": {
+    "_note": [
+      "Numbers the served model's own documentation claims, if any. Kept",
+      "separate from third-party benchmarks because a vendor's self-report and",
+      "an independent leaderboard entry are different kinds of evidence."
+    ],
+    "entries": []
+  }
+}

@@ -1,0 +1,22 @@
+# qualbench multimodal manifest -- synthetic smoke suite (16 items)
+# Deterministically generated shapes/text (see gen_smoke_images.py in the
+# dataset root), so ground truth is exact by construction. Use this to
+# verify the wiring (vision tower live, base64 transport, answer
+# extraction) before spending minutes on the MMMU subset.
+# Media paths are relative to $QUALBENCH_MM_MEDIA_ROOT.
+{"id": "ocr-01", "domain": "ocr", "source": "synthetic/ocr-01", "images": ["smoke/images/ocr-01.png"], "question": "Return the exact code shown in the image.", "answer_type": "exact", "answer": "Q9K-482-XM"}
+{"id": "ocr-02", "domain": "ocr", "source": "synthetic/ocr-02", "images": ["smoke/images/ocr-02.png"], "question": "Return the exact code shown in the image.", "answer_type": "exact", "answer": "7FZ-103-TL"}
+{"id": "ocr-03", "domain": "ocr", "source": "synthetic/ocr-03", "images": ["smoke/images/ocr-03.png"], "question": "Return the exact code shown in the image.", "answer_type": "exact", "answer": "B2H-955-QW"}
+{"id": "ocr-04", "domain": "ocr", "source": "synthetic/ocr-04", "images": ["smoke/images/ocr-04.png"], "question": "Return the exact code shown in the image.", "answer_type": "exact", "answer": "K4M-317-RC"}
+{"id": "counting-01", "domain": "counting", "source": "synthetic/counting-01", "images": ["smoke/images/counting-01.png"], "question": "How many blue circles are present in this image?", "answer_type": "numeric", "answer": "2", "abs_tol": 0}
+{"id": "counting-02", "domain": "counting", "source": "synthetic/counting-02", "images": ["smoke/images/counting-02.png"], "question": "How many blue circles are present in this image?", "answer_type": "numeric", "answer": "6", "abs_tol": 0}
+{"id": "counting-03", "domain": "counting", "source": "synthetic/counting-03", "images": ["smoke/images/counting-03.png"], "question": "How many blue circles are present in this image?", "answer_type": "numeric", "answer": "5", "abs_tol": 0}
+{"id": "counting-04", "domain": "counting", "source": "synthetic/counting-04", "images": ["smoke/images/counting-04.png"], "question": "How many blue circles are present in this image?", "answer_type": "numeric", "answer": "5", "abs_tol": 0}
+{"id": "spatial-01", "domain": "spatial", "source": "synthetic/spatial-01", "images": ["smoke/images/spatial-01.png"], "question": "Is the red triangle to the left or right of the green square?", "answer_type": "multiple_choice", "options": ["left", "right"], "answer": "A"}
+{"id": "spatial-02", "domain": "spatial", "source": "synthetic/spatial-02", "images": ["smoke/images/spatial-02.png"], "question": "Is the red triangle to the left or right of the green square?", "answer_type": "multiple_choice", "options": ["left", "right"], "answer": "B"}
+{"id": "spatial-03", "domain": "spatial", "source": "synthetic/spatial-03", "images": ["smoke/images/spatial-03.png"], "question": "Is the red triangle to the left or right of the green square?", "answer_type": "multiple_choice", "options": ["left", "right"], "answer": "A"}
+{"id": "spatial-04", "domain": "spatial", "source": "synthetic/spatial-04", "images": ["smoke/images/spatial-04.png"], "question": "Is the red triangle to the left or right of the green square?", "answer_type": "multiple_choice", "options": ["left", "right"], "answer": "B"}
+{"id": "chart-01", "domain": "charts", "source": "synthetic/chart-01", "images": ["smoke/images/chart-01.png"], "question": "Which series has the largest increase in value from Jan to Mar?", "answer_type": "multiple_choice", "options": ["A", "B", "C"], "answer": "C"}
+{"id": "chart-02", "domain": "charts", "source": "synthetic/chart-02", "images": ["smoke/images/chart-02.png"], "question": "Which series has the largest increase in value from Jan to Mar?", "answer_type": "multiple_choice", "options": ["A", "B", "C"], "answer": "B", "answer_any_of": ["C"], "note": "Generator produced a tie: B rises 20->30 and C rises 28->38, both +10. Both answers are defensible, so both are accepted rather than arbitrarily crediting B."}
+{"id": "chart-03", "domain": "charts", "source": "synthetic/chart-03", "images": ["smoke/images/chart-03.png"], "question": "Which series has the largest increase in value from Jan to Mar?", "answer_type": "multiple_choice", "options": ["A", "B", "C"], "answer": "A"}
+{"id": "chart-04", "domain": "charts", "source": "synthetic/chart-04", "images": ["smoke/images/chart-04.png"], "question": "Which series has the largest increase in value from Jan to Mar?", "answer_type": "multiple_choice", "options": ["A", "B", "C"], "answer": "B"}

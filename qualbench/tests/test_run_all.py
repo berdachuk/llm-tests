@@ -119,3 +119,26 @@ def test_render_markdown_includes_task_reasons() -> None:
     markdown = run_all.render_markdown(report)
     assert "expected no tool call" in markdown
     assert "Preflight: requested model present" in markdown
+
+
+def test_multimodal_is_registered_but_opt_in() -> None:
+    """Vision tasks must not silently join the default text-only run.
+
+    Every historical baseline in results/ is a 50-task text-only number;
+    adding vision to the default selection would make new totals
+    incomparable to old ones, and would fail wherever media/vision is
+    absent.
+    """
+    assert "multimodal" in run_all.CATEGORIES
+    assert "multimodal" in run_all.OPT_IN_CATEGORIES
+
+    default_selection = [c for c in run_all.CATEGORIES if c not in run_all.OPT_IN_CATEGORIES]
+    assert "multimodal" not in default_selection
+    assert len(default_selection) == 6, default_selection
+
+
+def test_every_registered_category_has_a_checker() -> None:
+    for cat_id, cfg in run_all.CATEGORIES.items():
+        check_py = run_all.FIXTURES / cfg["dir"] / "check.py"
+        assert check_py.is_file(), f"{cat_id}: missing {check_py}"
+        assert cfg["timeout"] > 0

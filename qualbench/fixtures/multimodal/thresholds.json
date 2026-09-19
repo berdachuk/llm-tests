@@ -1,0 +1,27 @@
+{
+  "_README": [
+    "Per-visual-domain pass thresholds (fraction of items that must be correct).",
+    "",
+    "These are REGRESSION GUARDS, not claims about the model's ability. The bar",
+    "is set below observed local accuracy so that ordinary run-to-run noise does",
+    "not flip a bucket red, while a genuine capability regression (or vision",
+    "being accidentally disabled) does.",
+    "",
+    "They differ per domain on purpose: chart and diagram reasoning is materially",
+    "harder than reading rendered text, so holding every bucket to one flat bar",
+    "would make the suite either trivially green or permanently red -- in both",
+    "cases useless as a regression signal.",
+    "",
+    "Values here override the DEFAULT_THRESHOLDS dict in check.py. Recalibrate",
+    "only against several runs, using the per-run accuracy spread reported by",
+    "variance_report.py -- never against a single run."
+  ],
+  "ocr": 0.75,
+  "counting": 0.6,
+  "spatial": 0.6,
+  "charts": 0.5,
+  "photos": 0.6,
+  "screen-captures": 0.5,
+  "diagrams": 0.4,
+  "video": 0.4
+}

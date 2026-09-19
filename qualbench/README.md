@@ -40,6 +40,23 @@ fixtures/
   long-context/       10 tasks -- needle-in-haystack retrieval at 8K/64K/
                       150K tokens x position 10%/50%/90%, plus 2 tasks
                       with decoy markers.
+  multimodal/         OPT-IN, image/vision eval. One "task" is a visual
+                      *domain* bucket (charts/photos/screen-captures/
+                      diagrams/ocr/counting/spatial/video) aggregating many
+                      images, not a single prompt.
+    check.py           model-in-the-loop harness; sends images as base64
+                       data URLs, grades at exact/normalized/numeric levels.
+    mm_common.py       shared media/encoding/extraction/grading logic.
+    manifests/*.jsonl  the evaluated item sets (committed; media is not).
+    prep_mmmu.py       builds a stratified MMMU subset manifest + extracts
+                       images from the HF parquet snapshot.
+    variance_report.py model-output-vs-ground-truth analysis: per-domain /
+                       subject / difficulty accuracy, wrong-answer vs
+                       plumbing-failure decomposition, cross-run flakiness.
+    dashboard.py       Markdown/HTML dashboard, incl. comparison against
+                       public_benchmarks.json reference numbers.
+    Dockerfile,
+    DOCKER.md          containerised eval client + step-by-step runbook.
 harness/
   run_all.py          unified runner: shells out to each category's own
                       check.py --all, does a /v1/models preflight for the
@@ -52,7 +69,83 @@ results/              aggregated run reports (JSON + Markdown per run),
 
 All qualbench content (fixtures, harnesses, `base/` app projects, results)
 now lives as ordinary tracked files inside the main `llm-tests` git repo
--- there are no nested git repositories under `qualbench/` anymore.
+-- there are no nested git repositories under `qualbench/` anymore. The one
+exception is multimodal **media**: MMMU images are gigabytes and are
+redistributable only from the original dataset, so they stay outside git
+and are located via `$QUALBENCH_MM_MEDIA_ROOT`. The manifests that define
+exactly which items were evaluated *are* committed.
+
+## The `multimodal` category is opt-in
+
+`multimodal` is registered in `run_all.py` but excluded from the default
+"run everything" selection (see `OPT_IN_CATEGORIES`). Two reasons:
+
+1. it needs a **vision-enabled** server plus media staged outside git, so
+   it would fail spuriously wherever those are absent;
+2. every historical baseline in `results/` is a 50-task **text-only**
+   number. Silently adding vision tasks to the default run would make new
+   totals incomparable to old ones.
+
+Request it explicitly:
+
+```bash
+QUALBENCH_MM_MEDIA_ROOT=/mnt/data/qwen36-mm-eval/media \
+QUALBENCH_MM_SUITE=mmmu-subset \
+python3 qualbench/harness/run_all.py \
+  --url http://192.168.0.88:8000 --model qwen3.6-35b-a3b \
+  --tag mm-mmmu --categories multimodal
+```
+
+Or drive the checker directly (this is what the container does):
+
+```bash
+cd qualbench/fixtures/multimodal
+export QUALBENCH_MM_MEDIA_ROOT=/mnt/data/qwen36-mm-eval/media
+python3 check.py --all --suite smoke --url http://192.168.0.88:8000 \
+  --emit-artifacts --records-out results/smoke.jsonl
+python3 variance_report.py results/smoke.jsonl
+python3 dashboard.py results/smoke.jsonl -o results/dashboard.md
+```
+
+Suites available: `smoke` (16 synthetic items, exact ground truth by
+construction -- run this first to verify wiring; scores 15/16 = 93.8%
+against the live server, the miss being a genuine reasoning loop that
+truncates) and `mmmu-subset` (60 real MMMU validation items, stratified
+across 4 visual domains). Full runbook including Docker:
+`fixtures/multimodal/DOCKER.md`.
+
+### Measured results (2026-09-19, FP8 on the 4090)
+
+`mmmu-subset`, `--max-tokens 16384`: **48/60 = 80.0%** overall --
+screen-captures 91.7%, charts 87.5%, diagrams 75.0%, photos 68.8%.
+Chance floor 26.0%. A second run at the same config gave 47/60 = 78.3%
+with the same domain ordering: **~2% run-to-run flakiness** (1 flipped
+item of 53 measurable). `photos` is the weakest bucket in both clean
+runs and sits at its 60% threshold. See
+`results/run-mm-mmmu-subset-20260919.md`.
+
+**The token budget is part of the result.** The same suite scores 58.3%
+at `max_tokens=2048` and 80.0% at 16384, because real MMMU figures need
+up to ~10k reasoning tokens. Always report the budget alongside the
+number, and check the truncation count before believing any accuracy
+figure from this category.
+
+### Grading design notes
+
+* Images go over the wire as **base64 data URLs**, never `file://`, so the
+  eval client need not share a filesystem with the server.
+* Grading records *how* an answer matched (`exact` / `normalized` /
+  `numeric`). The gap between accuracy and strict accuracy is **formatting**
+  variance, not reasoning variance, and is reported separately.
+* Truncated generations, transport errors and missing media are classified
+  as **plumbing failures**, never silently scored as wrong answers. A
+  bucket with un-staged media fails loudly instead of reporting 0%.
+* The variance report prints the **random-chance floor** implied by the
+  option counts, because on multiple-choice sets an unimpressive-looking
+  score can be statistically indistinguishable from guessing.
+* Per-domain thresholds (`thresholds.json`) are **regression guards**
+  calibrated on observed local behaviour, not claims about the model's
+  ceiling; chart/diagram reasoning is genuinely harder than OCR.
 
 ## CI and local sanity checks
 
@@ -74,7 +167,8 @@ python -m py_compile \
   qualbench/fixtures/sql-migrations/check.py \
   qualbench/fixtures/mcp-tools/check.py \
   qualbench/fixtures/security-review/check.py \
-  qualbench/fixtures/long-context/check.py
+  qualbench/fixtures/long-context/check.py \
+  qualbench/fixtures/multimodal/check.py
 python -m pytest -q qualbench/tests
 ```
 
