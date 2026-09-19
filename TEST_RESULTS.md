@@ -19,6 +19,76 @@ on the by-design mcp-tools probe) and agentbench **50 passed / 4 failed
 correct behavior)** with concurrency 3/3 and large-context 5/5 passing
 (see the section below).
 
+**Update 3 (2026-09-19):** FreeToken on the remote RTX 4090
+(`192.168.0.88`) was upgraded from **v0.1.2 (`af71ba4`) to v0.1.3
+(`cac247a`)**. The full 50-task qualbench suite was re-run against the
+same `Qwen3.6-35B-A3B-FP8` checkpoint (same chat template, same launch
+flags) to confirm no regression from the upgrade -- result:
+**47/50, 0 new findings, every non-pass matches an already-documented
+model-family behavior** (see
+[`qualbench/results/run-freetoken013-fp8-final-20260919.md`](qualbench/results/run-freetoken013-fp8-final-20260919.md)
+for the full comparison against the pre-upgrade v0.1.2 baseline runs).
+
+**Update 4 (2026-09-19, same day):** multimodal (vision) support was
+**enabled** on the same RTX 4090 engine by removing `--text-model-only`
+from the launch flags (this checkpoint is natively multimodal;
+0.1.3+ builds the vision tower by default once that flag is absent). The
+full 50-task qualbench suite was re-run immediately after to confirm the
+change did not regress the existing text-only quality/perf baseline or
+shrink the usable context window -- result: **47/50, identical pass rate
+to the immediately-preceding text-only baseline, advertised context
+length unchanged at 262144, no OOM, no restart needed** (see
+[`qualbench/results/run-freetoken013-mm-final-20260919.md`](qualbench/results/run-freetoken013-mm-final-20260919.md)
+for the full before/after comparison). A separate targeted smoke test
+(image color-identification via the OpenAI-compatible API) confirmed the
+vision pipeline itself works end-to-end; qualbench's 50 tasks are
+text-only and do not exercise image input.
+
+**Update 5 (2026-09-19, same day): the dedicated multimodal eval is built
+and has run.** A new **opt-in** `multimodal` qualbench category
+(`qualbench/fixtures/multimodal/`) evaluates real images through the
+served vision tower. It is excluded from the default 50-task run on
+purpose: those baselines are text-only numbers, and adding vision tasks
+to them would break comparability.
+
+First real result, on the MMMU validation split (60-item stratified
+subset across 4 visual domains):
+
+| domain | accuracy |
+|---|---|
+| screen-captures | 11/12 = 91.7% |
+| charts | 14/16 = 87.5% |
+| diagrams | 12/16 = 75.0% |
+| photos | 11/16 = 68.8% |
+| **total** | **48/60 = 80.0%** |
+
+Random-chance floor for this item mix is 26.0%, so the result carries
+real signal. A second run at the identical config confirmed the score
+and measured **~2% run-to-run flakiness** (1 flipped item of 53
+measurable; 78.3% vs 80.0% overall).
+
+Four caveats worth stating up front:
+
+- The headline is only meaningful together with the token budget. The
+  same suite scored 58.3% at `max_tokens=2048` and 80.0% at 16384 --
+  real MMMU figures need up to ~10k reasoning tokens, and the earlier
+  number was almost entirely truncation. Genuine wrong answers stayed
+  constant at 8 from 4096 onwards. A rerun at 16384 reproduced the
+  picture (47/60 = 78.3%), including the domain ordering; `photos` was
+  weakest in both clean runs (68.8% and 62.5%, the latter exactly at
+  its threshold).
+- This is **not** comparable to published MMMU scores: 60-item subset
+  with our own prompt/parser, vs. the official 900-item split and
+  harness.
+- **Video is untested** -- Video-MME annotations are staged but no clips
+  are, so video items fail as explicit staging errors rather than being
+  scored.
+
+Full writeup: [`qualbench/results/run-mm-mmmu-subset-20260919.md`](qualbench/results/run-mm-mmmu-subset-20260919.md);
+bring-up findings (including three harness/fixture bugs it caught) in
+[`qualbench/results/findings.md`](qualbench/results/findings.md); runbook
+incl. Docker in `qualbench/fixtures/multimodal/DOCKER.md`.
+
 Full detail lives in `qualbench/results/`:
 - [`comparative-report-20260903.md`](qualbench/results/comparative-report-20260903.md) -- the full FP8-vs-NVFP4 writeup
 - [`run-fp8-final-20260903.md`](qualbench/results/run-fp8-final-20260903.md) / [`run-nvfp4-final-20260903.md`](qualbench/results/run-nvfp4-final-20260903.md) -- per-quantization consolidated run reports

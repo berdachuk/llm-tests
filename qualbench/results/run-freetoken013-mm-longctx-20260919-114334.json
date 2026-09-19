@@ -1,0 +1,216 @@
+{
+  "tag": "freetoken013-mm-longctx",
+  "url": "http://192.168.0.88:8000",
+  "model": "qwen3.6-35b-a3b",
+  "notes": "post-multimodal-enable run: --text-model-only removed, vision tower active",
+  "selected_categories": [
+    "long-context"
+  ],
+  "timeout_override_s": null,
+  "runner_python": "3.12.3",
+  "suite_git_commit": "a791f5f1a752eb4347c246dfd24e26c9243a065d",
+  "suite_git_dirty": true,
+  "preflight": {
+    "checked_at": "2026-09-19T08:33:10.859181+00:00",
+    "models_url": "http://192.168.0.88:8000/v1/models",
+    "requested_model": "qwen3.6-35b-a3b",
+    "requested_model_found": true,
+    "available_model_ids": [
+      "qwen3.6-35b-a3b"
+    ],
+    "selected_model_entry": {
+      "id": "qwen3.6-35b-a3b",
+      "object": "model",
+      "created": 1789806790,
+      "owned_by": "FreeToken",
+      "root": "/mnt/data/berda-models/models/Qwen3.6-35B-A3B-FP8",
+      "max_model_len": 262144,
+      "context_length": 262144,
+      "supported_reasoning_efforts": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "default_reasoning_effort": "medium"
+    }
+  },
+  "started_at": "2026-09-19T08:33:10.868411+00:00",
+  "finished_at": "2026-09-19T08:43:34.079374+00:00",
+  "total_wall_s": 623.2109470367432,
+  "total_pass": 10,
+  "total_tasks": 10,
+  "categories": [
+    {
+      "category": "long-context",
+      "n_pass": 10,
+      "n_total": 10,
+      "wall_s": 623.2060153484344,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-8k-pos10",
+          "passed": true,
+          "elapsed_s": 25.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-8k-pos10",
+            "category": "long-context",
+            "expected_marker": "XK-1001-ALFA-9273-NEEDLE",
+            "target_tokens": 8000,
+            "position_pct": 0.1,
+            "response_length": 655,
+            "response_excerpt": "XK-1001-ALFA-9273-NEEDLE\nThe codebase exhibits several critical thread-safety flaws, most notably the unguarded deduplication dictionary in the payment webhook handler and the unprotected handler iteration in the event bus during concurrent subscriptions. Performance and correctness issues also stand out, including the O(N) linear search in the index writer, the audit log's failure to clear its buffer after flushing, and the saga orchestrator's incomplete step execution logic. Finally, a significant portion of the provided files are exact duplicates with only versioned naming, indicating redundant code rather than distinct service implementations.",
+            "first_line": "XK-1001-ALFA-9273-NEEDLE"
+          }
+        },
+        {
+          "id": "02-8k-pos50",
+          "passed": true,
+          "elapsed_s": 40.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-8k-pos50",
+            "category": "long-context",
+            "expected_marker": "XK-1002-BRAVO-4418-NEEDLE",
+            "target_tokens": 8000,
+            "position_pct": 0.5,
+            "response_length": 604,
+            "response_excerpt": "XK-1002-BRAVO-4418-NEEDLE\nThe codebase exhibits several critical flaws, including unbounded memory leaks in the payment deduplication cache, audit buffer, and event bus dead-letter queue due to missing cleanup logic. A race condition in the inventory service's dynamic lock creation can break mutual exclusion, while the search index suffers from severe O(N) performance degradation by concatenating and scanning all document fields on every query. Finally, the webhook deduplication key incorrectly omits the `event_id`, leading to false collisions for distinct events sharing the same order and amount.",
+            "first_line": "XK-1002-BRAVO-4418-NEEDLE"
+          }
+        },
+        {
+          "id": "03-8k-pos90",
+          "passed": true,
+          "elapsed_s": 40.2,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-8k-pos90",
+            "category": "long-context",
+            "expected_marker": "XK-1003-CHARLIE-8801-NEEDLE",
+            "target_tokens": 8000,
+            "position_pct": 0.9,
+            "response_length": 498,
+            "response_excerpt": "XK-1003-CHARLIE-8801-NEEDLE\nThe codebase contains numerous unbounded collections (`_seen_recently`, `_documents`, `_dead_letter`, etc.) that will inevitably cause memory leaks, alongside critical thread-safety gaps where shared state is accessed without locks. Performance is degraded by coarse-grained global locks in the cache and rate limiter, an O(N) linear scan in the search index, and a saga orchestrator that initializes instances but completely lacks step execution and compensation logic.",
+            "first_line": "XK-1003-CHARLIE-8801-NEEDLE"
+          }
+        },
+        {
+          "id": "04-64k-pos10",
+          "passed": true,
+          "elapsed_s": 51.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-64k-pos10",
+            "category": "long-context",
+            "expected_marker": "XK-2001-DELTA-5567-NEEDLE",
+            "target_tokens": 64000,
+            "position_pct": 0.1,
+            "response_length": 648,
+            "response_excerpt": "XK-2001-DELTA-5567-NEEDLE\nThe codebase contains several thread-safety vulnerabilities, notably in `payment_webhook_handler`, `saga_orchestrator`, and `search_index_writer`, which mutate shared dictionaries without synchronization. `event_bus` iterates directly over a subscriber list without copying it, risking a `RuntimeError` if subscriptions are modified during publish, while `audit_log`'s `flush` method is not atomic and can be called concurrently. Additionally, `payment_webhook_handler`'s deduplication cache grows unbounded without TTL cleanup, and `notification_dispatcher` unnecessarily acquires the same lock twice in its success path.",
+            "first_line": "XK-2001-DELTA-5567-NEEDLE"
+          }
+        },
+        {
+          "id": "05-64k-pos50",
+          "passed": true,
+          "elapsed_s": 66.0,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-64k-pos50",
+            "category": "long-context",
+            "expected_marker": "XK-2002-ECHO-3392-NEEDLE",
+            "target_tokens": 64000,
+            "position_pct": 0.5,
+            "response_length": 514,
+            "response_excerpt": "XK-2002-ECHO-3392-NEEDLE\n\nThe codebase exhibits several thread-safety and concurrency issues, notably in `payment_webhook_handler` (unprotected `_seen_recently` dict), `event_bus` (concurrent handler iteration without locks), and `saga_orchestrator` (unsynchronized instance creation). Performance bottlenecks stem from coarse-grained global locks in `rate_limiter` and `cache_layer`, while `audit_log` lacks reentrant flush safety and `search_index_writer` is entirely unprotected against concurrent reads/writes.",
+            "first_line": "XK-2002-ECHO-3392-NEEDLE"
+          }
+        },
+        {
+          "id": "06-64k-pos90",
+          "passed": true,
+          "elapsed_s": 50.2,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-64k-pos90",
+            "category": "long-context",
+            "expected_marker": "XK-2003-FOXTROT-7714-NEEDLE",
+            "target_tokens": 64000,
+            "position_pct": 0.9,
+            "response_length": 702,
+            "response_excerpt": "XK-2003-FOXTROT-7714-NEEDLE\nThe codebase consists of 311 highly repetitive service modules that share common architectural flaws, including unprotected shared state in payment deduplication and event bus dead-letter queues leading to unbounded memory leaks. Thread-safety is compromised by coarse global locks on hot paths like the cache and rate limiter, creating severe concurrency bottlenecks, while several components like the saga orchestrator and search index lack core execution logic. Overall, the system requires refactoring to replace in-memory state with distributed storage, implement fine-grained locking or lock-free structures, and address the indefinite growth of unbounded collections.",
+            "first_line": "XK-2003-FOXTROT-7714-NEEDLE"
+          }
+        },
+        {
+          "id": "07-150k-pos10",
+          "passed": true,
+          "elapsed_s": 98.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-150k-pos10",
+            "category": "long-context",
+            "expected_marker": "XK-3001-GOLF-2256-NEEDLE",
+            "target_tokens": 150000,
+            "position_pct": 0.1,
+            "response_length": 602,
+            "response_excerpt": "XK-3001-GOLF-2256-NEEDLE\nThe codebase contains several critical issues: `PaymentWebhookHandler` and `EventBus` suffer from unbounded memory growth due to missing TTL/cleanup on deduplication and dead-letter queues. `SearchIndexWriter` has severe performance degradation from O(N) linear scans with string coercion on every query, while `JobScheduler` ignores the `priority` field by using a standard list instead of a heap. Additionally, `AuditLog` has a race condition checking buffer length outside the lock, and `SagaOrchestrator` is incomplete, lacking actual step execution and compensation logic.",
+            "first_line": "XK-3001-GOLF-2256-NEEDLE"
+          }
+        },
+        {
+          "id": "08-150k-pos50",
+          "passed": true,
+          "elapsed_s": 87.5,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-150k-pos50",
+            "category": "long-context",
+            "expected_marker": "XK-3002-HOTEL-9938-NEEDLE",
+            "target_tokens": 150000,
+            "position_pct": 0.5,
+            "response_length": 459,
+            "response_excerpt": "XK-3002-HOTEL-9938-NEEDLE\n\nThe codebase is a highly repetitive template exercise spanning 11 service types repeated ~70 times each. While most modules implement basic thread safety with locks, several lack cleanup mechanisms for in-memory deduplication and buffering, leading to inevitable memory leaks. Performance bottlenecks include synchronous blocking flushes, unbounded cache growth, and linear-time search operations that would not scale in production.",
+            "first_line": "XK-3002-HOTEL-9938-NEEDLE"
+          }
+        },
+        {
+          "id": "09-distractor-64k",
+          "passed": true,
+          "elapsed_s": 57.5,
+          "reasons": [],
+          "artifact": {
+            "task_id": "09-distractor-64k",
+            "category": "long-context",
+            "expected_marker": "XK-4001-INDIA-6625-REAL",
+            "target_tokens": 64000,
+            "position_pct": 0.5,
+            "response_length": 532,
+            "response_excerpt": "XK-4001-INDIA-6625-REAL\nThe codebase contains critical race conditions in the payment deduplication and agent tool routing modules due to improperly scoped locks that allow concurrent access past safety checks. Several services like the event bus, notification dispatcher, and audit logger lack cleanup mechanisms, leading to unbounded memory growth over time. Additionally, the search indexer and rate limiter rely on inefficient linear scans and coarse-grained locking that will severely degrade throughput under high concurrency.",
+            "first_line": "XK-4001-INDIA-6625-REAL"
+          }
+        },
+        {
+          "id": "10-distractor-150k",
+          "passed": true,
+          "elapsed_s": 104.9,
+          "reasons": [],
+          "artifact": {
+            "task_id": "10-distractor-150k",
+            "category": "long-context",
+            "expected_marker": "XK-4002-JULIET-1187-REAL",
+            "target_tokens": 150000,
+            "position_pct": 0.75,
+            "response_length": 697,
+            "response_excerpt": "XK-4002-JULIET-1187-REAL\n\nThe codebase is heavily templated, consisting of hundreds of nearly identical versioned modules that serve as scaffolding rather than production-ready code. Key technical issues include race conditions in dynamic lock creation (`inventory_service`), unprotected concurrent iteration/modification (`event_bus`), and a global lock bottleneck in the `rate_limiter`. Additionally, `payment_webhook_handler` lacks TTL-based cleanup for its deduplication cache (causing memory leaks), `search_index_writer` performs inefficient O(N) linear scans, and core orchestrators like `saga_orchestrator` and `job_scheduler` are incomplete stubs missing execution and compensation logic.",
+            "first_line": "XK-4002-JULIET-1187-REAL"
+          }
+        }
+      ],
+      "artifact_count": 10,
+      "logs": []
+    }
+  ]
+}

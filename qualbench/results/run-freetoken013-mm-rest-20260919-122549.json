@@ -1,0 +1,901 @@
+{
+  "tag": "freetoken013-mm-rest",
+  "url": "http://192.168.0.88:8000",
+  "model": "qwen3.6-35b-a3b",
+  "notes": "post-multimodal-enable run: --text-model-only removed, vision tower active",
+  "selected_categories": [
+    "java-spring",
+    "ts-angular",
+    "sql-migrations",
+    "mcp-tools",
+    "security-review"
+  ],
+  "timeout_override_s": null,
+  "runner_python": "3.12.3",
+  "suite_git_commit": "a791f5f1a752eb4347c246dfd24e26c9243a065d",
+  "suite_git_dirty": true,
+  "preflight": {
+    "checked_at": "2026-09-19T08:56:40.588777+00:00",
+    "models_url": "http://192.168.0.88:8000/v1/models",
+    "requested_model": "qwen3.6-35b-a3b",
+    "requested_model_found": true,
+    "available_model_ids": [
+      "qwen3.6-35b-a3b"
+    ],
+    "selected_model_entry": {
+      "id": "qwen3.6-35b-a3b",
+      "object": "model",
+      "created": 1789808200,
+      "owned_by": "FreeToken",
+      "root": "/mnt/data/berda-models/models/Qwen3.6-35B-A3B-FP8",
+      "max_model_len": 262144,
+      "context_length": 262144,
+      "supported_reasoning_efforts": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "default_reasoning_effort": "medium"
+    }
+  },
+  "started_at": "2026-09-19T08:56:40.616969+00:00",
+  "finished_at": "2026-09-19T09:25:49.469913+00:00",
+  "total_wall_s": 1748.8529162406921,
+  "total_pass": 37,
+  "total_tasks": 40,
+  "categories": [
+    {
+      "category": "java-spring",
+      "n_pass": 9,
+      "n_total": 10,
+      "wall_s": 612.6150517463684,
+      "returncode": 1,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-pagination-calculator",
+          "passed": true,
+          "elapsed_s": 39.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-pagination-calculator",
+            "category": "java-spring",
+            "class_name": "PaginationCalculator",
+            "response_length": 650,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\n/**\n * Computes pagination metadata for a result set.\n */\npublic class PaginationCalculator {\n\n    /**\n     * Returns the total number of pages needed to display {@code totalItems}\n     * items at {@code pageSize} items per page. Must round UP (a partial\n     * last page still counts as a full page).\n     */\n    public int totalPages(int totalItems, int pageSize) {\n        if (pageSize <= 0) {\n            throw new IllegalArgumentException(\"pageSize must be positive\");\n        }\n        if (totalItems <= 0) {\n            return 0;\n        }\n        return (totalItems + pageSize - 1) / pageSize;\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\n/**\n * Computes pagination metadata for a result set.\n */\npublic class PaginationCalculator {\n\n    /**\n     * Returns the total number of pages needed to display {@code totalItems}\n     * items at {@code pageSize} items per page. Must round UP (a partial\n     * last page still counts as a full page).\n     */\n    public int totalPages(int totalItems, int pageSize) {\n        if (pageSize <= 0) {\n            throw new IllegalArgumentException(\"pageSize must be positive\");\n        }\n        if (totalItems <= 0) {\n            return 0;\n        }\n        return (totalItems + pageSize - 1) / pageSize;\n    }\n}\n",
+            "candidate_length": 639,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=PaginationCalculatorTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "02-discount-calculator",
+          "passed": true,
+          "elapsed_s": 67.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-discount-calculator",
+            "category": "java-spring",
+            "class_name": "DiscountCalculator",
+            "response_length": 847,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.math.BigDecimal;\nimport java.math.RoundingMode;\n\n/**\n * Applies a percentage discount to a price.\n */\npublic class DiscountCalculator {\n\n    /**\n     * Applies {@code discountPercent} (e.g. 15 for 15%) to {@code price} and\n     * returns the discounted price, rounded to 2 decimal places (HALF_UP).\n     */\n    public BigDecimal applyDiscount(BigDecimal price, BigDecimal discountPercent) {\n        if (price == null || discountPercent == null) {\n            throw new IllegalArgumentException(\"price and discountPercent must not be null\");\n        }\n        BigDecimal discountAmount = price.multiply(discountPercent).divide(BigDecimal.valueOf(100));\n        BigDecimal discountedPrice = price.subtract(discountAmount);\n        return discountedPrice.setScale(2, RoundingMode.HALF_UP);\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.math.BigDecimal;\nimport java.math.RoundingMode;\n\n/**\n * Applies a percentage discount to a price.\n */\npublic class DiscountCalculator {\n\n    /**\n     * Applies {@code discountPercent} (e.g. 15 for 15%) to {@code price} and\n     * returns the discounted price, rounded to 2 decimal places (HALF_UP).\n     */\n    public BigDecimal applyDiscount(BigDecimal price, BigDecimal discountPercent) {\n        if (price == null || discountPercent == null) {\n            throw new IllegalArgumentException(\"price and discountPercent must not be null\");\n        }\n        BigDecimal discountAmount = price.multiply(discountPercent).divide(BigDecimal.valueOf(100));\n        BigDecimal discountedPrice = price.subtract(discountAmount);\n        return discountedPrice.setScale(2, RoundingMode.HALF_UP);\n    }\n}\n",
+            "candidate_length": 836,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=DiscountCalculatorTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "03-inventory-counter",
+          "passed": true,
+          "elapsed_s": 55.2,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-inventory-counter",
+            "category": "java-spring",
+            "class_name": "InventoryCounter",
+            "response_length": 988,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.concurrent.atomic.AtomicInteger;\n\n/**\n * Thread-safe counter tracking available inventory across concurrent\n * reservation attempts.\n */\npublic class InventoryCounter {\n\n    private int available;\n\n    public InventoryCounter(int initialStock) {\n        this.available = initialStock;\n    }\n\n    /**\n     * Attempts to reserve {@code quantity} units. Returns true and\n     * decrements available stock if enough units are available; returns\n     * false (and leaves stock unchanged) otherwise. Must be safe to call\n     * concurrently from many threads without ever allowing available stock\n     * to go negative or losing a reservation that should have succeeded.\n     */\n    public synchronized boolean reserve(int quantity) {\n        if (available >= quantity) {\n            available -= quantity;\n            return true;\n        }\n        return false;\n    }\n\n    public int getAvailable() {\n        return available;\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.concurrent.atomic.AtomicInteger;\n\n/**\n * Thread-safe counter tracking available inventory across concurrent\n * reservation attempts.\n */\npublic class InventoryCounter {\n\n    private int available;\n\n    public InventoryCounter(int initialStock) {\n        this.available = initialStock;\n    }\n\n    /**\n     * Attempts to reserve {@code quantity} units. Returns true and\n     * decrements available stock if enough units are available; returns\n     * false (and leaves stock unchanged) otherwise. Must be safe to call\n     * concurrently from many threads without ever allowing available stock\n     * to go negative or losing a reservation that should have succeeded.\n     */\n    public synchronized boolean reserve(int quantity) {\n        if (available >= quantity) {\n            available -= quantity;\n            return true;\n        }\n        return false;\n    }\n\n    public int getAvailable() {\n        return available;\n    }\n}\n",
+            "candidate_length": 977,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=InventoryCounterTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "04-date-range-overlap",
+          "passed": true,
+          "elapsed_s": 62.5,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-date-range-overlap",
+            "category": "java-spring",
+            "class_name": "DateRangeOverlap",
+            "response_length": 614,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.time.LocalDate;\n\n/**\n * Checks whether two date ranges (inclusive on both ends) overlap.\n */\npublic class DateRangeOverlap {\n\n    /**\n     * Returns true if [startA, endA] and [startB, endB] share at least one\n     * day in common. Both ranges are inclusive of their start and end\n     * dates. A range that merely touches at a single shared boundary day\n     * counts as overlapping.\n     */\n    public boolean overlaps(LocalDate startA, LocalDate endA, LocalDate startB, LocalDate endB) {\n        return !startA.isAfter(endB) && !startB.isAfter(endA);\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.time.LocalDate;\n\n/**\n * Checks whether two date ranges (inclusive on both ends) overlap.\n */\npublic class DateRangeOverlap {\n\n    /**\n     * Returns true if [startA, endA] and [startB, endB] share at least one\n     * day in common. Both ranges are inclusive of their start and end\n     * dates. A range that merely touches at a single shared boundary day\n     * counts as overlapping.\n     */\n    public boolean overlaps(LocalDate startA, LocalDate endA, LocalDate startB, LocalDate endB) {\n        return !startA.isAfter(endB) && !startB.isAfter(endA);\n    }\n}\n",
+            "candidate_length": 603,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=DateRangeOverlapTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "05-csv-field-parser",
+          "passed": true,
+          "elapsed_s": 54.5,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-csv-field-parser",
+            "category": "java-spring",
+            "class_name": "CsvFieldParser",
+            "response_length": 1155,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.ArrayList;\nimport java.util.List;\n\n/**\n * Splits a single line of naive CSV into fields, respecting double-quoted\n * fields that may themselves contain commas.\n */\npublic class CsvFieldParser {\n\n    /**\n     * Splits {@code line} on commas, except commas that appear inside a\n     * double-quoted field (e.g. {@code a,\"b,c\",d} -> [\"a\", \"b,c\", \"d\"]).\n     * Surrounding quotes on a quoted field are stripped from the result.\n     */\n    public List<String> parseLine(String line) {\n        List<String> fields = new ArrayList<>();\n        StringBuilder currentField = new StringBuilder();\n        boolean inQuotes = false;\n        \n        for (int i = 0; i < line.length(); i++) {\n            char c = line.charAt(i);\n            if (c == '\"') {\n                inQuotes = !inQuotes;\n            } else if (c == ',' && !inQuotes) {\n                fields.add(currentField.toString());\n                currentField.setLength(0);\n            } else {\n                currentField.append(c);\n            }\n        }\n        fields.add(currentField.toString());\n        \n        return fields;\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.ArrayList;\nimport java.util.List;\n\n/**\n * Splits a single line of naive CSV into fields, respecting double-quoted\n * fields that may themselves contain commas.\n */\npublic class CsvFieldParser {\n\n    /**\n     * Splits {@code line} on commas, except commas that appear inside a\n     * double-quoted field (e.g. {@code a,\"b,c\",d} -> [\"a\", \"b,c\", \"d\"]).\n     * Surrounding quotes on a quoted field are stripped from the result.\n     */\n    public List<String> parseLine(String line) {\n        List<String> fields = new ArrayList<>();\n        StringBuilder currentField = new StringBuilder();\n        boolean inQuotes = false;\n        \n        for (int i = 0; i < line.length(); i++) {\n            char c = line.charAt(i);\n            if (c == '\"') {\n                inQuotes = !inQuotes;\n            } else if (c == ',' && !inQuotes) {\n                fields.add(currentField.toString());\n                currentField.setLength(0);\n            } else {\n                currentField.append(c);\n            }\n        }\n        fields.add(currentField.toString());\n        \n        return fields;\n    }\n}\n",
+            "candidate_length": 1144,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=CsvFieldParserTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "06-moving-average",
+          "passed": true,
+          "elapsed_s": 55.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-moving-average",
+            "category": "java-spring",
+            "class_name": "MovingAverage",
+            "response_length": 1025,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.ArrayDeque;\nimport java.util.Deque;\n\n/**\n * Maintains a simple moving average over the last {@code windowSize}\n * values added.\n */\npublic class MovingAverage {\n\n    private final int windowSize;\n    private final Deque<Double> window = new ArrayDeque<>();\n    private double sum = 0.0;\n\n    public MovingAverage(int windowSize) {\n        if (windowSize <= 0) {\n            throw new IllegalArgumentException(\"windowSize must be positive\");\n        }\n        this.windowSize = windowSize;\n    }\n\n    /**\n     * Adds a new value, evicting the oldest value once the window exceeds\n     * {@code windowSize} entries, and returns the current average over the\n     * values currently in the window.\n     */\n    public double add(double value) {\n        window.addLast(value);\n        sum += value;\n        if (window.size() > windowSize) {\n            double removed = window.removeFirst();\n            sum -= removed;\n        }\n        return sum / window.size();\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.ArrayDeque;\nimport java.util.Deque;\n\n/**\n * Maintains a simple moving average over the last {@code windowSize}\n * values added.\n */\npublic class MovingAverage {\n\n    private final int windowSize;\n    private final Deque<Double> window = new ArrayDeque<>();\n    private double sum = 0.0;\n\n    public MovingAverage(int windowSize) {\n        if (windowSize <= 0) {\n            throw new IllegalArgumentException(\"windowSize must be positive\");\n        }\n        this.windowSize = windowSize;\n    }\n\n    /**\n     * Adds a new value, evicting the oldest value once the window exceeds\n     * {@code windowSize} entries, and returns the current average over the\n     * values currently in the window.\n     */\n    public double add(double value) {\n        window.addLast(value);\n        sum += value;\n        if (window.size() > windowSize) {\n            double removed = window.removeFirst();\n            sum -= removed;\n        }\n        return sum / window.size();\n    }\n}\n",
+            "candidate_length": 1014,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=MovingAverageTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "07-money",
+          "passed": false,
+          "elapsed_s": 90.8,
+          "reasons": [
+            "truncated: finish_reason=length (content: '```java\\npackage com.qualbench.bugs;\\n\\nimport java.math')"
+          ],
+          "artifact": {
+            "task_id": "07-money",
+            "category": "java-spring",
+            "class_name": "Money",
+            "error": "truncated: finish_reason=length (content: '```java\\npackage com.qualbench.bugs;\\n\\nimport java.math')"
+          }
+        },
+        {
+          "id": "08-retrying-operation",
+          "passed": true,
+          "elapsed_s": 59.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-retrying-operation",
+            "category": "java-spring",
+            "class_name": "RetryingOperation",
+            "response_length": 1154,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.concurrent.Callable;\n\n/**\n * Retries a flaky operation up to a fixed number of times, re-throwing the\n * last failure if every attempt fails.\n */\npublic class RetryingOperation {\n\n    /**\n     * Calls {@code operation} up to {@code maxAttempts} times. Returns the\n     * first successful result. If every attempt throws, re-throws the\n     * exception from the LAST attempt (not the first), wrapped in a\n     * RuntimeException if it isn't one already.\n     */\n    public <T> T runWithRetry(Callable<T> operation, int maxAttempts) {\n        if (maxAttempts <= 0) {\n            throw new IllegalArgumentException(\"maxAttempts must be positive\");\n        }\n        Exception lastFailure = null;\n        for (int attempt = 1; attempt <= maxAttempts; attempt++) {\n            try {\n                return operation.call();\n            } catch (Exception e) {\n                lastFailure = e;\n            }\n        }\n        if (lastFailure instanceof RuntimeException) {\n            throw (RuntimeException) lastFailure;\n        }\n        throw new RuntimeException(lastFailure.getMessage());\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.concurrent.Callable;\n\n/**\n * Retries a flaky operation up to a fixed number of times, re-throwing the\n * last failure if every attempt fails.\n */\npublic class RetryingOperation {\n\n    /**\n     * Calls {@code operation} up to {@code maxAttempts} times. Returns the\n     * first successful result. If every attempt throws, re-throws the\n     * exception from the LAST attempt (not the first), wrapped in a\n     * RuntimeException if it isn't one already.\n     */\n    public <T> T runWithRetry(Callable<T> operation, int maxAttempts) {\n        if (maxAttempts <= 0) {\n            throw new IllegalArgumentException(\"maxAttempts must be positive\");\n        }\n        Exception lastFailure = null;\n        for (int attempt = 1; attempt <= maxAttempts; attempt++) {\n            try {\n                return operation.call();\n            } catch (Exception e) {\n                lastFailure = e;\n            }\n        }\n        if (lastFailure instanceof RuntimeException) {\n            throw (RuntimeException) lastFailure;\n        }\n        throw new RuntimeException(lastFailure.getMessage());\n    }\n}\n",
+            "candidate_length": 1143,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=RetryingOperationTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "09-request-id-generator",
+          "passed": true,
+          "elapsed_s": 86.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "09-request-id-generator",
+            "category": "java-spring",
+            "class_name": "RequestIdGenerator",
+            "response_length": 1154,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport org.springframework.stereotype.Component;\n\n/**\n * A singleton Spring bean that generates sequential request IDs of the\n * form \"REQ-<currentUserId>-<sequence>\" for the currently-processing\n * request. Because this bean is a singleton (Spring's default scope), it\n * is shared across all concurrently-handled HTTP requests in the\n * application -- it must never hold per-request mutable state as an\n * instance field.\n */\n@Component\npublic class RequestIdGenerator {\n\n    private final ThreadLocal<String> currentUserId = ThreadLocal.withInitial(() -> null);\n    private final ThreadLocal<Integer> sequence = ThreadLocal.withInitial(() -> 0);\n\n    /** Called once at the start of handling a request for the given user. */\n    public void startRequest(String userId) {\n        this.currentUserId.set(userId);\n        this.sequence.set(0);\n    }\n\n    /** Called to produce the next ID for the request started above. */\n    public synchronized String generateId() {\n        int seq = this.sequence.get() + 1;\n        this.sequence.set(seq);\n        return \"REQ-\" + this.currentUserId.get() + \"-\" + seq;\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport org.springframework.stereotype.Component;\n\n/**\n * A singleton Spring bean that generates sequential request IDs of the\n * form \"REQ-<currentUserId>-<sequence>\" for the currently-processing\n * request. Because this bean is a singleton (Spring's default scope), it\n * is shared across all concurrently-handled HTTP requests in the\n * application -- it must never hold per-request mutable state as an\n * instance field.\n */\n@Component\npublic class RequestIdGenerator {\n\n    private final ThreadLocal<String> currentUserId = ThreadLocal.withInitial(() -> null);\n    private final ThreadLocal<Integer> sequence = ThreadLocal.withInitial(() -> 0);\n\n    /** Called once at the start of handling a request for the given user. */\n    public void startRequest(String userId) {\n        this.currentUserId.set(userId);\n        this.sequence.set(0);\n    }\n\n    /** Called to produce the next ID for the request started above. */\n    public synchronized String generateId() {\n        int seq = this.sequence.get() + 1;\n        this.sequence.set(seq);\n        return \"REQ-\" + this.currentUserId.get() + \"-\" + seq;\n    }\n}\n",
+            "candidate_length": 1143,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=RequestIdGeneratorTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "10-lru-cache",
+          "passed": true,
+          "elapsed_s": 41.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "10-lru-cache",
+            "category": "java-spring",
+            "class_name": "LruCache",
+            "response_length": 1152,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.LinkedHashMap;\nimport java.util.Map;\n\n/**\n * A fixed-capacity cache that evicts the Least Recently Used entry when\n * full. \"Recently used\" must be updated on both writes (put) AND reads\n * (get) -- reading an entry counts as using it, so it should not be the\n * next one evicted.\n */\npublic class LruCache<K, V> {\n\n    private final int capacity;\n    private final Map<K, V> map;\n\n    public LruCache(int capacity) {\n        if (capacity <= 0) {\n            throw new IllegalArgumentException(\"capacity must be positive\");\n        }\n        this.capacity = capacity;\n        this.map = new LinkedHashMap<>(capacity, 0.75f, true) {\n            @Override\n            protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {\n                return size() > LruCache.this.capacity;\n            }\n        };\n    }\n\n    public void put(K key, V value) {\n        map.put(key, value);\n    }\n\n    public V get(K key) {\n        return map.get(key);\n    }\n\n    public boolean containsKey(K key) {\n        return map.containsKey(key);\n    }\n\n    public int size() {\n        return map.size();\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.LinkedHashMap;\nimport java.util.Map;\n\n/**\n * A fixed-capacity cache that evicts the Least Recently Used entry when\n * full. \"Recently used\" must be updated on both writes (put) AND reads\n * (get) -- reading an entry counts as using it, so it should not be the\n * next one evicted.\n */\npublic class LruCache<K, V> {\n\n    private final int capacity;\n    private final Map<K, V> map;\n\n    public LruCache(int capacity) {\n        if (capacity <= 0) {\n            throw new IllegalArgumentException(\"capacity must be positive\");\n        }\n        this.capacity = capacity;\n        this.map = new LinkedHashMap<>(capacity, 0.75f, true) {\n            @Override\n            protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {\n                return size() > LruCache.this.capacity;\n            }\n        };\n    }\n\n    public void put(K key, V value) {\n        map.put(key, value);\n    }\n\n    public V get(K key) {\n        return map.get(key);\n    }\n\n    public boolean containsKey(K key) {\n        return map.containsKey(key);\n    }\n\n    public int size() {\n        return map.size();\n    }\n}\n",
+            "candidate_length": 1141,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=LruCacheTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        }
+      ],
+      "artifact_count": 10,
+      "logs": []
+    },
+    {
+      "category": "ts-angular",
+      "n_pass": 8,
+      "n_total": 8,
+      "wall_s": 407.75993490219116,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-price-formatter",
+          "passed": true,
+          "elapsed_s": 36.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-price-formatter",
+            "category": "ts-angular",
+            "file_name": "price-formatter.ts",
+            "spec_name": "price-formatter.spec.ts",
+            "response_length": 339,
+            "response_excerpt": "```ts\n/**\n * Formats a price in cents (integer) as a currency string, e.g.\n * formatPrice(1050) -> \"$10.50\", formatPrice(5) -> \"$0.05\".\n */\nexport function formatPrice(cents: number): string {\n  const dollars = Math.floor(cents / 100);\n  const remainder = cents % 100;\n  return `$${dollars}.${remainder.toString().padStart(2, '0')}`;\n}\n```",
+            "candidate_ts": "/**\n * Formats a price in cents (integer) as a currency string, e.g.\n * formatPrice(1050) -> \"$10.50\", formatPrice(5) -> \"$0.05\".\n */\nexport function formatPrice(cents: number): string {\n  const dollars = Math.floor(cents / 100);\n  const remainder = cents % 100;\n  return `$${dollars}.${remainder.toString().padStart(2, '0')}`;\n}\n",
+            "candidate_length": 330,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/price-formatter.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "02-search-service",
+          "passed": true,
+          "elapsed_s": 61.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-search-service",
+            "category": "ts-angular",
+            "file_name": "search.service.ts",
+            "spec_name": "search.service.spec.ts",
+            "response_length": 1531,
+            "response_excerpt": "```ts\nimport { Injectable } from '@angular/core';\nimport { Observable, Subject } from 'rxjs';\nimport { map, switchMap } from 'rxjs/operators';\n\n/**\n * A minimal \"search as you type\" service: emits the latest search results\n * for the most recently issued query term, discarding results from any\n * earlier, now-superseded queries (a classic race condition when a slow\n * earlier request resolves AFTER a fast later request).\n */\n@Injectable({ providedIn: 'root' })\nexport class SearchService {\n  private readonly queries = new Subject<string>();\n\n  /** Simulates a backend call whose latency depends on the query string. */\n  search(term: string): Observable<string[]> {\n    return new Observable<string[]>((subscriber) => {\n      const delayMs = term.length * 10;\n      const timer = setTimeout(() => {\n        subscriber.next([`${term}-result-1`, `${term}-result-2`]);\n        subscriber.complete();\n      }, delayMs);\n      return () => clearTimeout(timer);\n    });\n  }\n\n  /** Call this whenever the user types a new query term. */\n  setQuery(term: string): void {\n    this.queries.next(term);\n  }\n\n  /**\n   * Stream of results for the LATEST issued query only. If an older query\n   * is still in flight when a newer one is issued, the older query's\n   * results must never be emitted here -- only the newest query's results\n   * should ever reach subscribers.\n   */\n  results(): Observable<string[]> {\n    return this.queries.pipe(\n      switchMap((term) => this.search(term)),\n      map((results) => results),\n    );\n  }\n}\n```",
+            "candidate_ts": "import { Injectable } from '@angular/core';\nimport { Observable, Subject } from 'rxjs';\nimport { map, switchMap } from 'rxjs/operators';\n\n/**\n * A minimal \"search as you type\" service: emits the latest search results\n * for the most recently issued query term, discarding results from any\n * earlier, now-superseded queries (a classic race condition when a slow\n * earlier request resolves AFTER a fast later request).\n */\n@Injectable({ providedIn: 'root' })\nexport class SearchService {\n  private readonly queries = new Subject<string>();\n\n  /** Simulates a backend call whose latency depends on the query string. */\n  search(term: string): Observable<string[]> {\n    return new Observable<string[]>((subscriber) => {\n      const delayMs = term.length * 10;\n      const timer = setTimeout(() => {\n        subscriber.next([`${term}-result-1`, `${term}-result-2`]);\n        subscriber.complete();\n      }, delayMs);\n      return () => clearTimeout(timer);\n    });\n  }\n\n  /** Call this whenever the user types a new query term. */\n  setQuery(term: string): void {\n    this.queries.next(term);\n  }\n\n  /**\n   * Stream of results for the LATEST issued query only. If an older query\n   * is still in flight when a newer one is issued, the older query's\n   * results must never be emitted here -- only the newest query's results\n   * should ever reach subscribers.\n   */\n  results(): Observable<string[]> {\n    return this.queries.pipe(\n      switchMap((term) => this.search(term)),\n      map((results) => results),\n    );\n  }\n}\n",
+            "candidate_length": 1522,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/search.service.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "03-shopping-cart",
+          "passed": true,
+          "elapsed_s": 87.2,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-shopping-cart",
+            "category": "ts-angular",
+            "file_name": "shopping-cart.ts",
+            "spec_name": "shopping-cart.spec.ts",
+            "response_length": 814,
+            "response_excerpt": "```ts\nimport { Injectable, computed, signal } from '@angular/core';\n\nexport interface CartItem {\n  id: string;\n  price: number; // in cents\n  quantity: number;\n}\n\n/**\n * Signal-based shopping cart. `total` must always reflect the current sum\n * of price * quantity across all items, recomputed reactively whenever\n * items change.\n */\n@Injectable({ providedIn: 'root' })\nexport class ShoppingCart {\n  private readonly _items = signal<CartItem[]>([]);\n  readonly items = this._items.asReadonly();\n\n  get total(): number {\n    return this._items().reduce((sum, item) => sum + item.price * item.quantity, 0);\n  }\n\n  addItem(item: CartItem): void {\n    this._items.update((items) => [...items, item]);\n  }\n\n  removeItem(id: string): void {\n    this._items.update((items) => items.filter((i) => i.id !== id));\n  }\n}\n```",
+            "candidate_ts": "import { Injectable, computed, signal } from '@angular/core';\n\nexport interface CartItem {\n  id: string;\n  price: number; // in cents\n  quantity: number;\n}\n\n/**\n * Signal-based shopping cart. `total` must always reflect the current sum\n * of price * quantity across all items, recomputed reactively whenever\n * items change.\n */\n@Injectable({ providedIn: 'root' })\nexport class ShoppingCart {\n  private readonly _items = signal<CartItem[]>([]);\n  readonly items = this._items.asReadonly();\n\n  get total(): number {\n    return this._items().reduce((sum, item) => sum + item.price * item.quantity, 0);\n  }\n\n  addItem(item: CartItem): void {\n    this._items.update((items) => [...items, item]);\n  }\n\n  removeItem(id: string): void {\n    this._items.update((items) => items.filter((i) => i.id !== id));\n  }\n}\n",
+            "candidate_length": 805,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/shopping-cart.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "04-password-match-validator",
+          "passed": true,
+          "elapsed_s": 55.6,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-password-match-validator",
+            "category": "ts-angular",
+            "file_name": "password-match.validator.ts",
+            "spec_name": "password-match.validator.spec.ts",
+            "response_length": 1078,
+            "response_excerpt": "```ts\nimport { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';\n\n/**\n * A cross-field validator to be applied at the FormGroup level, checking\n * that the 'password' and 'confirmPassword' controls have matching\n * values. Should set a `passwordMismatch` error on the confirmPassword\n * control when they differ, and clear it when they match.\n */\nexport function passwordMatchValidator(): ValidatorFn {\n  return (group: AbstractControl): ValidationErrors | null => {\n    const password = group.get('password');\n    const confirmPassword = group.get('confirmPassword');\n    if (!password || !confirmPassword) {\n      return null;\n    }\n\n    if (password.value !== confirmPassword.value) {\n      confirmPassword.setErrors({ passwordMismatch: true });\n      return { passwordMismatch: true };\n    }\n\n    if (confirmPassword.hasError('passwordMismatch')) {\n      const errors = { ...confirmPassword.errors };\n      delete errors['passwordMismatch'];\n      confirmPassword.setErrors(Object.keys(errors).length ? errors : null);\n    }\n    return null;\n  };\n}\n```",
+            "candidate_ts": "import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';\n\n/**\n * A cross-field validator to be applied at the FormGroup level, checking\n * that the 'password' and 'confirmPassword' controls have matching\n * values. Should set a `passwordMismatch` error on the confirmPassword\n * control when they differ, and clear it when they match.\n */\nexport function passwordMatchValidator(): ValidatorFn {\n  return (group: AbstractControl): ValidationErrors | null => {\n    const password = group.get('password');\n    const confirmPassword = group.get('confirmPassword');\n    if (!password || !confirmPassword) {\n      return null;\n    }\n\n    if (password.value !== confirmPassword.value) {\n      confirmPassword.setErrors({ passwordMismatch: true });\n      return { passwordMismatch: true };\n    }\n\n    if (confirmPassword.hasError('passwordMismatch')) {\n      const errors = { ...confirmPassword.errors };\n      delete errors['passwordMismatch'];\n      confirmPassword.setErrors(Object.keys(errors).length ? errors : null);\n    }\n    return null;\n  };\n}\n",
+            "candidate_length": 1069,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/password-match.validator.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "05-ticker-component",
+          "passed": true,
+          "elapsed_s": 37.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-ticker-component",
+            "category": "ts-angular",
+            "file_name": "ticker.component.ts",
+            "spec_name": "ticker.component.spec.ts",
+            "response_length": 917,
+            "response_excerpt": "```ts\nimport { Component, OnDestroy, OnInit, signal } from '@angular/core';\nimport { Subscription, interval } from 'rxjs';\n\n/**\n * Displays a tick counter that increments once per second while the\n * component is alive. The subscription to the ticking interval MUST be\n * torn down when the component is destroyed -- otherwise the interval\n * keeps firing and updating state forever, leaking memory/CPU for every\n * instance ever created (a very common Angular component bug).\n */\n@Component({\n  selector: 'app-ticker',\n  standalone: true,\n  template: `<span>{{ count() }}</span>`,\n})\nexport class TickerComponent implements OnInit, OnDestroy {\n  readonly count = signal(0);\n\n  private subscription?: Subscription;\n\n  ngOnInit(): void {\n    this.subscription = interval(1000).subscribe(() => {\n      this.count.update((c) => c + 1);\n    });\n  }\n\n  ngOnDestroy(): void {\n    this.subscription?.unsubscribe();\n  }\n}\n```",
+            "candidate_ts": "import { Component, OnDestroy, OnInit, signal } from '@angular/core';\nimport { Subscription, interval } from 'rxjs';\n\n/**\n * Displays a tick counter that increments once per second while the\n * component is alive. The subscription to the ticking interval MUST be\n * torn down when the component is destroyed -- otherwise the interval\n * keeps firing and updating state forever, leaking memory/CPU for every\n * instance ever created (a very common Angular component bug).\n */\n@Component({\n  selector: 'app-ticker',\n  standalone: true,\n  template: `<span>{{ count() }}</span>`,\n})\nexport class TickerComponent implements OnInit, OnDestroy {\n  readonly count = signal(0);\n\n  private subscription?: Subscription;\n\n  ngOnInit(): void {\n    this.subscription = interval(1000).subscribe(() => {\n      this.count.update((c) => c + 1);\n    });\n  }\n\n  ngOnDestroy(): void {\n    this.subscription?.unsubscribe();\n  }\n}\n",
+            "candidate_length": 908,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/ticker.component.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "06-todo-list-component",
+          "passed": true,
+          "elapsed_s": 50.6,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-todo-list-component",
+            "category": "ts-angular",
+            "file_name": "todo-list.component.ts",
+            "spec_name": "todo-list.component.spec.ts",
+            "response_length": 1241,
+            "response_excerpt": "```ts\nimport { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';\n\nexport interface Todo {\n  id: number;\n  text: string;\n  done: boolean;\n}\n\n/**\n * An OnPush component that displays a list of todos and lets the parent\n * toggle one via `toggle`. Because it runs OnPush, Angular only checks\n * this component for changes when one of its @Input() REFERENCES changes\n * (or a signal/event fires) -- mutating the existing array/object in\n * place is not enough to trigger a re-render from a parent's perspective,\n * and (worse here) corrupts the parent's original array unexpectedly.\n */\n@Component({\n  selector: 'app-todo-list',\n  standalone: true,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    @for (todo of todos; track todo.id) {\n      <label>\n        <input type=\"checkbox\" [checked]=\"todo.done\" (change)=\"onToggle(todo.id)\" />\n        {{ todo.text }}\n      </label>\n    }\n  `,\n})\nexport class TodoListComponent {\n  @Input() todos: Todo[] = [];\n  @Output() toggle = new EventEmitter<Todo[]>();\n\n  onToggle(id: number): void {\n    const newTodos = this.todos.map((todo) =>\n      todo.id === id ? { ...todo, done: !todo.done } : todo\n    );\n    this.toggle.emit(newTodos);\n  }\n}\n```",
+            "candidate_ts": "import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';\n\nexport interface Todo {\n  id: number;\n  text: string;\n  done: boolean;\n}\n\n/**\n * An OnPush component that displays a list of todos and lets the parent\n * toggle one via `toggle`. Because it runs OnPush, Angular only checks\n * this component for changes when one of its @Input() REFERENCES changes\n * (or a signal/event fires) -- mutating the existing array/object in\n * place is not enough to trigger a re-render from a parent's perspective,\n * and (worse here) corrupts the parent's original array unexpectedly.\n */\n@Component({\n  selector: 'app-todo-list',\n  standalone: true,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    @for (todo of todos; track todo.id) {\n      <label>\n        <input type=\"checkbox\" [checked]=\"todo.done\" (change)=\"onToggle(todo.id)\" />\n        {{ todo.text }}\n      </label>\n    }\n  `,\n})\nexport class TodoListComponent {\n  @Input() todos: Todo[] = [];\n  @Output() toggle = new EventEmitter<Todo[]>();\n\n  onToggle(id: number): void {\n    const newTodos = this.todos.map((todo) =>\n      todo.id === id ? { ...todo, done: !todo.done } : todo\n    );\n    this.toggle.emit(newTodos);\n  }\n}\n",
+            "candidate_length": 1232,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/todo-list.component.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "07-counter-display-component",
+          "passed": true,
+          "elapsed_s": 33.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-counter-display-component",
+            "category": "ts-angular",
+            "file_name": "counter-display.component.ts",
+            "spec_name": "counter-display.component.spec.ts",
+            "response_length": 611,
+            "response_excerpt": "```ts\nimport { Component } from '@angular/core';\nimport { CounterService } from './counter.service';\n\n/**\n * Displays and increments the shared app-wide counter. Every instance of\n * this component (e.g. two siblings on the same page) must read/write the\n * SAME underlying counter, since CounterService is `providedIn: 'root'`.\n */\n@Component({\n  selector: 'app-counter-display',\n  standalone: true,\n  template: `\n    <button (click)=\"counter.increment()\">+1</button>\n    <span>{{ counter.count() }}</span>\n  `,\n})\nexport class CounterDisplayComponent {\n  constructor(readonly counter: CounterService) {}\n}\n```",
+            "candidate_ts": "import { Component } from '@angular/core';\nimport { CounterService } from './counter.service';\n\n/**\n * Displays and increments the shared app-wide counter. Every instance of\n * this component (e.g. two siblings on the same page) must read/write the\n * SAME underlying counter, since CounterService is `providedIn: 'root'`.\n */\n@Component({\n  selector: 'app-counter-display',\n  standalone: true,\n  template: `\n    <button (click)=\"counter.increment()\">+1</button>\n    <span>{{ counter.count() }}</span>\n  `,\n})\nexport class CounterDisplayComponent {\n  constructor(readonly counter: CounterService) {}\n}\n",
+            "candidate_length": 602,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/counter-display.component.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "08-batch-processor",
+          "passed": true,
+          "elapsed_s": 44.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-batch-processor",
+            "category": "ts-angular",
+            "file_name": "batch-processor.ts",
+            "spec_name": "batch-processor.spec.ts",
+            "response_length": 594,
+            "response_excerpt": "```ts\n/**\n * Processes a list of items one at a time by calling an async\n * `processOne` function for each, collecting all results in the same\n * order as the input. If any item fails, the whole batch should fail\n * (reject) with that error -- partial/incomplete results must never be\n * returned as if the batch succeeded.\n */\nexport async function processBatch<T, R>(\n  items: T[],\n  processOne: (item: T) => Promise<R>,\n): Promise<R[]> {\n  const results: R[] = [];\n  for (const item of items) {\n    const result = await processOne(item);\n    results.push(result);\n  }\n  return results;\n}\n```",
+            "candidate_ts": "/**\n * Processes a list of items one at a time by calling an async\n * `processOne` function for each, collecting all results in the same\n * order as the input. If any item fails, the whole batch should fail\n * (reject) with that error -- partial/incomplete results must never be\n * returned as if the batch succeeded.\n */\nexport async function processBatch<T, R>(\n  items: T[],\n  processOne: (item: T) => Promise<R>,\n): Promise<R[]> {\n  const results: R[] = [];\n  for (const item of items) {\n    const result = await processOne(item);\n    results.push(result);\n  }\n  return results;\n}\n",
+            "candidate_length": 585,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/batch-processor.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        }
+      ],
+      "artifact_count": 8,
+      "logs": []
+    },
+    {
+      "category": "sql-migrations",
+      "n_pass": 4,
+      "n_total": 6,
+      "wall_s": 361.50605273246765,
+      "returncode": 1,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-add-column-not-null",
+          "passed": true,
+          "elapsed_s": 30.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-add-column-not-null",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/01-add-column-not-null",
+            "response_length": 89,
+            "response_excerpt": "```sql\nALTER TABLE orders ADD COLUMN shipping_status TEXT NOT NULL DEFAULT 'pending';\n```",
+            "candidate_sql": "ALTER TABLE orders ADD COLUMN shipping_status TEXT NOT NULL DEFAULT 'pending';\n",
+            "candidate_length": 79,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/01-add-column-not-null",
+                "up.candidate.sql"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "02-unique-constraint-dupes",
+          "passed": true,
+          "elapsed_s": 57.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-unique-constraint-dupes",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes",
+            "response_length": 268,
+            "response_excerpt": "```sql\nDO $$\nBEGIN\n    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_email_key') THEN\n        UPDATE users SET email = email || '_backup' WHERE id = 3;\n        ALTER TABLE users ADD CONSTRAINT users_email_key UNIQUE (email);\n    END IF;\nEND $$;\n```",
+            "candidate_sql": "DO $$\nBEGIN\n    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'users_email_key') THEN\n        UPDATE users SET email = email || '_backup' WHERE id = 3;\n        ALTER TABLE users ADD CONSTRAINT users_email_key UNIQUE (email);\n    END IF;\nEND $$;\n",
+            "candidate_length": 258,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes",
+                "up.candidate.sql"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "03-rename-column-view",
+          "passed": true,
+          "elapsed_s": 77.0,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-rename-column-view",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view",
+            "response_length": 416,
+            "response_excerpt": "```sql\nALTER TABLE products ADD COLUMN quantity_in_stock INTEGER;\nUPDATE products SET quantity_in_stock = qty;\nCREATE OR REPLACE VIEW low_stock_products AS SELECT id, name, quantity_in_stock AS qty FROM products WHERE quantity_in_stock < 10;\nALTER TABLE products DROP COLUMN qty;\nALTER TABLE products ALTER COLUMN quantity_in_stock SET NOT NULL;\nALTER TABLE products ALTER COLUMN quantity_in_stock SET DEFAULT 0;\n```",
+            "candidate_sql": "ALTER TABLE products ADD COLUMN quantity_in_stock INTEGER;\nUPDATE products SET quantity_in_stock = qty;\nCREATE OR REPLACE VIEW low_stock_products AS SELECT id, name, quantity_in_stock AS qty FROM products WHERE quantity_in_stock < 10;\nALTER TABLE products DROP COLUMN qty;\nALTER TABLE products ALTER COLUMN quantity_in_stock SET NOT NULL;\nALTER TABLE products ALTER COLUMN quantity_in_stock SET DEFAULT 0;\n",
+            "candidate_length": 406,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view",
+                "up.candidate.sql"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "04-non-idempotent-migration",
+          "passed": false,
+          "elapsed_s": 83.2,
+          "reasons": [
+            "truncated: finish_reason=length (content: 'The user wants me to fix a PostgreSQL migration script.\\nThe existing schema has an `accounts` table with `id` and `name`.\\nThe pending migration adds a column `is_active` to `accounts`, creates an inde')"
+          ],
+          "artifact": {
+            "task_id": "04-non-idempotent-migration",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/04-non-idempotent-migration",
+            "error": "truncated: finish_reason=length (content: 'The user wants me to fix a PostgreSQL migration script.\\nThe existing schema has an `accounts` table with `id` and `name`.\\nThe pending migration adds a column `is_active` to `accounts`, creates an inde')"
+          }
+        },
+        {
+          "id": "05-fk-missing-unique-target",
+          "passed": false,
+          "elapsed_s": 72.0,
+          "reasons": [
+            "truncated: finish_reason=length (content: 'The user wants me to fix a PostgreSQL migration script.\\nThe existing schema has `warehouses` and `shipments` tables.\\n`warehouses` has `id`, `code`, `city`. `code` is unique in business logic but not e')"
+          ],
+          "artifact": {
+            "task_id": "05-fk-missing-unique-target",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/05-fk-missing-unique-target",
+            "error": "truncated: finish_reason=length (content: 'The user wants me to fix a PostgreSQL migration script.\\nThe existing schema has `warehouses` and `shipments` tables.\\n`warehouses` has `id`, `code`, `city`. `code` is unique in business logic but not e')"
+          }
+        },
+        {
+          "id": "06-bad-backfill-update",
+          "passed": true,
+          "elapsed_s": 41.5,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-bad-backfill-update",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/06-bad-backfill-update",
+            "response_length": 140,
+            "response_excerpt": "```sql\nUPDATE orders\nSET discount_percent = discount_codes.percent\nFROM discount_codes\nWHERE orders.discount_code = discount_codes.code;\n```",
+            "candidate_sql": "UPDATE orders\nSET discount_percent = discount_codes.percent\nFROM discount_codes\nWHERE orders.discount_code = discount_codes.code;\n",
+            "candidate_length": 130,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/06-bad-backfill-update",
+                "up.candidate.sql"
+              ],
+              "returncode": 0
+            }
+          }
+        }
+      ],
+      "artifact_count": 6,
+      "logs": []
+    },
+    {
+      "category": "mcp-tools",
+      "n_pass": 8,
+      "n_total": 8,
+      "wall_s": 48.36421799659729,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-single-tool-required-args",
+          "passed": true,
+          "elapsed_s": 5.2,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-single-tool-required-args",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "get_weather"
+            ],
+            "response_excerpt": "The user wants to know the weather in Tokyo and requested the temperature in Fahrenheit.\nI have a tool `get_weather` that takes `city` and `unit` as arguments.\nI will call `get_weather` with `city=\"Tokyo\"` and `unit=\"fahrenheit\"`."
+          }
+        },
+        {
+          "id": "02-enum-selection",
+          "passed": true,
+          "elapsed_s": 5.6,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-enum-selection",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "create_ticket"
+            ],
+            "response_excerpt": "The user wants to file a support ticket for a production database outage.\nThe title should be 'Production DB outage'.\nThe priority is described as \"emergency\" and \"drop everything\", which corresponds to the \"urgent\" priority level in the tool definition.\n\nI need to call `create_ticket` with:\n- title: \"Production DB outage\"\n- priority: \"urgent\""
+          }
+        },
+        {
+          "id": "03-numeric-coercion",
+          "passed": true,
+          "elapsed_s": 6.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-numeric-coercion",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "apply_discount"
+            ],
+            "response_excerpt": "The user wants to apply a 15% discount to an item costing $49.99.\nI need to convert the price to cents: $49.99 = 4999 cents.\nThe discount rate is 15%, which is 0.15.\nI will use the `apply_discount` tool with `amount_cents` = 4999 and `discount_rate` = 0.15."
+          }
+        },
+        {
+          "id": "04-nested-object-args",
+          "passed": true,
+          "elapsed_s": 8.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-nested-object-args",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "create_shipping_label"
+            ],
+            "response_excerpt": "The user wants to create a shipping label for Maria Gonzalez.\nI have the following information:\n- Recipient Name: Maria Gonzalez\n- Street: 42 Rue de Rivoli\n- City: Paris\n- Postal Code: 75004\n- Country: France\n\nI need to use the `create_shipping_label` tool.\nThe parameters required are `recipient_name` and `address`.\n`address` is an object with `street`, `city`, `postal_code`, and `country`.\n\nConstructing the call:\n`recipient_name`: \"Maria Gonzalez\"\n`address`: {\n  \"street\": \"42 Rue de Rivoli\",\n  \"city\": \"Paris\",\n  \"postal_code\": \"75004\",\n  \"country\": \"France\"\n}"
+          }
+        },
+        {
+          "id": "05-tool-disambiguation",
+          "passed": true,
+          "elapsed_s": 5.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-tool-disambiguation",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "create_calendar_event"
+            ],
+            "response_excerpt": "The user wants to create a new calendar event.\nI have the title 'Q3 Planning'.\nI have the start time '2026-09-10T14:00:00Z'.\nI should use the `create_calendar_event` tool."
+          }
+        },
+        {
+          "id": "06-missing-info-no-premature-call",
+          "passed": true,
+          "elapsed_s": 5.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-missing-info-no-premature-call",
+            "category": "mcp-tools",
+            "finish_reason": "stop",
+            "tool_call_count": 0,
+            "tool_call_names": [],
+            "response_excerpt": "I can help you with that. To send the money, I need Jake's account ID. Could you please provide it?"
+          }
+        },
+        {
+          "id": "07-multi-step-context-carry",
+          "passed": true,
+          "elapsed_s": 5.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-multi-step-context-carry",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "issue_refund"
+            ],
+            "response_excerpt": "The user wants a refund of $30. The `issue_refund` function requires the amount in cents. $30 is 3000 cents. I have the customer_id \"CUST-88213\". I can now issue the refund."
+          }
+        },
+        {
+          "id": "08-array-argument",
+          "passed": true,
+          "elapsed_s": 6.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-array-argument",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "invite_to_meeting"
+            ],
+            "response_excerpt": "The user wants to invite three people to a meeting with ID \"MTG-77\".\nThe emails are alice@corp.com, bob@corp.com, and carla@corp.com.\nI need to use the `invite_to_meeting` tool.\nParameters:\n- meeting_id: \"MTG-77\"\n- attendee_emails: [\"alice@corp.com\", \"bob@corp.com\", \"carla@corp.com\"]"
+          }
+        }
+      ],
+      "artifact_count": 8,
+      "logs": []
+    },
+    {
+      "category": "security-review",
+      "n_pass": 8,
+      "n_total": 8,
+      "wall_s": 318.5988962650299,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-sql-injection",
+          "passed": true,
+          "elapsed_s": 24.2,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-sql-injection",
+            "category": "security-review",
+            "response_length": 1226,
+            "response_excerpt": "**Vulnerability:** SQL Injection\n\n**Explanation:** The `username` parameter is directly concatenated into the SQL string. An attacker can supply crafted input (e.g., `' OR '1'='1' --`) to alter the query's logic, bypass authentication, exfiltrate data, or execute destructive commands.\n\n**Fix:** Use `PreparedStatement` with parameterized queries. This forces the JDBC driver to send the query structure and parameters separately to the database, ensuring user input is strictly treated as data.\n\n**Fixed Code:**\n```java\npublic User findUserByUsername(Connection conn, String username) throws SQLException {\n    String query = \"SELECT * FROM users WHERE username = ?\";\n    try (PreparedStatement pstmt = conn.prepareStatement(query)) {\n        pstmt.setString(1, username);\n        try (ResultSet rs = pstmt.executeQuery()) {\n            if (rs.next()) {\n                return new User(rs.getInt(\"id\"), rs.getString(\"username\"), rs.getString(\"email\"));\n            }\n        }\n    }\n    return null;\n}\n```\n\n**Additional Recommendation:** Validate/sanitize the `username` input at the application layer (e.g., max length, allowed character set) as defense-in-depth, though parameterization alone is sufficient to prevent SQLi."
+          }
+        },
+        {
+          "id": "02-hardcoded-secret",
+          "passed": true,
+          "elapsed_s": 52.0,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-hardcoded-secret",
+            "category": "security-review",
+            "response_length": 3185,
+            "response_excerpt": "Here are the security vulnerabilities identified in the code, along with remediation steps:\n\n### 1. Hardcoded Secret Key (CWE-798)\n- **Issue:** The Stripe secret key is embedded directly in the source code. If committed to version control, it becomes permanently exposed and can be abused to make unauthorized charges.\n- **Fix:** Store the key in a secrets manager or environment variable. Never commit secrets to code.\n  ```python\n  import os\n  STRIPE_API_KEY = os.environ.get(\"STRIPE_API_KEY\")\n  if not STRIPE_API_KEY:\n      raise ValueError(\"STRIPE_API_KEY environment variable is required\")\n  ```\n\n### 2. Missing Request Timeout (CWE-400)\n- **Issue:** `requests.post()` lacks a `timeout` parameter. A slow or unresponsive Stripe endpoint will cause the thread/process to hang indefinitely, leading to resource exhaustion or denial of service.\n- **Fix:** Add a connect and read timeout tuple.\n  ```python\n  timeout=(3.05, 10)  # 3.05s connect, 10s read\n  ```\n\n### 3. Insufficient Input Validation (CWE-20)\n- **Issue:** `customer_id` and `amount_cents` are passed directly to the API without validation. Malicious or malformed input can cause unexpected API behavior, wasted resources, or downstream processing errors.\n- **Fix:** Validate inputs before making the request. Fail fast with clear errors.\n  ```python\n  if not isinstance(amount_cents, int) or amount_cents <= 0:\n      raise ValueError(\"Invalid amount\")\n  # Add format validation for customer_id if applicable\n  ```\n\n### 4. Potential Information Disclosure in Error Handling (CWE-209)\n- **Issue:** `response.raise_for_status()` raises an exception containing the raw HTTP response. If unhandled or logged improperly, it may leak sensitive Stripe error details, internal IDs, or request payloads.\n- **Fix:** Catch exceptions, log securely (without secrets/payloads), and return a generic error to the caller.\n  ```python\n  except requests.HTTPError as e:\n      # Log securely for debugging\n      logger.error(\"Stripe API error: %s\", e.re... [truncated]"
+          }
+        },
+        {
+          "id": "03-path-traversal",
+          "passed": true,
+          "elapsed_s": 44.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-path-traversal",
+            "category": "security-review",
+            "response_length": 2577,
+            "response_excerpt": "Here are the security vulnerabilities found in the code, along with direct fixes:\n\n### 1. Path Traversal (Directory Traversal)\n**Issue:** `req.query.file` is directly passed to `path.join()` without sanitization. Attackers can use `../` sequences to escape `UPLOADS_DIR` and read arbitrary system files (e.g., `../../etc/passwd`).\n**Fix:** Resolve the absolute path and verify it remains strictly within the allowed directory.\n```javascript\nconst resolvedPath = path.resolve(UPLOADS_DIR, filename);\nconst safeBase = path.resolve(UPLOADS_DIR);\nif (!resolvedPath.startsWith(safeBase + path.sep) && resolvedPath !== safeBase) {\n    return res.status(403).send('Access denied');\n}\n```\n\n### 2. Memory Exhaustion / DoS\n**Issue:** `fs.readFile()` loads the entire file into memory before sending. Requesting large files can cause OOM crashes or degrade server performance.\n**Fix:** Stream the file directly to the response and optionally enforce a size limit.\n```javascript\nconst stream = fs.createReadStream(resolvedPath);\nstream.on('error', () => res.status(404).send('File not found'));\nstream.pipe(res);\n```\n\n### 3. Lack of Input Validation\n**Issue:** No validation on the `filename` parameter. Accepts arbitrary strings, enabling traversal and potentially malicious filenames.\n**Fix:** Validate against a strict whitelist pattern (e.g., alphanumeric, dots, hyphens, underscores) and/or enforce allowed extensions.\n```javascript\nif (!/^[a-zA-Z0-9._-]+$/.test(filename)) {\n    return res.status(400).send('Invalid filename');\n}\n```\n\n### 4. Unauthenticated/Unrestricted Access\n**Issue:** The endpoint is publicly accessible. Any user can download files without verification.\n**Fix:** Add authentication and authorization middleware to verify user identity and permissions before serving files.\n```javascript\n// Example: Apply auth middleware to the route\napp.get('/download', authenticate, authorize('download'), (req, res) => { ... });\n```\n\n### Recommended Secure Implementation Snippet\n```javascript\napp... [truncated]"
+          }
+        },
+        {
+          "id": "04-insecure-deserialization",
+          "passed": true,
+          "elapsed_s": 29.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-insecure-deserialization",
+            "category": "security-review",
+            "response_length": 1667,
+            "response_excerpt": "**Vulnerabilities:**\n1. **Insecure Deserialization (Arbitrary Code Execution):** `pickle.loads()` is unsafe for untrusted input. During unpickling, it can instantiate arbitrary classes and execute code. An attacker can craft a malicious base64-encoded payload that runs commands on your server.\n2. **Missing Integrity & Authentication:** The `state` parameter is accepted directly from user input without signature verification, encryption, or validation, allowing trivial tampering or replay attacks.\n\n**How to Fix:**\n1. **Replace Pickle with a Safe Format:** Use `json.loads()` instead. JSON cannot execute code and is safe for untrusted data.\n2. **Add Integrity Verification:** If `state` is meant to be a session token, sign it with an HMAC or use Flask's `itsdangerous` library to prevent tampering.\n3. **Validate Input Structure:** Ensure the deserialized data matches the expected schema (type checks, required keys) before processing.\n\n**Secure Example:**\n```python\nimport json\nimport base64\nfrom flask import Flask, request, abort\n\napp = Flask(__name__)\n\n@app.route('/session/restore', methods=['POST'])\ndef restore_session():\n    encoded_state = request.form.get('state')\n    if not encoded_state:\n        abort(400)\n    try:\n        raw = base64.b64decode(encoded_state)\n        session_obj = json.loads(raw)\n        if not isinstance(session_obj, dict) or \"user\" not in session_obj:\n            abort(400)\n        return {\"user\": session_obj[\"user\"], \"restored\": True}\n    except Exception:\n        abort(400)\n```\n*Note: For production, prefer Flask's built-in `session` or a standard token-based auth system (e.g., JWT) instead of custom state handling.*"
+          }
+        },
+        {
+          "id": "05-weak-crypto-hash",
+          "passed": true,
+          "elapsed_s": 39.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-weak-crypto-hash",
+            "category": "security-review",
+            "response_length": 2368,
+            "response_excerpt": "### Vulnerabilities Found\n\n1. **Use of MD5 for Password Hashing**\n   - **Issue:** MD5 is cryptographically broken, computationally fast, and explicitly unsuitable for password storage. It is highly vulnerable to brute-force, rainbow table, and collision attacks.\n   - **Fix:** Replace with a dedicated password hashing algorithm designed for passwords: **bcrypt**, **scrypt**, or **Argon2**.\n\n2. **Missing Salt**\n   - **Issue:** Hashing the raw password without a unique salt allows attackers to use precomputed rainbow tables and easily identify users with identical passwords.\n   - **Fix:** Modern password hashing libraries automatically generate and embed a unique, cryptographically secure salt per password. No manual salt management is needed.\n\n3. **Implicit Character Encoding**\n   - **Issue:** `plainPassword.getBytes()` relies on the platform's default charset, which can vary across environments and cause hash mismatches or encoding-related edge cases.\n   - **Fix:** Explicitly specify `StandardCharsets.UTF_8` if byte conversion is required.\n\n---\n\n### Corrected Implementation\n\n```java\nimport org.springframework.security.crypto.password.PasswordEncoder;\nimport org.springframework.security.crypto.argon2.Argon2PasswordEncoder;\nimport java.nio.charset.StandardCharsets;\n\npublic class UserRegistrationService {\n    private final PasswordEncoder passwordEncoder;\n    private final UserRepository userRepository;\n\n    public UserRegistrationService(UserRepository userRepository) {\n        this.userRepository = userRepository;\n        // Argon2 is currently the recommended standard; BCrypt is a solid alternative\n        this.passwordEncoder = Argon2PasswordEncoder.defaultsForSpringSecurity_v5_8();\n    }\n\n    public void registerUser(String username, String plainPassword) {\n        // encode() automatically handles salting, hashing, and encoding\n        String hashedPassword = passwordEncoder.encode(plainPassword);\n        userRepository.save(new UserAccount(username, hashedPasswor... [truncated]"
+          }
+        },
+        {
+          "id": "06-ssrf",
+          "passed": true,
+          "elapsed_s": 45.9,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-ssrf",
+            "category": "security-review",
+            "response_length": 2857,
+            "response_excerpt": "### \ud83d\udd0d Vulnerabilities Found\n\n1. **Server-Side Request Forgery (SSRF)**\n   - **Issue:** The app blindly trusts the `url` query parameter and makes an outbound HTTP request. Attackers can supply internal IPs, cloud metadata endpoints (`169.254.169.254`), or localhost services to access restricted resources or scan the internal network.\n   - **Fix:** Validate the URL scheme, resolve the hostname, and block all private/reserved IP ranges before making the request.\n\n2. **Unrestricted Redirects (SSRF Bypass)**\n   - **Issue:** `requests.get()` follows HTTP 3xx redirects by default. An attacker can point to an external domain that redirects to an internal IP, bypassing initial URL checks.\n   - **Fix:** Pass `allow_redirects=False` to `requests.get()`.\n\n3. **Information Disclosure via SSRF**\n   - **Issue:** Returning `resp.text[:2000]` leaks internal service responses directly to the attacker, amplifying SSRF impact.\n   - **Fix:** Only extract safe, public metadata (e.g., `<title>`, meta tags) or cap/strip the response. Never return raw internal payloads.\n\n---\n\n### \ud83d\udee0\ufe0f How to Fix (Secure Implementation)\n\n```python\nimport requests\nfrom flask import Flask, request, jsonify\nfrom urllib.parse import urlparse\nimport ipaddress\nimport socket\n\napp = Flask(__name__)\n\ndef is_safe_url(url: str) -> bool:\n    parsed = urlparse(url)\n    if parsed.scheme not in ('http', 'https'):\n        return False\n    \n    hostname = parsed.hostname\n    if not hostname:\n        return False\n    \n    try:\n        # Resolve hostname to IP(s)\n        ip = socket.gethostbyname(hostname)\n        ip_obj = ipaddress.ip_address(ip)\n        \n        # Block private, loopback, link-local, and reserved ranges\n        if ip_obj.is_private or ip_obj.is_loopback or ip_obj.is_link_local:\n            return False\n    except socket.gaierror:\n        return False  # Invalid hostname\n        \n    return True\n\n@app.route('/fetch-preview', methods=['GET'])\ndef fetch_preview():\n    target_url = request.args.get('url')\n    if ... [truncated]"
+          }
+        },
+        {
+          "id": "07-broken-access-control",
+          "passed": true,
+          "elapsed_s": 34.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-broken-access-control",
+            "category": "security-review",
+            "response_length": 2264,
+            "response_excerpt": "**Vulnerability: Insecure Direct Object Reference (IDOR) / Broken Access Control**\n\n**Explanation:**  \nThe endpoint only enforces authentication, not authorization. Any valid session can access any invoice by simply changing the `invoiceId` in the URL. This allows users to view, and potentially download or manipulate, invoices they do not own or have permission to access, leading to unauthorized data exposure.\n\n**How to Fix:**  \nImplement an authorization check that ties the requested resource to the authenticated user. Filter the database query by the user's ID, or validate ownership before returning the object. Use Spring Security's method-level authorization for cleaner, declarative enforcement.\n\n**Example Fix:**\n```java\n@Service\npublic class InvoiceService {\n    public Invoice getInvoiceForUser(Long invoiceId, Long userId) {\n        return invoiceRepository.findByInvoiceIdAndOwnerId(invoiceId, userId)\n                .orElseThrow(() -> new AccessDeniedException(\"Invoice not found or access denied\"));\n    }\n}\n\n@RestController\n@RequestMapping(\"/api/invoices\")\npublic class InvoiceController {\n    private final InvoiceService invoiceService;\n\n    public InvoiceController(InvoiceService invoiceService) {\n        this.invoiceService = invoiceService;\n    }\n\n    @GetMapping(\"/{invoiceId}\")\n    public ResponseEntity<Invoice> getInvoice(@PathVariable Long invoiceId, Authentication authentication) {\n        // Extract user ID from your security principal\n        Long userId = ((CustomUserDetails) authentication.getPrincipal()).getId();\n        Invoice invoice = invoiceService.getInvoiceForUser(invoiceId, userId);\n        return ResponseEntity.ok(invoice);\n    }\n}\n```\n\n**Alternative (Declarative):**  \nUse Spring Security's `@PreAuthorize` to offload the check:\n```java\n@PreAuthorize(\"@invoiceService.hasAccess(#invoiceId, authentication)\")\n@GetMapping(\"/{invoiceId}\")\npublic ResponseEntity<Invoice> getInvoice(@PathVariable Long invoiceId) { ... }\n```\n\n**Additional Hardening:*... [truncated]"
+          }
+        },
+        {
+          "id": "08-command-injection",
+          "passed": true,
+          "elapsed_s": 47.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-command-injection",
+            "category": "security-review",
+            "response_length": 2703,
+            "response_excerpt": "### \ud83d\udd34 Critical: Command Injection (CWE-78)\n**Issue:** `filename` is directly interpolated into a shell command and executed with `shell=True`. An attacker can pass payloads like `filename=\"doc.pdf; cat /etc/passwd\"` to execute arbitrary system commands.\n**Fix:** Never use `shell=True` with user input. Pass commands as a list of arguments to `subprocess.run()`. Validate the filename against a strict allowlist regex.\n\n### \ud83d\udfe0 High: Path Traversal (CWE-22)\n**Issue:** `filename` is used directly in file paths without sanitization. Attackers can use `../` sequences to read/write files outside `/tmp/uploads/` or `/tmp/converted/`.\n**Fix:** Strip directory components using `os.path.basename()`, validate against a strict pattern, and verify resolved paths stay within the intended base directories using `os.path.abspath()`.\n\n### \ud83d\udfe1 Medium: Unsafe File Serving (CWE-22/CWE-530)\n**Issue:** `send_file()` receives a user-controlled path. If validation is bypassed, it could serve unintended files or leak server paths.\n**Fix:** Use `send_from_directory()` which explicitly prevents path traversal in HTTP responses.\n\n---\n\n### \u2705 Secure Implementation\n```python\nimport os\nimport re\nimport subprocess\nfrom flask import Flask, request, send_from_directory\n\napp = Flask(__name__)\nUPLOAD_DIR = '/tmp/uploads'\nCONVERT_DIR = '/tmp/converted'\n\n# Strict allowlist: alphanumeric, dots, hyphens, underscores\nSAFE_FILENAME_RE = re.compile(r'^[a-zA-Z0-9._-]+$')\n\n@app.route('/convert', methods=['POST'])\ndef convert_to_pdf():\n    filename = request.form.get('filename')\n    if not filename or not SAFE_FILENAME_RE.match(filename):\n        return \"Invalid filename\", 400\n\n    # Prevent path traversal\n    safe_filename = os.path.basename(filename)\n    input_path = os.path.join(UPLOAD_DIR, safe_filename)\n    \n    # Ensure resolved path stays within allowed directory\n    if not os.path.abspath(input_path).startswith(os.path.abspath(UPLOAD_DIR)):\n        return \"Invalid path\", 400\n\n    # Safe subprocess execution (n... [truncated]"
+          }
+        }
+      ],
+      "artifact_count": 8,
+      "logs": []
+    }
+  ]
+}

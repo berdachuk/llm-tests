@@ -1,0 +1,216 @@
+{
+  "tag": "freetoken013-longctx",
+  "url": "http://192.168.0.88:8000",
+  "model": "qwen3.6-35b-a3b",
+  "notes": "FreeToken upgraded to 0.1.3 on 192.168.0.88; long-context first",
+  "selected_categories": [
+    "long-context"
+  ],
+  "timeout_override_s": null,
+  "runner_python": "3.12.3",
+  "suite_git_commit": "a791f5f1a752eb4347c246dfd24e26c9243a065d",
+  "suite_git_dirty": true,
+  "preflight": {
+    "checked_at": "2026-09-19T07:15:11.154895+00:00",
+    "models_url": "http://192.168.0.88:8000/v1/models",
+    "requested_model": "qwen3.6-35b-a3b",
+    "requested_model_found": true,
+    "available_model_ids": [
+      "qwen3.6-35b-a3b"
+    ],
+    "selected_model_entry": {
+      "id": "qwen3.6-35b-a3b",
+      "object": "model",
+      "created": 1789802111,
+      "owned_by": "FreeToken",
+      "root": "/mnt/data/berda-models/models/Qwen3.6-35B-A3B-FP8",
+      "max_model_len": 262144,
+      "context_length": 262144,
+      "supported_reasoning_efforts": [
+        "high",
+        "medium",
+        "low"
+      ],
+      "default_reasoning_effort": "medium"
+    }
+  },
+  "started_at": "2026-09-19T07:15:11.165726+00:00",
+  "finished_at": "2026-09-19T07:25:44.269962+00:00",
+  "total_wall_s": 633.1042139530182,
+  "total_pass": 10,
+  "total_tasks": 10,
+  "categories": [
+    {
+      "category": "long-context",
+      "n_pass": 10,
+      "n_total": 10,
+      "wall_s": 633.0994021892548,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-8k-pos10",
+          "passed": true,
+          "elapsed_s": 37.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-8k-pos10",
+            "category": "long-context",
+            "expected_marker": "XK-1001-ALFA-9273-NEEDLE",
+            "target_tokens": 8000,
+            "position_pct": 0.1,
+            "response_length": 647,
+            "response_excerpt": "XK-1001-ALFA-9273-NEEDLE\nThe codebase exhibits several critical flaws: unbounded memory growth in deduplication caches, saga registries, and dead-letter queues; thread-safety gaps in `audit_log` (unsynchronized `flush`), `event_bus` (iterating subscribers without holding the subscription lock), and `inventory_service` (relying on CPython's GIL for compound dict operations); and performance bottlenecks like O(N) linear search scans and redundant lock acquisitions. Additionally, the architecture is heavily duplicated across versioned shards, with core components like the saga orchestrator missing actual step execution and compensation logic.",
+            "first_line": "XK-1001-ALFA-9273-NEEDLE"
+          }
+        },
+        {
+          "id": "02-8k-pos50",
+          "passed": true,
+          "elapsed_s": 48.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-8k-pos50",
+            "category": "long-context",
+            "expected_marker": "XK-1002-BRAVO-4418-NEEDLE",
+            "target_tokens": 8000,
+            "position_pct": 0.5,
+            "response_length": 593,
+            "response_excerpt": "XK-1002-BRAVO-4418-NEEDLE\nThe codebase contains several critical thread-safety races, including unprotected lock initialization in inventory services, unbounded memory growth in deduplication and logging buffers, and a non-atomic flush operation in the audit logger. Performance bottlenecks stem from global locks on high-throughput paths like caching and rate limiting, alongside inefficient linear search algorithms. Additionally, key features like saga execution and webhook deduplication are either incomplete or vulnerable to false positives due to missing event identifiers in hash keys.",
+            "first_line": "XK-1002-BRAVO-4418-NEEDLE"
+          }
+        },
+        {
+          "id": "03-8k-pos90",
+          "passed": true,
+          "elapsed_s": 32.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-8k-pos90",
+            "category": "long-context",
+            "expected_marker": "XK-1003-CHARLIE-8801-NEEDLE",
+            "target_tokens": 8000,
+            "position_pct": 0.9,
+            "response_length": 577,
+            "response_excerpt": "XK-1003-CHARLIE-8801-NEEDLE\nThe codebase consists of highly repetitive, largely unimplemented service skeletons that suffer from multiple thread-safety violations, particularly in shared dictionaries, lists, and counters that lack synchronization primitives. Several modules exhibit memory leak risks due to unbounded deduplication caches and dynamically created locks without eviction policies. Finally, critical business logic for scheduling, saga compensation, and event publishing is entirely missing, leaving these as functional stubs rather than production-ready systems.",
+            "first_line": "XK-1003-CHARLIE-8801-NEEDLE"
+          }
+        },
+        {
+          "id": "04-64k-pos10",
+          "passed": true,
+          "elapsed_s": 55.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-64k-pos10",
+            "category": "long-context",
+            "expected_marker": "XK-2001-DELTA-5567-NEEDLE",
+            "target_tokens": 64000,
+            "position_pct": 0.1,
+            "response_length": 551,
+            "response_excerpt": "XK-2001-DELTA-5567-NEEDLE\n\nThe codebase contains several concurrency and memory management issues: `PaymentWebhookHandler` lacks thread safety and TTL for its deduplication cache, risking race conditions and unbounded memory growth; `EventBus.publish` iterates over a subscriber list that can be concurrently modified by `subscribe` without holding the lock, causing `RuntimeError`; and both `AuditLog` and `SearchIndexWriter` perform unprotected reads/writes on shared state, leading to potential data corruption or stale reads under concurrent load.",
+            "first_line": "XK-2001-DELTA-5567-NEEDLE"
+          }
+        },
+        {
+          "id": "05-64k-pos50",
+          "passed": true,
+          "elapsed_s": 53.6,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-64k-pos50",
+            "category": "long-context",
+            "expected_marker": "XK-2002-ECHO-3392-NEEDLE",
+            "target_tokens": 64000,
+            "position_pct": 0.5,
+            "response_length": 613,
+            "response_excerpt": "XK-2002-ECHO-3392-NEEDLE\n\nThe codebase consists of 311 highly repetitive, versioned service modules with identical logic. Key issues include unbounded in-memory collections (queues, caches, logs) that will cause memory exhaustion, a race condition in the payment webhook handler where `_seen_recently` is read/written without a lock, and a `SagaOrchestrator` that only initializes instances but lacks execution or compensation logic. Performance will degrade significantly due to synchronous I/O in audit logging, linear-time search operations, and coarse-grained locking that serializes all requests per service.",
+            "first_line": "XK-2002-ECHO-3392-NEEDLE"
+          }
+        },
+        {
+          "id": "06-64k-pos90",
+          "passed": true,
+          "elapsed_s": 43.6,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-64k-pos90",
+            "category": "long-context",
+            "expected_marker": "XK-2003-FOXTROT-7714-NEEDLE",
+            "target_tokens": 64000,
+            "position_pct": 0.9,
+            "response_length": 607,
+            "response_excerpt": "XK-2003-FOXTROT-7714-NEEDLE\n\nThe codebase is a highly repetitive, versioned scaffold of microservice components that shares consistent structural patterns but lacks production-ready safeguards. Key issues include unprotected shared state in payment deduplication and event bus dead-letter queues leading to race conditions and memory leaks, lazy TTL eviction in the cache, and incomplete core logic in the saga orchestrator and job scheduler. Overall, it functions as a structural template that requires proper synchronization, bounded collections, and actual step/compensation execution flows to be viable.",
+            "first_line": "XK-2003-FOXTROT-7714-NEEDLE"
+          }
+        },
+        {
+          "id": "07-150k-pos10",
+          "passed": true,
+          "elapsed_s": 102.2,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-150k-pos10",
+            "category": "long-context",
+            "expected_marker": "XK-3001-GOLF-2256-NEEDLE",
+            "target_tokens": 150000,
+            "position_pct": 0.1,
+            "response_length": 614,
+            "response_excerpt": "XK-3001-GOLF-2256-NEEDLE\nThe codebase exhibits significant thread-safety and memory management issues across multiple services. Key problems include unprotected dictionary iteration in the search writer (causing `RuntimeError` on concurrent writes), unbounded growth in the payment handler's deduplication cache (memory leak), and missing locks in the audit logger, saga orchestrator, and event bus during concurrent reads/writes. Additionally, the heavy reliance on in-memory data structures without persistence or proper synchronization makes this architecture unsuitable for production multi-threaded workloads.",
+            "first_line": "XK-3001-GOLF-2256-NEEDLE"
+          }
+        },
+        {
+          "id": "08-150k-pos50",
+          "passed": true,
+          "elapsed_s": 93.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-150k-pos50",
+            "category": "long-context",
+            "expected_marker": "XK-3002-HOTEL-9938-NEEDLE",
+            "target_tokens": 150000,
+            "position_pct": 0.5,
+            "response_length": 626,
+            "response_excerpt": "XK-3002-HOTEL-9938-NEEDLE\nThe codebase is composed of highly repetitive, versioned service stubs containing several critical concurrency and logic flaws. Key issues include a TOCTOU race condition in the payment webhook deduplication, unsynchronized lock creation in the inventory service, a missing priority queue implementation despite accepting a priority parameter, and an incomplete saga orchestrator that lacks execution and compensation logic. Additionally, the audit log flush and event bus publish methods lack proper synchronization, which risks data corruption or dead-letter queue corruption under concurrent load.",
+            "first_line": "XK-3002-HOTEL-9938-NEEDLE"
+          }
+        },
+        {
+          "id": "09-distractor-64k",
+          "passed": true,
+          "elapsed_s": 63.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "09-distractor-64k",
+            "category": "long-context",
+            "expected_marker": "XK-4001-INDIA-6625-REAL",
+            "target_tokens": 64000,
+            "position_pct": 0.5,
+            "response_length": 586,
+            "response_excerpt": "XK-4001-INDIA-6625-REAL\nThe codebase consists of 311 highly repetitive modules with several critical flaws. Notable issues include unbounded in-memory collections causing memory leaks (`_seen_recently`, `_dead_letter`, `_delivery_log`), a race condition in the payment webhook handler due to an unprotected dictionary, and severe performance bottlenecks in the search index writer from linear full-text scanning. Additionally, the audit log's `flush` method is not thread-safe, and the job scheduler fails to utilize its `priority` field by relying on a standard list instead of a heap.",
+            "first_line": "XK-4001-INDIA-6625-REAL"
+          }
+        },
+        {
+          "id": "10-distractor-150k",
+          "passed": true,
+          "elapsed_s": 102.0,
+          "reasons": [],
+          "artifact": {
+            "task_id": "10-distractor-150k",
+            "category": "long-context",
+            "expected_marker": "XK-4002-JULIET-1187-REAL",
+            "target_tokens": 150000,
+            "position_pct": 0.75,
+            "response_length": 540,
+            "response_excerpt": "XK-4002-JULIET-1187-REAL\nThe codebase is composed of highly repetitive, versioned service templates that share several systemic issues. Key findings include race conditions in the inventory and payment services due to unprotected shared dictionaries, memory leaks in the webhook deduplication cache, and performance bottlenecks caused by global locks in the rate limiter and event bus. Additionally, the search indexer lacks scalability, the saga orchestrator is functionally incomplete, and the audit log's flush method is not thread-safe.",
+            "first_line": "XK-4002-JULIET-1187-REAL"
+          }
+        }
+      ],
+      "artifact_count": 10,
+      "logs": []
+    }
+  ]
+}
