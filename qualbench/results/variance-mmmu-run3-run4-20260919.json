@@ -1,0 +1,600 @@
+{
+  "runs": [
+    {
+      "path": "/home/berdachuk/tmp/opencode/mm-run4/mmmu-run3.jsonl",
+      "suite": "mmmu-subset",
+      "model": "qwen3.6-35b-a3b",
+      "url": "http://127.0.0.1:8000",
+      "written_at": "2026-09-19T13:30:05.754814+00:00",
+      "n_items": 60
+    },
+    {
+      "path": "/home/berdachuk/tmp/opencode/mm-run4/mmmu-run4.jsonl",
+      "suite": "mmmu-subset",
+      "model": "qwen3.6-35b-a3b",
+      "url": "http://127.0.0.1:8000",
+      "written_at": "2026-09-19T13:39:59.316994+00:00",
+      "config": {
+        "max_tokens": 16384,
+        "video_frames": 8,
+        "per_task_timeout_s": 900,
+        "limit": null
+      },
+      "n_items": 60
+    }
+  ],
+  "suite": "mmmu-subset",
+  "suite_consistency": {
+    "suites": [
+      "mmmu-subset"
+    ],
+    "consistent": true,
+    "mixed": []
+  },
+  "run_config_comparison": {
+    "compared": 2,
+    "settings": [
+      "limit",
+      "max_tokens",
+      "per_task_timeout_s",
+      "video_frames"
+    ],
+    "differing": [
+      {
+        "setting": "max_tokens",
+        "values": [
+          {
+            "run": "mmmu-run3.jsonl",
+            "value": null
+          },
+          {
+            "run": "mmmu-run4.jsonl",
+            "value": 16384
+          }
+        ]
+      },
+      {
+        "setting": "per_task_timeout_s",
+        "values": [
+          {
+            "run": "mmmu-run3.jsonl",
+            "value": null
+          },
+          {
+            "run": "mmmu-run4.jsonl",
+            "value": 900
+          }
+        ]
+      },
+      {
+        "setting": "video_frames",
+        "values": [
+          {
+            "run": "mmmu-run3.jsonl",
+            "value": null
+          },
+          {
+            "run": "mmmu-run4.jsonl",
+            "value": 8
+          }
+        ]
+      }
+    ],
+    "runs_without_config": [
+      "mmmu-run3.jsonl"
+    ],
+    "comparable": false
+  },
+  "summary": {
+    "n_total": 60,
+    "n_correct": 47,
+    "accuracy": 0.7833333333333333,
+    "match_modes": {
+      "exact": 47,
+      "none": 13
+    },
+    "domains": {
+      "charts": {
+        "n_total": 16,
+        "n_correct": 15,
+        "accuracy": 0.9375
+      },
+      "diagrams": {
+        "n_total": 16,
+        "n_correct": 11,
+        "accuracy": 0.6875
+      },
+      "photos": {
+        "n_total": 16,
+        "n_correct": 10,
+        "accuracy": 0.625
+      },
+      "screen-captures": {
+        "n_total": 12,
+        "n_correct": 11,
+        "accuracy": 0.9166666666666666
+      }
+    },
+    "strict_accuracy": 0.7833333333333333,
+    "format_slack": 0.0
+  },
+  "domain_variance": {
+    "n_domains": 4,
+    "min": 0.625,
+    "max": 0.9375,
+    "range": 0.3125,
+    "mean": 0.7916666666666666,
+    "stdev": 0.13740527039867623,
+    "worst_domain": "photos",
+    "best_domain": "charts"
+  },
+  "errors": {
+    "n_total": 60,
+    "n_correct": 47,
+    "by_kind": {
+      "truncated": 3
+    },
+    "wrong_answers": 10,
+    "unextractable": 0,
+    "n_answered": 57,
+    "accuracy_over_answered": 0.8245614035087719
+  },
+  "by_domain": {
+    "charts": {
+      "n_total": 16,
+      "n_correct": 15,
+      "accuracy": 0.9375,
+      "n_exact": 15,
+      "n_errors": 0
+    },
+    "diagrams": {
+      "n_total": 16,
+      "n_correct": 11,
+      "accuracy": 0.6875,
+      "n_exact": 11,
+      "n_errors": 1
+    },
+    "photos": {
+      "n_total": 16,
+      "n_correct": 10,
+      "accuracy": 0.625,
+      "n_exact": 10,
+      "n_errors": 2
+    },
+    "screen-captures": {
+      "n_total": 12,
+      "n_correct": 11,
+      "accuracy": 0.9166666666666666,
+      "n_exact": 11,
+      "n_errors": 0
+    }
+  },
+  "by_subject": {
+    "Accounting": {
+      "n_total": 3,
+      "n_correct": 3,
+      "accuracy": 1.0,
+      "n_exact": 3,
+      "n_errors": 0
+    },
+    "Agriculture": {
+      "n_total": 1,
+      "n_correct": 0,
+      "accuracy": 0.0,
+      "n_exact": 0,
+      "n_errors": 1
+    },
+    "Architecture_and_Engineering": {
+      "n_total": 2,
+      "n_correct": 2,
+      "accuracy": 1.0,
+      "n_exact": 2,
+      "n_errors": 0
+    },
+    "Art": {
+      "n_total": 2,
+      "n_correct": 2,
+      "accuracy": 1.0,
+      "n_exact": 2,
+      "n_errors": 0
+    },
+    "Art_Theory": {
+      "n_total": 2,
+      "n_correct": 1,
+      "accuracy": 0.5,
+      "n_exact": 1,
+      "n_errors": 0
+    },
+    "Basic_Medical_Science": {
+      "n_total": 1,
+      "n_correct": 0,
+      "accuracy": 0.0,
+      "n_exact": 0,
+      "n_errors": 0
+    },
+    "Biology": {
+      "n_total": 3,
+      "n_correct": 3,
+      "accuracy": 1.0,
+      "n_exact": 3,
+      "n_errors": 0
+    },
+    "Chemistry": {
+      "n_total": 1,
+      "n_correct": 1,
+      "accuracy": 1.0,
+      "n_exact": 1,
+      "n_errors": 0
+    },
+    "Clinical_Medicine": {
+      "n_total": 2,
+      "n_correct": 2,
+      "accuracy": 1.0,
+      "n_exact": 2,
+      "n_errors": 0
+    },
+    "Computer_Science": {
+      "n_total": 2,
+      "n_correct": 2,
+      "accuracy": 1.0,
+      "n_exact": 2,
+      "n_errors": 0
+    },
+    "Design": {
+      "n_total": 3,
+      "n_correct": 2,
+      "accuracy": 0.6666666666666666,
+      "n_exact": 2,
+      "n_errors": 0
+    },
+    "Diagnostics_and_Laboratory_Medicine": {
+      "n_total": 1,
+      "n_correct": 1,
+      "accuracy": 1.0,
+      "n_exact": 1,
+      "n_errors": 0
+    },
+    "Economics": {
+      "n_total": 1,
+      "n_correct": 1,
+      "accuracy": 1.0,
+      "n_exact": 1,
+      "n_errors": 0
+    },
+    "Electronics": {
+      "n_total": 1,
+      "n_correct": 1,
+      "accuracy": 1.0,
+      "n_exact": 1,
+      "n_errors": 0
+    },
+    "Energy_and_Power": {
+      "n_total": 1,
+      "n_correct": 1,
+      "accuracy": 1.0,
+      "n_exact": 1,
+      "n_errors": 0
+    },
+    "Geography": {
+      "n_total": 1,
+      "n_correct": 0,
+      "accuracy": 0.0,
+      "n_exact": 0,
+      "n_errors": 0
+    },
+    "History": {
+      "n_total": 5,
+      "n_correct": 3,
+      "accuracy": 0.6,
+      "n_exact": 3,
+      "n_errors": 0
+    },
+    "Literature": {
+      "n_total": 4,
+      "n_correct": 4,
+      "accuracy": 1.0,
+      "n_exact": 4,
+      "n_errors": 0
+    },
+    "Manage": {
+      "n_total": 5,
+      "n_correct": 4,
+      "accuracy": 0.8,
+      "n_exact": 4,
+      "n_errors": 0
+    },
+    "Marketing": {
+      "n_total": 1,
+      "n_correct": 1,
+      "accuracy": 1.0,
+      "n_exact": 1,
+      "n_errors": 0
+    },
+    "Materials": {
+      "n_total": 1,
+      "n_correct": 1,
+      "accuracy": 1.0,
+      "n_exact": 1,
+      "n_errors": 0
+    },
+    "Math": {
+      "n_total": 1,
+      "n_correct": 1,
+      "accuracy": 1.0,
+      "n_exact": 1,
+      "n_errors": 0
+    },
+    "Mechanical_Engineering": {
+      "n_total": 1,
+      "n_correct": 0,
+      "accuracy": 0.0,
+      "n_exact": 0,
+      "n_errors": 1
+    },
+    "Music": {
+      "n_total": 1,
+      "n_correct": 0,
+      "accuracy": 0.0,
+      "n_exact": 0,
+      "n_errors": 0
+    },
+    "Pharmacy": {
+      "n_total": 3,
+      "n_correct": 2,
+      "accuracy": 0.6666666666666666,
+      "n_exact": 2,
+      "n_errors": 1
+    },
+    "Physics": {
+      "n_total": 1,
+      "n_correct": 1,
+      "accuracy": 1.0,
+      "n_exact": 1,
+      "n_errors": 0
+    },
+    "Psychology": {
+      "n_total": 4,
+      "n_correct": 4,
+      "accuracy": 1.0,
+      "n_exact": 4,
+      "n_errors": 0
+    },
+    "Public_Health": {
+      "n_total": 1,
+      "n_correct": 1,
+      "accuracy": 1.0,
+      "n_exact": 1,
+      "n_errors": 0
+    },
+    "Sociology": {
+      "n_total": 5,
+      "n_correct": 3,
+      "accuracy": 0.6,
+      "n_exact": 3,
+      "n_errors": 0
+    }
+  },
+  "by_difficulty": {
+    "(unknown)": {
+      "n_total": 60,
+      "n_correct": 47,
+      "accuracy": 0.7833333333333333,
+      "n_exact": 47,
+      "n_errors": 3
+    }
+  },
+  "by_answer_type": {
+    "multiple_choice": {
+      "n_total": 60,
+      "n_correct": 47,
+      "accuracy": 0.7833333333333333,
+      "n_exact": 47,
+      "n_errors": 3
+    }
+  },
+  "stability": {
+    "n_runs": 2,
+    "n_items_repeated": 60,
+    "flaky_items": [
+      {
+        "id": "diagrams-09-history",
+        "domain": "diagrams",
+        "n_correct": 1,
+        "n_attempts": 2,
+        "answers": [
+          "C",
+          "A"
+        ]
+      }
+    ],
+    "stable_correct": 45,
+    "stable_incorrect": 7,
+    "unmeasurable_items": [
+      {
+        "id": "charts-05-clinical_medicine",
+        "domain": "charts",
+        "kinds": [
+          "truncated",
+          "ok"
+        ]
+      },
+      {
+        "id": "diagrams-06-design",
+        "domain": "diagrams",
+        "kinds": [
+          "truncated",
+          "ok"
+        ]
+      },
+      {
+        "id": "diagrams-08-energy_and_power",
+        "domain": "diagrams",
+        "kinds": [
+          "truncated",
+          "ok"
+        ]
+      },
+      {
+        "id": "diagrams-14-pharmacy",
+        "domain": "diagrams",
+        "kinds": [
+          "ok",
+          "truncated"
+        ]
+      },
+      {
+        "id": "photos-01-agriculture",
+        "domain": "photos",
+        "kinds": [
+          "ok",
+          "truncated"
+        ]
+      },
+      {
+        "id": "photos-04-basic_medical_science",
+        "domain": "photos",
+        "kinds": [
+          "truncated",
+          "ok"
+        ]
+      },
+      {
+        "id": "photos-13-mechanical_engineering",
+        "domain": "photos",
+        "kinds": [
+          "ok",
+          "truncated"
+        ]
+      }
+    ],
+    "n_measurable": 53,
+    "flake_rate": 0.018867924528301886,
+    "per_run_accuracy": [
+      0.8,
+      0.7833333333333333
+    ],
+    "accuracy_spread": 0.01666666666666672,
+    "accuracy_stdev": 0.00833333333333336
+  },
+  "failures": [
+    {
+      "id": "charts-16-sociology",
+      "domain": "charts",
+      "subject": "Sociology",
+      "expected": "C",
+      "extracted": "B",
+      "error_kind": null,
+      "reason": "expected option C, got 'B'"
+    },
+    {
+      "id": "photos-01-agriculture",
+      "domain": "photos",
+      "subject": "Agriculture",
+      "expected": "B",
+      "extracted": "",
+      "error_kind": "truncated",
+      "reason": "truncated: finish_reason=length (content: 'The user wants me to identify the cause of the corky outgrowths on the ash tree trunk.\\n\\n1.  **Analyze the image:**\\n    *   The image shows a young tree trunk, identified as an ash tree (*Fraxinus exce')"
+    },
+    {
+      "id": "photos-04-basic_medical_science",
+      "domain": "photos",
+      "subject": "Basic_Medical_Science",
+      "expected": "B",
+      "extracted": "A",
+      "error_kind": null,
+      "reason": "expected option B, got 'A'"
+    },
+    {
+      "id": "photos-09-geography",
+      "domain": "photos",
+      "subject": "Geography",
+      "expected": "D",
+      "extracted": "A",
+      "error_kind": null,
+      "reason": "expected option D, got 'A'"
+    },
+    {
+      "id": "photos-12-manage",
+      "domain": "photos",
+      "subject": "Manage",
+      "expected": "C",
+      "extracted": "A",
+      "error_kind": null,
+      "reason": "expected option C, got 'A'"
+    },
+    {
+      "id": "photos-13-mechanical_engineering",
+      "domain": "photos",
+      "subject": "Mechanical_Engineering",
+      "expected": "B",
+      "extracted": "",
+      "error_kind": "truncated",
+      "reason": "truncated: finish_reason=length (content: 'The user wants me to identify the incorrect thread labeling method from the provided image.\\n\\n1.  **Analyze the image:**\\n    *   The image shows four cross-sectional diagrams labeled a), b), c), and d)')"
+    },
+    {
+      "id": "photos-16-sociology",
+      "domain": "photos",
+      "subject": "Sociology",
+      "expected": "B",
+      "extracted": "A",
+      "error_kind": null,
+      "reason": "expected option B, got 'A'"
+    },
+    {
+      "id": "screen-captures-04-history",
+      "domain": "screen-captures",
+      "subject": "History",
+      "expected": "D",
+      "extracted": "C",
+      "error_kind": null,
+      "reason": "expected option D, got 'C'"
+    },
+    {
+      "id": "diagrams-03-art_theory",
+      "domain": "diagrams",
+      "subject": "Art_Theory",
+      "expected": "A",
+      "extracted": "D",
+      "error_kind": null,
+      "reason": "expected option A, got 'D'"
+    },
+    {
+      "id": "diagrams-06-design",
+      "domain": "diagrams",
+      "subject": "Design",
+      "expected": "C",
+      "extracted": "D",
+      "error_kind": null,
+      "reason": "expected option C, got 'D'"
+    },
+    {
+      "id": "diagrams-09-history",
+      "domain": "diagrams",
+      "subject": "History",
+      "expected": "C",
+      "extracted": "A",
+      "error_kind": null,
+      "reason": "expected option C, got 'A'"
+    },
+    {
+      "id": "diagrams-13-music",
+      "domain": "diagrams",
+      "subject": "Music",
+      "expected": "B",
+      "extracted": "D",
+      "error_kind": null,
+      "reason": "expected option B, got 'D'"
+    },
+    {
+      "id": "diagrams-14-pharmacy",
+      "domain": "diagrams",
+      "subject": "Pharmacy",
+      "expected": "B",
+      "extracted": "",
+      "error_kind": "truncated",
+      "reason": "truncated: finish_reason=length (content: 'The user wants me to identify the chemical structure shown in the image.\\n\\n1.  **Analyze the image:**\\n    *   The image shows a chemical structure with two main parts.\\n    *   **Top part:** Two cyclic ')"
+    }
+  ],
+  "chance_baseline": 0.26,
+  "lift_over_chance": 0.5233333333333333
+}

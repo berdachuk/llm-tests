@@ -322,3 +322,201 @@ system python, or that category silently runs 0/0 tasks.
 
 See `results/run-4090-fp8-final-20260903.md` for the consolidated report
 (46/50).
+
+---
+
+## Multimodal (vision) category -- initial calibration, 2026-09-19
+
+New opt-in `multimodal` category, run against the vision-enabled FP8
+build on the 4090 (`192.168.0.88:8000`). Findings from bringing it up:
+
+### 1. Token budget dominates vision-reasoning results (harness bug, fixed)
+
+This was the single biggest confound in the whole exercise, and it took
+three attempts to size correctly.
+
+| run | `max_tokens` | accuracy | truncated | wrong answers | accuracy over answered |
+|---|---|---|---|---|---|
+| 1 | 1024->2048 | 35/60 = 58.3% | **21** | **4** | 89.7% |
+| 2 | 4096 | 40/60 = 66.7% | 12 | 8 | 83.3% |
+| probe | 16384 | -- | 0 of 4 retried | -- | those items scored correct |
+| 3 | 16384 | **48/60 = 80.0%** | 4 | 8 | 85.7% |
+
+All four domain buckets clear their thresholds at the final setting:
+`charts 14/16 (87.5%)`, `photos 11/16 (68.8%)`, `screen-captures 11/12
+(91.7%)`, `diagrams 12/16 (75.0%)`; chance floor 26.0%, so the lift is
+54 points.
+
+Direct evidence, re-running the four items that truncated in *both*
+runs 1 and 2 at a 16384 budget:
+
+| item | completion tokens used | result at 16384 |
+|---|---|---|
+| `charts-11-materials` | 9390 | correct (`A`) |
+| `diagrams-05-computer_science` | 10421 | correct (`D`) |
+| `diagrams-07-electronics` | 9427 | correct (`A`) |
+| `diagrams-03-art_theory` | 4353 | **wrong** (`D` vs `A`) |
+
+Three of the four were *never* reasoning failures -- the model simply
+needed ~10k tokens to finish analysing a real MMMU diagram. Only the
+fourth is a genuine miss. Every truncation therefore converts directly
+into a phantom wrong answer that understates the model.
+
+Note the perverse effect at 4096: accuracy rose (58.3% -> 66.7%) while
+the number of *genuine* wrong answers also rose (4 -> 8). The first
+figure was flattered by the small answered denominator; the second is
+the more trustworthy signal. This is precisely why `variance_report.py`
+reports `accuracy over answered items` and the truncation count next to
+the headline number, and why the checker classifies
+`finish_reason=length` as a plumbing failure rather than a wrong answer.
+
+Note also that the *wrong-answer* count is stable at 8 from 4096
+onwards. Raising the budget recovered truncated items but produced no
+new wrong answers -- it revealed the model's real capability rather than
+inflating it.
+
+Default raised to **16384**. Cost: a few items take minutes instead of
+seconds; one item needed 10.4k tokens and 293s. The alternative is
+scoring the model wrong for failing to finish inside a budget we picked
+arbitrarily, which corrupts exactly the number the suite exists to
+produce.
+
+Residual truncations at 16384: **4 items** (`charts-05`,
+`photos-04`, `diagrams-06`, `diagrams-08`), each burning 300-500s
+before giving up. These are genuine reasoning loops, not a budget
+problem -- the opposite conclusion from the earlier ones, and worth
+distinguishing. Raising the budget further would cost enormous wall time
+for diminishing returns; they are left as-is and counted honestly as
+plumbing failures.
+
+**Run-config guard added.** Because runs 1-3 used different budgets,
+aggregating them reported a 21.7% "spread" that was entirely a
+configuration difference, not model noise. Records now embed their
+config, and `variance_report.py` refuses to present a spread as
+variance without warning when the supplied runs disagree.
+
+The lesson generalizes: for any vision-reasoning eval, **check the
+truncation count before reading the accuracy number**.
+
+### 2. Grading bug found by probing -- hedged multiple-choice answers
+
+The first implementation credited any reply whose first character matched
+the expected letter. That scored replies like `"Both B and C"` and
+`"B or C"` as **correct**, silently inflating multiple-choice accuracy
+for answers that decline to commit. Fixed via
+`mm_common.resolve_choice_letter`, which detects multiple distinct
+in-range option letters and refuses credit. Regression tests added.
+
+### 3. Fixture bug found in the synthetic smoke set -- ambiguous ground truth
+
+`smoke/chart-02` asks which series rises most from Jan to Mar. The
+generator produced **a tie**: B rises 20->30 and C rises 28->38, both
++10. Ground truth claimed `B`, so the model's `C` was scored wrong. Both
+answers are defensible, so the item now accepts either
+(`answer_any_of`). Worth stating plainly: this was a bug in *our*
+fixture, not a model failure, and it was only visible because the
+variance report separates wrong answers from other outcomes.
+
+Confirmed end-to-end after the fix: a smoke-suite rerun scored the item
+`correct` and the whole synthetic suite went from 14/16 to **15/16 =
+93.8%** (the one missing item, `counting-04`, truncated after 356s -- a
+plumbing failure, correctly not scored as a wrong answer).
+
+### 4. Run-to-run instability is ~2%, measured with two same-config runs
+
+The first cross-run comparison looked alarming: **7 items flipped**
+between runs 1 and 2, suggesting 11.7% nondeterminism. Inspecting them
+showed every single one had an **empty answer on one side** -- i.e. a
+truncation, not a changed opinion.
+
+Fix: `variance_report.py` now excludes any item where a run failed for a
+plumbing reason from the flakiness count, and reports those separately
+as `unmeasurable`.
+
+Across runs 1-3 (mixed budgets -- useful only for the plumbing
+correction, not as a variance figure):
+
+```
+60 repeated items: 34 always correct, 3 always wrong, 0 flipped (0.0%)
+23 items EXCLUDED (a run was truncated/errored, so the comparison is void)
+per-run accuracy: 58.3%, 66.7%, 80.0%
+```
+
+Run 4 then repeated run 3 at the **identical 16384 configuration**, the
+only comparison that actually measures model variance. Run 3's header
+predates config embedding, but the config is provable from the data:
+run 3 has correct answers that used 15,900 completion tokens, which no
+smaller budget could produce. (The guard still labels it unverifiable
+because it only reads headers -- conservative by design.)
+
+```
+same config (runs 3+4): 53 measurable items
+  45 always correct, 7 always wrong, 1 flipped (1.9%)
+  7 items EXCLUDED (one run truncated them)
+  accuracy: 80.0% vs 78.3% (spread 1.7%)
+```
+
+**~2% flakiness on a proper same-config sample**, replacing the earlier
+0%-on-a-mixed-budget-sample figure. The single flip was
+`diagrams-09-history` (C -> A). This is still a notable contrast with
+the *text* categories on this same FP8 build, where `findings.md`
+documents ~10-30% nondeterminism on long reasoning tasks -- vision
+answers here are short (a single option letter), so there is far less
+room for a reasoning loop to send the answer somewhere different.
+
+Two caveats, both material:
+
+1. The per-run accuracy *spread* of 21.7% above runs 1-3 is **not model
+   variance** -- those runs used different token budgets. A dedicated
+   run-config comparison now detects and labels this (see item 1).
+2. Flakiness is measured only over items that neither run truncated.
+   The excluded seven cluster at the 16k-token boundary, so the hardest
+   items are the least covered by this stability claim.
+
+### 5. Per-domain spread is large
+
+Definitive per-domain results at the correct budget (run 3):
+
+| domain | accuracy |
+|---|---|
+| screen-captures | 11/12 = 91.7% |
+| charts | 14/16 = 87.5% |
+| diagrams | 12/16 = 75.0% |
+| photos | 11/16 = 68.8% |
+
+Spread: range 22.9%, stdev 9.2%. The earlier picture was distorted by
+truncation in two different directions: charts *rose* from 62.5% to
+87.5% once their items were allowed to finish, while diagrams recovered
+only partially because several of its truncated items turned out to be
+genuinely wrong rather than merely unfinished.
+
+Notably **photos is now the weakest bucket**, not diagrams -- the
+opposite of what the truncated runs suggested. That looks like a real
+capability signal (medical/histology imagery, agricultural photos,
+geography) rather than a budget or formatting artifact.
+
+The same-config repeat (run 4) preserved the ordering -- charts 93.8%,
+screen-captures 91.7%, diagrams 68.8%, photos 62.5% -- with photos
+landing exactly on its 60% threshold. Photos is the bucket to watch:
+it is the only domain whose verdict could plausibly flip on a rerun.
+
+A single flat pass threshold would be useless here, hence the
+per-domain thresholds in `thresholds.json`.
+
+Treat this as a relative ordering, not absolute capability: several
+samples per subject means individual subject scores (many 0/1 or 1/1)
+carry almost no information.
+
+### 6. Caveat on comparing to published MMMU numbers
+
+This suite scores a **60-item stratified subset** of the MMMU
+*validation* split with its own prompt and answer parser. Published MMMU
+scores use the full 900-item validation split (or the withheld 10.5k test
+split) with the official harness. These are different measurements and
+the numbers are **not** directly comparable. `public_benchmarks.json`
+ships with unsourced placeholders deliberately marked `UNVERIFIED`; the
+dashboard refuses to present them as fact.
+
+Only the `validation` split is used, because it is the only split whose
+answers are public and therefore locally gradeable. MMMU's `test` answers
+are withheld.
