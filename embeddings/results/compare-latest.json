@@ -1,0 +1,132 @@
+{
+  "tei": {
+    "name": "tei",
+    "url": "http://192.168.0.88:8004",
+    "model": "Qwen/Qwen3-Embedding-0.6B",
+    "native_dim": 1024,
+    "health_status": 200,
+    "info": {
+      "model_id": "Qwen/Qwen3-Embedding-0.6B",
+      "model_sha": "97b0c614be4d77ee51c0cef4e5f07c00f9eb65b3",
+      "model_dtype": "float16",
+      "served_model_name": "Qwen/Qwen3-Embedding-0.6B",
+      "model_type": {
+        "embedding": {
+          "pooling": "last_token"
+        }
+      },
+      "max_concurrent_requests": 256,
+      "max_input_length": 32768,
+      "max_batch_tokens": 32768,
+      "max_batch_requests": 128,
+      "max_client_batch_size": 128,
+      "auto_truncate": true,
+      "tokenization_workers": 16,
+      "version": "1.9.4",
+      "sha": "e80ef225ed0e6cb1717ce632a6a84b6cf211bb67",
+      "docker_label": "sha-e80ef22"
+    },
+    "formats": {
+      "string": {
+        "ok": true,
+        "dim": 1024
+      },
+      "string_list": {
+        "ok": true,
+        "n": 3
+      },
+      "dimensions_256": {
+        "ok": true,
+        "dim": 256
+      },
+      "image_object": {
+        "ok": false,
+        "error": "not supported by TEI text-only"
+      },
+      "mixed_batch": {
+        "ok": false,
+        "error": "not supported by TEI text-only"
+      },
+      "prompt_name": {
+        "ok": false,
+        "error": "TEI ignores / no ST prompt_name"
+      }
+    },
+    "batch": {
+      "n": 8,
+      "dim": 1024,
+      "latency_s_mean": 0.02779116466990672,
+      "latency_s_stdev": 0.0019031307255112139,
+      "items_per_s": 287.8612715595432,
+      "l2_norm_mean": 0.999999981747495
+    },
+    "semantic": {
+      "related": 0.7454684335934793,
+      "unrelated": 0.36345289921939944,
+      "cross_lang": 0.7733940947721354
+    },
+    "probe_s": 0.3724134119984228
+  },
+  "gemma": {
+    "name": "gemma",
+    "url": "http://192.168.0.88:8005",
+    "model": "google/embeddinggemma-2",
+    "native_dim": 768,
+    "health_status": 200,
+    "info": {
+      "model_id": "google/embeddinggemma-2",
+      "served_model_name": "google/embeddinggemma-2",
+      "model_dtype": "torch.bfloat16",
+      "embedding_dimension": 768,
+      "modalities": [
+        "text",
+        "image",
+        "audio",
+        "video",
+        "message"
+      ],
+      "max_download_bytes": 41943040
+    },
+    "formats": {
+      "string": {
+        "ok": true,
+        "dim": 768
+      },
+      "string_list": {
+        "ok": true,
+        "n": 3
+      },
+      "dimensions_256": {
+        "ok": true,
+        "dim": 256
+      },
+      "image_object": {
+        "ok": true,
+        "dim": 768
+      },
+      "mixed_batch": {
+        "ok": true,
+        "n": 2
+      },
+      "prompt_name": {
+        "ok": true,
+        "dim": 768
+      }
+    },
+    "batch": {
+      "n": 8,
+      "dim": 768,
+      "latency_s_mean": 0.07404265133178949,
+      "latency_s_stdev": 0.012548284535479813,
+      "items_per_s": 108.04583380127121,
+      "l2_norm_mean": 1.0019961630703962
+    },
+    "semantic": {
+      "related": 0.9030274041863338,
+      "unrelated": 0.5844466496591981,
+      "cross_lang": 0.8790699885612637
+    },
+    "probe_s": 1.289374523999868
+  },
+  "generated_at": "20261007-134142"
+}

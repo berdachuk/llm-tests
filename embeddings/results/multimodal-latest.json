@@ -1,0 +1,125 @@
+{
+  "model": {
+    "model_id": "google/embeddinggemma-2",
+    "served_model_name": "google/embeddinggemma-2",
+    "model_dtype": "torch.bfloat16",
+    "embedding_dimension": 768,
+    "modalities": [
+      "text",
+      "image",
+      "audio",
+      "video",
+      "message"
+    ],
+    "max_download_bytes": 41943040
+  },
+  "gpu_note": "192.168.0.88:8005 EmbeddingGemma-2",
+  "cases": [
+    {
+      "case": "image_png",
+      "ok": true,
+      "n": 1,
+      "dim": 768,
+      "s": 0.085,
+      "l2": 1.0022
+    },
+    {
+      "case": "image_jpeg",
+      "ok": true,
+      "n": 1,
+      "dim": 768,
+      "s": 0.071,
+      "l2": 0.9984
+    },
+    {
+      "case": "image_list",
+      "ok": true,
+      "n": 1,
+      "dim": 768,
+      "s": 0.122,
+      "l2": 0.9983
+    },
+    {
+      "case": "image_batch3",
+      "ok": true,
+      "n": 3,
+      "dim": 768,
+      "s": 0.191,
+      "l2": 1.0017
+    },
+    {
+      "case": "image_mrl256",
+      "ok": true,
+      "n": 1,
+      "dim": 256,
+      "s": 0.071,
+      "l2": 1.0
+    },
+    {
+      "case": "interleaved_text_image",
+      "ok": true,
+      "n": 1,
+      "dim": 768,
+      "s": 0.071,
+      "l2": 1.002
+    },
+    {
+      "case": "interleaved_multi_image",
+      "ok": true,
+      "n": 1,
+      "dim": 768,
+      "s": 0.121,
+      "l2": 1.0019
+    },
+    {
+      "case": "audio_wav",
+      "ok": true,
+      "n": 1,
+      "dim": 768,
+      "s": 0.034,
+      "l2": 1.0023
+    },
+    {
+      "case": "audio_tones_cosine",
+      "ok": true,
+      "cosine": 0.9691
+    },
+    {
+      "case": "batch_audio_text",
+      "ok": true,
+      "n": 3,
+      "dim": 768,
+      "s": 0.038,
+      "l2": 0.9999
+    },
+    {
+      "case": "interleaved_text_audio",
+      "ok": true,
+      "n": 1,
+      "dim": 768,
+      "s": 0.032,
+      "l2": 1.0005
+    },
+    {
+      "case": "interleaved_text_image_audio",
+      "ok": true,
+      "n": 1,
+      "dim": 768,
+      "s": 0.084,
+      "l2": 0.999
+    },
+    {
+      "case": "full_mm_batch",
+      "ok": true,
+      "n": 4,
+      "dim": 768,
+      "s": 0.213,
+      "l2": 1.0013
+    },
+    {
+      "case": "video_skipped_note",
+      "ok": false,
+      "error": "500 Server Error: Internal Server Error for url: http://192.168.0.88:8005/v1/embeddings"
+    }
+  ]
+}

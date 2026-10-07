@@ -3,6 +3,10 @@
 **See [`TEST_RESULTS.md`](TEST_RESULTS.md) for the latest qualbench
 FP8-vs-NVFP4 comparative test results (50-task quality/regression eval).**
 
+**Embeddings on `.88`:** usage/deploy guide [`EMBEDDINGS_88.md`](EMBEDDINGS_88.md);
+live compare report [`EMBEDDINGS_88_COMPARE.md`](EMBEDDINGS_88_COMPARE.md);
+pytest suite `embeddings/tests` (TEI `:8004` + EmbeddingGemma-2 `:8005`, formats + batches).
+
 Live-server compatibility tests for local/self-hosted LLM deployments,
 focused on the wire protocols coding agents actually speak: OpenAI Chat
 Completions, OpenAI Responses, and Anthropic Messages.
@@ -37,6 +41,14 @@ agentbench/
     test_concurrency.py             Parallel-request correctness (opt-in).
     test_large_context.py           Needle-in-haystack at scale (opt-in).
     test_chat_template.py           Offline chat_template.jinja checks.
+embeddings/
+  client.py / settings.py / conftest.py
+  tests/test_tei_formats.py         Qwen3 TEI :8004 — string/list/batch/dims
+  tests/test_gemma_formats.py       EmbeddingGemma-2 :8005 — text/batch/MRL
+  tests/test_gemma_multimodal.py    image/audio/interleaved/HTTP URL/batches
+  media_fixtures.py                 tiny PNG/JPEG/WAV helpers
+  compare_report.py                 Live probe → EMBEDDINGS_88_COMPARE.md
+EMBEDDINGS_88.md      Deploy + how to call both .88 embedding backends
 gen_256k_prompt.py    Synthetic large-context prompt generator used by
                       test_large_context.py.
 check_applied.py      Chat-template version-string parser used by
