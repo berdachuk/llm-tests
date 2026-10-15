@@ -12,7 +12,7 @@ Full runbook: [`STRATA_88_PRODUCTION.md`](STRATA_88_PRODUCTION.md)
 |---|---|
 | Engine | Strata **v0.1.44.1** (`/mnt/data/strata/Strata`) |
 | Config | `/mnt/data/strata/Strata/strata-iq3_s.json` → `"gpu": 0`, **no** `layer_split` |
-| Served model id | **`qwen3.6-35b-a3b`** (compat alias for Flash-Next IQ3_S) |
+| Served model id | **`qwen3.8-flash-next-iq3_s`** |
 | systemd | `strata-iq3_s.service` + `strata-open-8080.service` (user, linger) |
 | Bind | `0.0.0.0:8080` |
 | VRAM | GPU0 ~**23 GiB** |
