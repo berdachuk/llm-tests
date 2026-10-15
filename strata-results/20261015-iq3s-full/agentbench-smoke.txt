@@ -1,0 +1,12 @@
+Strata IQ3_S agentbench (via SSH tunnel 127.0.0.1:18080)
+pytest agentbench/tests -m "not slow and not concurrency"
+Result: 50 passed, 5 failed, 3 skipped, 8 deselected in ~63s
+
+FAILED:
+- test_full_bugfix_loop_completes_with_final_summary (empty final content after tool_calls)
+- test_models_endpoint_reports_full_context (Strata uses meta.n_ctx=262144, not max_model_len)
+- test_messages_count_tokens (401 Unauthorized on /v1/messages/count_tokens)
+- test_inline_think_off_tag_content_is_not_swallowed_into_reasoning (XPASS→fail under xfail_strict; FreeToken-specific)
+- test_tool_choice_required_forces_a_call (XPASS→fail under xfail_strict; FreeToken-specific)
+
+Core smoke: models/chat/responses/messages/tools/streaming mostly green.

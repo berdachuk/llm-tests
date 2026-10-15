@@ -74,6 +74,9 @@ DEFAULT_URL = _env_str("AGENTBENCH_URL", "http://localhost:8000")
 #: (verify with `curl $AGENTBENCH_URL/v1/models`).
 DEFAULT_MODEL = _env_str("AGENTBENCH_MODEL", "qwen3.6-35b-a3b")
 
+#: Optional Bearer token for servers that require auth (e.g. Strata).
+DEFAULT_API_KEY = _env_str("AGENTBENCH_API_KEY", "") or None
+
 #: Per-request timeout (seconds) for normal test calls. Large-context /
 #: slow tests can legitimately take minutes on a big model.
 DEFAULT_TIMEOUT = _env_float("AGENTBENCH_TIMEOUT", 300.0)

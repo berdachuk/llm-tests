@@ -141,7 +141,12 @@ def agent_large_context_large_tokens() -> int:
 
 @pytest.fixture(scope="session")
 def client(agent_url, agent_model, agent_timeout) -> AgentBenchClient:
-    return AgentBenchClient(agent_url, agent_model, timeout=agent_timeout)
+    return AgentBenchClient(
+        agent_url,
+        agent_model,
+        timeout=agent_timeout,
+        api_key=settings.DEFAULT_API_KEY,
+    )
 
 
 @pytest.fixture(scope="session", autouse=True)
