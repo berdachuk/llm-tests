@@ -1,0 +1,13 @@
+=== Preflight: checking server model list ===
+Preflight OK: model 'qwen3.8-flash-next-iq3_s' is advertised (1 model(s) total).
+
+=== Running category: mcp-tools (per-task timeout 120s) ===
+--- mcp-tools: 8/8 passed (15.0s wall) ---
+
+=== Running category: long-context (per-task timeout 600s) ===
+--- long-context: 10/10 passed (396.9s wall) ---
+
+=== TOTAL: 18/18 passed (412.0s wall) ===
+Report written to:
+  /home/berdachuk/projects-llm-test/llm-tests/qualbench/results/run-strata-iq3s-mcp-longctx-20261015-111531.json
+  /home/berdachuk/projects-llm-test/llm-tests/qualbench/results/run-strata-iq3s-mcp-longctx-20261015-111531.md

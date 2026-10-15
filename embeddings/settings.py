@@ -38,12 +38,12 @@ def _env_int(name: str, default: int) -> int:
 
 
 # Qwen3-Embedding-0.6B via HuggingFace TEI
-TEI_URL = _env("EMBED_TEI_URL", "http://192.168.0.88:8004").rstrip("/")
+TEI_URL = _env("EMBED_TEI_URL", "http://192.168.0.175:8004").rstrip("/")
 TEI_MODEL = _env("EMBED_TEI_MODEL", "Qwen/Qwen3-Embedding-0.6B")
 TEI_NATIVE_DIM = _env_int("EMBED_TEI_NATIVE_DIM", 1024)
 
 # google/embeddinggemma-2 via SentenceTransformers FastAPI
-GEMMA_URL = _env("EMBED_GEMMA_URL", "http://192.168.0.88:8005").rstrip("/")
+GEMMA_URL = _env("EMBED_GEMMA_URL", "http://192.168.0.175:8005").rstrip("/")
 GEMMA_MODEL = _env("EMBED_GEMMA_MODEL", "google/embeddinggemma-2")
 GEMMA_NATIVE_DIM = _env_int("EMBED_GEMMA_NATIVE_DIM", 768)
 

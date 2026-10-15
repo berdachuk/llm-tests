@@ -20,6 +20,8 @@ import requests
 from jsonschema import Draft7Validator, ValidationError
 
 HERE = Path(__file__).parent
+sys.path.insert(0, str(HERE.parents[1] / "harness"))
+from http_auth import auth_headers  # noqa: E402
 
 
 def artifact_snippet(text: str, limit: int = 2000) -> str:
@@ -38,6 +40,7 @@ def load_task(task_dir: Path) -> tuple[list, list, dict]:
 def call_model(base_url: str, model: str, tools: list, messages: list, timeout: int) -> dict:
     resp = requests.post(
         f"{base_url.rstrip('/')}/v1/chat/completions",
+        headers=auth_headers(),
         json={
             "model": model,
             "messages": messages,

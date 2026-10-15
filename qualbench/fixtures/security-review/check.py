@@ -16,6 +16,8 @@ from pathlib import Path
 import requests
 
 HERE = Path(__file__).parent
+sys.path.insert(0, str(HERE.parents[1] / "harness"))
+from http_auth import auth_headers  # noqa: E402
 
 
 class TruncatedResponseError(RuntimeError):
@@ -39,6 +41,7 @@ def call_model(base_url: str, model: str, code: str, prompt: str, timeout: int) 
     user_content = f"{prompt}\n\n```\n{code}\n```"
     resp = requests.post(
         f"{base_url.rstrip('/')}/v1/chat/completions",
+        headers=auth_headers(),
         json={
             "model": model,
             "messages": [

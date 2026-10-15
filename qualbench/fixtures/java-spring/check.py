@@ -27,6 +27,8 @@ from pathlib import Path
 import requests
 
 HERE = Path(__file__).parent
+sys.path.insert(0, str(HERE.parents[1] / "harness"))
+from http_auth import auth_headers  # noqa: E402
 BUG_COMMENT_RE = re.compile(r"[ \t]*//\s*BUG:.*(?:\n[ \t]*//.*)*\n?")
 
 
@@ -84,6 +86,7 @@ Fix the bug in `{class_name}.java` so that all tests in `{class_name}Test.java` 
 
     resp = requests.post(
         f"{base_url.rstrip('/')}/v1/chat/completions",
+        headers=auth_headers(),
         json={
             "model": model,
             "messages": [{"role": "user", "content": prompt}],

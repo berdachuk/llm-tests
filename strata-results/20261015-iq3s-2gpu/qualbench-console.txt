@@ -1,0 +1,25 @@
+=== Preflight: checking server model list ===
+Preflight OK: model 'qwen3.8-flash-next-iq3_s' is advertised (1 model(s) total).
+
+=== Running category: java-spring (per-task timeout 180s) ===
+--- java-spring: 10/10 passed (95.5s wall) ---
+
+=== Running category: ts-angular (per-task timeout 300s) ===
+--- ts-angular: 8/8 passed (60.6s wall) ---
+
+=== Running category: sql-migrations (per-task timeout 300s) ===
+--- sql-migrations: 6/6 passed (48.2s wall) ---
+
+=== Running category: mcp-tools (per-task timeout 120s) ===
+--- mcp-tools: 8/8 passed (23.5s wall) ---
+
+=== Running category: security-review (per-task timeout 180s) ===
+--- security-review: 8/8 passed (108.1s wall) ---
+
+=== Running category: long-context (per-task timeout 600s) ===
+--- long-context: 10/10 passed (630.3s wall) ---
+
+=== TOTAL: 50/50 passed (966.2s wall) ===
+Report written to:
+  /home/berdachuk/projects-llm-test/llm-tests/qualbench/results/run-strata-iq3s-2gpu-full50-20261015-121142.json
+  /home/berdachuk/projects-llm-test/llm-tests/qualbench/results/run-strata-iq3s-2gpu-full50-20261015-121142.md

@@ -16,6 +16,8 @@ import requests
 import gen_prompt
 
 HERE = Path(__file__).parent
+sys.path.insert(0, str(HERE.parents[1] / "harness"))
+from http_auth import auth_headers  # noqa: E402
 
 
 class TruncatedResponseError(RuntimeError):
@@ -45,6 +47,7 @@ def build_prompt(task: dict) -> str:
 def call_model(base_url: str, model: str, prompt: str, timeout: int) -> str:
     resp = requests.post(
         f"{base_url.rstrip('/')}/v1/chat/completions",
+        headers=auth_headers(),
         json={
             "model": model,
             "messages": [{"role": "user", "content": prompt}],

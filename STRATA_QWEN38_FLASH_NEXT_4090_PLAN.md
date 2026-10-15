@@ -1,12 +1,18 @@
 # Plan: Strata + Qwen3.8-Flash-Next на RTX 4090 (192.168.0.88)
 
-Цель: поднять **Strata** с **максимальным контекстом** на **RTX 4090 24 GB**,
-прогнать матрицу размеров контекста, затем вернуть **FreeToken**
-(`qwen3.6-35b-a3b` на `:8000`).
+> **Статус (2026-10-15):** план выполнен. Прод — Strata IQ3_S **1×4090** на
+> `:8080`, Bifrost `llm-88/qwen3.8-flash-next-iq3_s`, FreeToken **не** возвращён.
+> Актуальные настройки и результаты: [`STRATA_88_PRODUCTION.md`](STRATA_88_PRODUCTION.md),
+> [`STRATA_88_ACTIVE_STACK.md`](STRATA_88_ACTIVE_STACK.md),
+> [`STRATA_VS_FREETOKEN_4090_COMPARE.md`](STRATA_VS_FREETOKEN_4090_COMPARE.md).
+
+Цель (историческая): поднять **Strata** с **максимальным контекстом** на
+**RTX 4090 24 GB**, прогнать матрицу размеров контекста; изначально планировался
+rollback на FreeToken (`qwen3.6-35b-a3b` на `:8000`) — вместо этого cutover на Strata.
 
 Хост: `ssh berda@192.168.0.88` (`llm-server`).  
 Связанные runbook’и: [`FREETOKEN_QWEN36_SERVE.md`](FREETOKEN_QWEN36_SERVE.md),
-[`TEST_RESULTS.md`](TEST_RESULTS.md).
+[`FREETOKEN_88_RESTORE.md`](FREETOKEN_88_RESTORE.md), [`TEST_RESULTS.md`](TEST_RESULTS.md).
 
 ---
 

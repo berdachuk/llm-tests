@@ -24,6 +24,17 @@
 
 **Вердикт:** IQ3_S на 4090 стабилен до ~248K prompt tokens с needle recall; заявленный native max 262K достижим по prefill, но нужно оставлять запас под chat template / generation. Prefill ~**1.9–2.1k tok/s** на длинных промптах; decode ~**50–150 tok/s** (зависит от длины ответа / draft accept).
 
+### Production follow-up (same day)
+
+| Пункт | Результат |
+|---|---|
+| Cutover | Bifrost `llm-88` → Strata `:8080`; FreeToken off |
+| Model id | **`qwen3.8-flash-next-iq3_s`** (compat `qwen3.6-35b-a3b` retired) |
+| Autostart | user units + linger; firewall oneshot **без** Docker / без `Before=` |
+| Qualbench-50 morning | **50/50** / **711 s** |
+| Qualbench-50 prod re-check | **50/50** / **685 s** — [`run-strata-iq3s-prod-full50-20261015-135743.md`](qualbench/results/run-strata-iq3s-prod-full50-20261015-135743.md) |
+| Runbook | [`STRATA_88_PRODUCTION.md`](STRATA_88_PRODUCTION.md) |
+
 ---
 
 ## 2. Окружение и подготовка

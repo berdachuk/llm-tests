@@ -7,7 +7,7 @@ Stopped for Strata Flash-Next context matrix on GPU0.
 
 | Field | Value |
 |---|---|
-| Host | `berda@192.168.0.88` |
+| Host | `berda@192.168.0.175` |
 | FreeToken | `0.1.3` at `/home/berda/freetoken-0.1.3` |
 | Model path | `/mnt/data/berda-models/models/Qwen3.6-35B-A3B-FP8` |
 | Served id | `qwen3.6-35b-a3b` |
@@ -103,6 +103,8 @@ $HOME/freetoken-0.1.3/.venv/bin/ft daemon start /mnt/data/berda-models/models/Qw
 ## Notes
 
 - Chat template: froggeric in model dir `chat_template.jinja` (see llm-tests `FREETOKEN_QWEN36_SERVE.md`).
-- Bifrost id: `llm-88/qwen3.6-35b-a3b` — do not rename served-model-name without Bifrost update.
+- Bifrost currently uses `llm-88/qwen3.8-flash-next-iq3_s` (Strata). After restore,
+  either rename served-model-name to match clients or update Bifrost back to
+  `llm-88/qwen3.6-35b-a3b` and point nginx at `:8000`.
 - GPU1 (5060 Ti) ASR/embeddings left running; only FreeToken on GPU0 is stopped.
 stopped_at_planned: 2026-10-15T03:12:05-04:00

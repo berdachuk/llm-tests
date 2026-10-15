@@ -1,88 +1,96 @@
 # Strata IQ3_S vs FreeToken на RTX 4090 (`.88`)
 
 > Сравнение **не apples-to-apples по модели**: разные семейства и кванты.  
-> Цель — сопоставить **рабочий прод-стек FreeToken** с **прогоном Strata IQ3_S** на том же железе (GPU0 4090, 125 GB RAM).
+> Цель — сопоставить **бывший прод FreeToken** с **Strata IQ3_S** на том же железе.  
+> **Прод сейчас:** Strata **1×4090** на `:8080` (Bifrost `llm-88/qwen3.8-flash-next-iq3_s`). FreeToken выключен.
 
-| | **FreeToken** (baseline) | **Strata IQ3_S** (этот прогон) |
-|---|---|---|
-| Дата | 2026-09-19 (v0.1.3 + MM) | **2026-10-15** |
-| Engine | FreeToken **0.1.3** | Strata **v0.1.44.1** |
-| Model | `qwen3.6-35b-a3b` = Qwen3.6-35B-A3B-**FP8** | `qwen3.8-flash-next-iq3_s` = Flash-Next **IQ3_S** |
-| Port | `:8000` | `:8080` |
-| Context advertise | **262144** (`max_model_len`) | **262144** (`meta.n_ctx`) |
-| Vision | ON (+~0.5 GiB VRAM) | ON (mmproj BF16) |
-| Источники | [`run-freetoken013-mm-final-20260919.md`](qualbench/results/run-freetoken013-mm-final-20260919.md), [`FREETOKEN_QWEN36_SERVE.md`](FREETOKEN_QWEN36_SERVE.md), [`TEST_RESULTS.md`](TEST_RESULTS.md) | [`STRATA_IQ3S_4090_TEST_REPORT.md`](STRATA_IQ3S_4090_TEST_REPORT.md), `strata-results/20261015-iq3s-full/` |
+| | **FreeToken** (baseline) | **Strata 1×4090** (prod) | **Strata 2×GPU** (test window) |
+|---|---|---|---|
+| Дата | 2026-09-19 (v0.1.3 + MM) | **2026-10-15** | **2026-10-15** |
+| Engine | FreeToken **0.1.3** | Strata **v0.1.44.1** | Strata **v0.1.44.1** |
+| Model | `qwen3.6-35b-a3b` FP8 | Flash-Next **IQ3_S** (`qwen3.8-flash-next-iq3_s`) | Flash-Next **IQ3_S** |
+| GPUs | GPU0 4090 | GPU0 4090 | **GPU0+1**, `layer_split=auto` (card order **1,0**) |
+| Port | `:8000` (off) | `:8080` | `:8080` (LAN monitor) |
+| Context | **262144** | **262144** (практика ~**248K**) | **262144** |
+| Vision | ON | ON | ON (smoke PASS) |
+| Отчёты | [`run-freetoken013-mm-final-20260919.md`](qualbench/results/run-freetoken013-mm-final-20260919.md) | [`STRATA_IQ3S_4090_TEST_REPORT.md`](STRATA_IQ3S_4090_TEST_REPORT.md), morning [`…113238.md`](qualbench/results/run-strata-iq3s-full50-20261015-113238.md), prod [`…prod…135743.md`](qualbench/results/run-strata-iq3s-prod-full50-20261015-135743.md) | [`STRATA_IQ3S_2GPU_4090_5060TI_TEST_REPORT.md`](STRATA_IQ3S_2GPU_4090_5060TI_TEST_REPORT.md), [`…121142.md`](qualbench/results/run-strata-iq3s-2gpu-full50-20261015-121142.md) |
 
 ---
 
 ## 1. Железо / footprint
 
-| Метрика | FreeToken FP8 | Strata IQ3_S |
-|---|---|---|
-| GPU0 VRAM used | ~**23.1–23.7 GiB** (почти полный 24 GB) | ~**23.4 GiB** (23970 MiB) |
-| GPU0 free | ~0.2–1.0 GiB | ~**114 MiB** |
-| Host RAM under load | MoE offload (experts в RAM; типично десятки GiB) | ~**62 GiB** (experts ~47 GiB + KV stream) |
-| KV strategy | `--kv-reserve-tokens 300000` (пол в VRAM до expert cache) | KV **streaming в RAM**, `--kv-resident 32768` |
-| Concurrent requests | max **4** | по умолчанию **1** (batching off) |
+| Метрика | FreeToken FP8 | Strata 1×4090 | Strata 2×GPU |
+|---|---|---|---|
+| GPU0 4090 used | ~**23.1–23.7 GiB** | ~**23.4 GiB** | ~**23.4–23.5 GiB** |
+| GPU1 5060 Ti used | ASR/embed (отд.) | idle / ASR restore | ~**8.5–11.3 GiB** (layers 0–2) |
+| Host RAM under load | MoE offload | ~**62 GiB** | ~**60–61 GiB** |
+| KV strategy | `--kv-reserve-tokens 300000` | KV stream + `--kv-resident 32768` | same |
+| Concurrent requests | max **4** | **1** | **1** |
 
-Оба упираются в потолок 4090. FreeToken оставляет чуть больше «воздуха» под concurrent KV; Strata IQ3_S агрессивнее заполняет VRAM expert cache + почти нулевой free.
+2×GPU split (auto): layers **0–2 @ 5060 Ti**, **3–47 + head/MTP @ 4090**.
 
 ---
 
 ## 2. Совместимость API / agentbench
 
-Одинаковый фильтр: `pytest agentbench/tests -m "not slow and not concurrency"`.
+| | FreeToken | Strata 1×4090 | Strata 2×GPU |
+|---|---|---|---|
+| agentbench fast | зелёный core (suite под FT) | **50 pass / 5 fail / 3 skip** | **49 pass / 6 fail / 3 skip** |
+| context field | `max_model_len` | `meta.n_ctx` | `meta.n_ctx` |
+| `count_tokens` | OK | **401** | **401** |
+| qualbench mcp-tools | **8/8** | **8/8** | **8/8** |
 
-| | FreeToken (документированный профиль) | Strata 2026-10-15 |
-|---|---|---|
-| Быстрый agentbench | Зелёный core (chat/tools/stream); suite заточен под FT | **50 passed / 5 failed / 3 skipped** |
-| `/v1/models` context field | `max_model_len` / `context_length` | `meta.n_ctx` (тест FT падает) |
-| `/v1/messages/count_tokens` | поддерживается | **401** в этом прогоне |
-| `tool_choice=required` | documented gap (xfail) | иное поведение → strict fail |
-| Inline `<\|think_off\|>` | documented FT parser gap (xfail) | иное → strict fail |
-| Chat template checks | froggeric path | skipped (нет `AGENTBENCH_TEMPLATE_PATH`) |
-| Agentic bugfix final summary | обычно OK на FT | 1 fail (tool_calls без final content) |
-
-**Вывод:** для coding-agents FreeToken сейчас **более «притёрт»** к agentbench/Bifrost (поле context, count_tokens, ожидаемые xfail). Strata закрывает основные протоколы (chat/responses/messages/tools/stream), но 5 fails — в основном **контракт API / тест-ожидания FT**, не полный отказ качества.
+**Вывод:** API-расхождения Strata vs FreeToken те же на 1× и 2×. Layer split не чинит контракт.
 
 ---
 
-## 3. Качество (qualbench / long-context)
+## 3. Качество — полный qualbench-50 (text)
 
-| Suite | FreeToken | Strata |
-|---|---|---|
-| qualbench 50 (text) | **47/50** (MM-on, 0 avoidable regressions) | **не гонялся** в этом окне |
-| long-context category | **10/10**, вкл. **150K** pos10/pos50 (~87–98 s/task) | своя matrix: needle **E ~170K** 3/3, **F ~248K** 3/3 (после калибровки) |
-| Vision smoke | color ID OK (runbook) | 1×1 PNG → «Black» OK |
-| Full MMMU / Video-MME | есть отдельные прогоны на FT | не гонялись |
+| Category | FreeToken | Strata 1×4090 | Strata 2×GPU | Wall FT → 1× → 2× |
+|---|---|---|---|---|
+| **Total** | **47/50** | **50/50** | **50/50** | **2372 → 711 → 966 s** |
+| java-spring | 9/10 | **10/10** | **10/10** | 613 → 83 → 95.5 |
+| ts-angular | 8/8 | **8/8** | **8/8** | 408 → 62 → 60.6 |
+| sql-migrations | 4/6 | **6/6** | **6/6** | 362 → 61 → 48.2 |
+| mcp-tools | 8/8 | **8/8** | **8/8** | 48 → 15 → 23.5 |
+| security-review | 8/8 | **8/8** | **8/8** | 319 → 93 → 108.1 |
+| long-context | 10/10 | **10/10** | **10/10** | 623 → **397** → **630** |
 
-Честное сравнение quality на одинаковых 50 задачах **пока невозможно** — нужен qualbench на Strata. По long-context retrieval Strata показал needle recall выше типичного qualbench ceiling (150K → **248K**).
+FT fails: java `07-money`, sql `04`+`05`. На обоих Strata — **0/50** avoidable fails.
 
----
+**Прод re-check** (после reboot, тот же id, LAN `:8080`): снова **50/50** за **685 s**
+([`run-strata-iq3s-prod-full50-20261015-135743.md`](qualbench/results/run-strata-iq3s-prod-full50-20261015-135743.md)) —
+категории: java 79 / ts 54 / sql 44 / mcp 15 / security 95 / long-context **398** s.
 
-## 4. Производительность (ориентиры)
-
-| Метрика | FreeToken (runbook / longctx) | Strata IQ3_S (matrix) |
-|---|---|---|
-| Decode tok/s | типично **40–80** | **~50–150** (короткие ответы / draft) |
-| Prefill tok/s | до ~**1500** (runbook) | **~1900–2100** на 40K–250K cold |
-| TTFT ~40K prompt | — | ~**22 s** cold |
-| TTFT ~85K | — | ~**27 s** cold |
-| TTFT ~170K | ~87–98 s wall на 150K tasks (qualbench, с генерацией) | ~**75–82 s** TTFT needle |
-| TTFT ~248K | native 262K не отдельно бенчили в matrix | ~**78 s** TTFT |
-| Warm prefix cache | есть | TTFT **&lt;0.15 s** на повтор A–D |
-
-Strata выглядит **быстрее на prefill** длинных промптов в этом прогоне; decode сопоставим/чуть выше на коротких генерациях (с MTP/spec). Абсолютные цифры зависят от длины ответа и reasoning.
+**Вывод:** score одинаковый (**50/50**). **Скорость лучше у 1×4090** (~685–711 s). 2×GPU ~**1.36× медленнее** 1×, в основном из‑за long-context. Оба Strata быстрее FreeToken (~3.3–3.5× / ~2.5×).
 
 ---
 
-## 5. Context ceiling (практика)
+## 4. Производительность
 
-| | FreeToken | Strata IQ3_S |
-|---|---|---|
-| Advertised | 262144 | 262144 |
-| Verified in suite | 150K tasks pass; full 262K «не независимо верифицирован» как single needle matrix | **~248K** prompt + needle OK; сырой filler на 262K → **HTTP 400** (template overhead) |
-| Risk | мало free VRAM при больших concurrent | мало free VRAM; single-flight по умолчанию |
+| Метрика | FreeToken | Strata 1×4090 | Strata 2×GPU |
+|---|---|---|---|
+| Full qualbench-50 wall | **~2372 s** | **685–711 s** | **966 s** |
+| long-context category | **623 s** | **397–398 s** | **630 s** |
+| 150K task wall | ~87–98 s | ~**77–98 s** | ~**122–135 s** |
+| Prefill ~32–65K (cold, matrix) | до ~1500 | ~**1900–1930** | ~**1250–1275** |
+| Prefill ~170–248K | — | ~**1990–2075** | ~**1260–1295** |
+| Prefill short Monitor prompt | — | ~**100–400** (нормально) | — |
+| Decode (matrix / answers) | **40–80** | **~50–150** | **~45–145** |
+
+---
+
+## 5. Context ceiling
+
+| | FreeToken | Strata 1×4090 | Strata 2×GPU |
+|---|---|---|---|
+| Advertised | 262144 | 262144 | 262144 |
+| Practical prompt (OpenCode) | — | **248000** | — |
+| qualbench verified | **150K** | **150K** | **150K** |
+| Needle ~170K (E) | — | **3/3** | **3/3** (1 flake mid → retry OK) |
+| Needle ~248K (F calib) | — | **3/3** | **3/3** |
+| Raw filler 262K | — | HTTP **400** | HTTP **400** |
+| Risk | concurrent KV | мало free VRAM | PCIe split → ниже prefill |
 
 ---
 
@@ -90,24 +98,30 @@ Strata выглядит **быстрее на prefill** длинных пром�
 
 | Сценарий | Рекомендация |
 |---|---|
-| Прод Bifrost / coding agents / qualbench-паритет | **FreeToken** `qwen3.6-35b-a3b` |
-| Макс. однопользовательский long-context / Flash-Next quality ladder | **Strata IQ3_S** (и дальше Q2_0 / IQ2_XS A/B) |
-| Multimodal image в agent path | оба умеют; FT уже вшит в serve unit + qualbench-mm |
-| Несколько параллельных запросов | **FreeToken** (max 4); Strata — включать parallel осознанно |
+| Прод Bifrost / OpenCode / chat | **Strata 1×4090** (`qwen3.8-flash-next-iq3_s`) |
+| Qualbench text quality / speed | **Strata 1×4090** (50/50, ~685–711 s) |
+| Long-context агенты на этом хосте | **Strata 1×4090** (2× split замедляет) |
+| Занять обе карты под один LLM | 2×GPU работает, score паритетен, но **не ускоряет** |
+| Параллельные запросы (max 4) | только если вернуть **FreeToken** |
+| GPU1 под ASR/embeddings | не отдавать под layer split |
 
 ---
 
-## 7. Ограничения сравнения
+## 7. Ограничения
 
-1. **Разные модели** (3.6-35B-A3B FP8 vs 3.8-Flash-Next IQ3_S) — главная оговорка.
-2. Strata **без** полного qualbench-50 в этом окне.
-3. agentbench на Strata гонялся через SSH tunnel; FT — напрямую `:8000`.
-4. FreeToken сейчас **остановлен** (restore: `FREETOKEN_88_RESTORE.md`); цифры FT — из сентябрьских артефактов, не side-by-side в один день.
+1. Разные модели (3.6-35B-A3B FP8 vs 3.8-Flash-Next IQ3_S).
+2. FT сентябрь / Strata октябрь — не один день.
+3. FreeToken остановлен; прод на Strata (`STRATA_88_PRODUCTION.md`).
+4. Multimodal suite на Strata не гонялся (только vision smoke).
+5. agentbench: часть fails из‑за контракта API Strata vs suite под FreeToken.
 
 ---
 
-## 8. Следующие шаги (если добивать паритет)
+## 8. Следующие шаги
 
-1. Поднять FreeToken обратно → тот же agentbench filter → таблица fail-by-fail.
-2. Прогнать `qualbench` categories `mcp-tools` + `long-context` на Strata (как в плане §8).
-3. Опционально: короткий decode A/B на одинаковом 4K prompt (одинаковый `max_tokens`, thinking off) для чистого tok/s.
+1. ~~Полный text qualbench-50 на 1× и 2×~~ — done.
+2. ~~Context matrix 2× (A–F + calib)~~ — done.
+3. ~~Прод cutover Bifrost + autostart после reboot~~ — done.
+4. ~~Прод re-check qualbench-50~~ — **50/50 @ 685 s**.
+5. agentbench fail-by-fail vs поднятый FreeToken (опционально).
+6. Confirm ASR/embed Docker на GPU1 после reboot, если нужен.

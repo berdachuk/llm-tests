@@ -1,10 +1,13 @@
 # Embedding models on `.88` — how they are deployed and how to use them
 
-Two live embedding backends share **GPU 1 (RTX 5060 Ti)** on `192.168.0.88` with Speaches (`:8002`) and GigaAM (`:8003`).
+> **LAN (2026-10-15):** host address is ethernet `192.168.0.175` (wifi `.88` retired for binds).
+
+
+Two live embedding backends share **GPU 1 (RTX 5060 Ti)** on `192.168.0.175` with Speaches (`:8002`) and GigaAM (`:8003`).
 
 | | **Qwen3-Embedding-0.6B (TEI)** | **EmbeddingGemma-2** |
 |---|---|---|
-| Host bind | `192.168.0.88:8004` | `192.168.0.88:8005` |
+| Host bind | `192.168.0.175:8004` | `192.168.0.175:8005` |
 | Runtime | HuggingFace Text Embeddings Inference | SentenceTransformers + FastAPI |
 | Model id | `Qwen/Qwen3-Embedding-0.6B` | `google/embeddinggemma-2` |
 | Native dim | **1024** | **768** (MRL 128/256/512) |
@@ -28,7 +31,7 @@ Multimodal (image / audio / video / interleaved; llm-88 Bearer, NOT Bifrost):
   llm.avroflex.ru/embedding-gemma2/v1/embeddings
     → Traefik PathPrefix /embedding-gemma2
     → llm-88.berdachuk.com/embedding-gemma2
-    → 192.168.0.88:8005
+    → 192.168.0.175:8005
 ```
 
 Bifrost only accepts OpenAI text `input: string | string[]`. Native ST modality objects must use the `/embedding-gemma2` path.
@@ -37,7 +40,7 @@ Auth:
 
 - Bifrost / VK keys — for `llm.avroflex.ru/v1/*`.
 - llm-88 nginx Bearer (`EMBEDDING_88_API_KEY` / same key as other `.88` fronts) — for `llm-88.berdachuk.com/*` and Traefik multimodal path.
-- VPC: `http://192.168.0.88:8004|8005` — no auth.
+- VPC: `http://192.168.0.175:8004|8005` — no auth.
 
 ## When to pick which
 
@@ -50,17 +53,17 @@ Auth:
 
 ```bash
 # string
-curl -fsS http://192.168.0.88:8004/v1/embeddings \
+curl -fsS http://192.168.0.175:8004/v1/embeddings \
   -H 'Content-Type: application/json' \
   -d '{"model":"Qwen/Qwen3-Embedding-0.6B","input":"ocean waves"}'
 
 # batch string[]
-curl -fsS http://192.168.0.88:8005/v1/embeddings \
+curl -fsS http://192.168.0.175:8005/v1/embeddings \
   -H 'Content-Type: application/json' \
   -d '{"model":"google/embeddinggemma-2","input":["a","b","c"]}'
 
 # optional MRL / truncate
-curl -fsS http://192.168.0.88:8005/v1/embeddings \
+curl -fsS http://192.168.0.175:8005/v1/embeddings \
   -H 'Content-Type: application/json' \
   -d '{"model":"google/embeddinggemma-2","input":"q","dimensions":256}'
 ```
@@ -71,17 +74,17 @@ TEI also accepts `dimensions` (truncate). Gemma renormalizes after MRL truncate 
 
 ```bash
 # image modality object
-curl -fsS http://192.168.0.88:8005/v1/embeddings \
+curl -fsS http://192.168.0.175:8005/v1/embeddings \
   -H 'Content-Type: application/json' \
   -d '{"model":"google/embeddinggemma-2","input":{"image":"data:image/png;base64,..."}}'
 
 # interleaved text + image
-curl -fsS http://192.168.0.88:8005/v1/embeddings \
+curl -fsS http://192.168.0.175:8005/v1/embeddings \
   -H 'Content-Type: application/json' \
   -d '{"model":"google/embeddinggemma-2","input":{"text":"caption <|image|>","image":"data:image/png;base64,..."}}'
 
 # prompt_name (text-only inputs)
-curl -fsS http://192.168.0.88:8005/v1/embeddings \
+curl -fsS http://192.168.0.175:8005/v1/embeddings \
   -H 'Content-Type: application/json' \
   -d '{"model":"google/embeddinggemma-2","input":["query"],"prompt_name":"SearchQuery"}'
 ```
@@ -108,12 +111,12 @@ Body size on nginx for Gemma prefix: **50m**.
 
 ```bash
 # TEI (existing)
-ssh berda@192.168.0.88 'cd ~/voice-asr/qwen3-embedding && docker compose ps'
+ssh berda@192.168.0.175 'cd ~/voice-asr/qwen3-embedding && docker compose ps'
 
 # Gemma
-ssh berda@192.168.0.88 'cd ~/voice-asr/embeddinggemma-2 && docker compose ps'
-curl -fsS http://192.168.0.88:8005/health
-curl -fsS http://192.168.0.88:8005/info | jq
+ssh berda@192.168.0.175 'cd ~/voice-asr/embeddinggemma-2 && docker compose ps'
+curl -fsS http://192.168.0.175:8005/health
+curl -fsS http://192.168.0.175:8005/info | jq
 nvidia-smi --query-gpu=index,memory.used,memory.free --format=csv
 ```
 

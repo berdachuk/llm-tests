@@ -1,0 +1,4 @@
+[F-calib] pos=0.1 ok=yes needle=yes pt=248016 ttft=61.663 prefill=1264.7 decode=62.7 finish=stop
+[F-calib] pos=0.5 ok=yes needle=yes pt=248016 ttft=61.677 prefill=1264.6 decode=70.5 finish=stop
+[F-calib] pos=0.9 ok=yes needle=yes pt=248018 ttft=61.69 prefill=1263.7 decode=133.8 finish=stop
+DONE F-calib 3

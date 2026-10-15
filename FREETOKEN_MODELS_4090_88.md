@@ -1,4 +1,4 @@
-# FreeToken models for 192.168.0.88 (RTX 4090)
+# FreeToken models for 192.168.0.175 (RTX 4090)
 
 Какие checkpoint’ы из
 [FreeToken `docs/models.md`](https://github.com/FlashML-org/FreeToken/blob/main/docs/models.md)
@@ -8,6 +8,8 @@
 Связанные runbook’и:
 [`FREETOKEN_QWEN36_SERVE.md`](FREETOKEN_QWEN36_SERVE.md),
 [`FREETOKEN_QWEN38_SERVE.md`](FREETOKEN_QWEN38_SERVE.md),
+[`FREETOKEN_88_RESTORE.md`](FREETOKEN_88_RESTORE.md),
+[`STRATA_88_PRODUCTION.md`](STRATA_88_PRODUCTION.md),
 [`STRATA_QWEN38_FLASH_NEXT_4090_PLAN.md`](STRATA_QWEN38_FLASH_NEXT_4090_PLAN.md).
 
 ---
@@ -16,13 +18,14 @@
 
 | Ресурс | Факт |
 |---|---|
-| Host | `ssh berda@192.168.0.88` |
+| Host | `ssh berda@192.168.0.175` |
 | GPU0 | RTX 4090 **24 GB** (primary FreeToken) |
 | GPU1 | RTX 5060 Ti **16 GB** (optional second serve) |
 | RAM | **125 GiB** usable |
 | Disk | `/mnt/data` NVMe |
 | Engine | FreeToken (`ft serve` / `ft daemon`), MoE: `--moe-strategy offload` / `hybrid` |
-| Current daily | `Qwen3.6-35B-A3B-FP8` on `:8000` |
+| Current daily | **Strata** Flash-Next IQ3_S on `:8080` (`qwen3.8-flash-next-iq3_s`) — FreeToken off; see `STRATA_88_PRODUCTION.md` |
+| FreeToken rollback | `Qwen3.6-35B-A3B-FP8` on `:8000` via `FREETOKEN_88_RESTORE.md` |
 
 Правило fit:
 
@@ -82,7 +85,7 @@
 ### Download (когда решите качать)
 
 ```bash
-ssh berda@192.168.0.88
+ssh berda@192.168.0.175
 mkdir -p /mnt/data/berda-models/models
 hf download nvidia/Qwen3.8-Flash-Next-NVFP4 \
   --local-dir /mnt/data/berda-models/models/Qwen3.8-Flash-Next-NVFP4

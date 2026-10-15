@@ -1,0 +1,19 @@
+SMOKE content= 'pong' finish= stop s= 0.231
+[A] target=1024 pos=None rep=0 ok=yes pt=1251 ttft=3.177 total=3.177 prefill=400.0 decode=44.4 needle=n/a
+[A] target=1024 pos=None rep=1 ok=yes pt=1251 ttft=0.094 total=0.094 prefill=177.7 decode=43.8 needle=n/a
+[B] target=4096 pos=None rep=0 ok=yes pt=5229 ttft=6.463 total=6.463 prefill=816.6 decode=47.1 needle=n/a
+[B] target=4096 pos=None rep=1 ok=yes pt=5229 ttft=0.1 total=0.1 prefill=192.8 decode=46.9 needle=n/a
+[C] target=32768 pos=None rep=0 ok=yes pt=42513 ttft=34.007 total=34.036 prefill=1252.1 decode=50.8 needle=n/a
+[C] target=32768 pos=None rep=1 ok=yes pt=42513 ttft=0.114 total=0.114 prefill=197.2 decode=51.5 needle=n/a
+[D] target=65536 pos=None rep=0 ok=yes pt=85101 ttft=41.1 total=41.126 prefill=1275.4 decode=53.8 needle=n/a
+[D] target=65536 pos=None rep=1 ok=yes pt=85101 ttft=0.125 total=0.125 prefill=201.7 decode=54.5 needle=n/a
+[E] target=131072 pos=0.1 rep=0 ok=yes pt=170355 ttft=60.993 total=132.008 prefill=1293.0 decode=77.3 needle=yes
+[E] target=131072 pos=0.5 rep=0 ok=no pt=0 ttft=61.757 total=61.757 prefill= decode= needle=no
+[E] target=131072 pos=0.9 rep=0 ok=yes pt=170357 ttft=74.952 total=146.017 prefill=1292.7 decode=95.1 needle=yes
+FAIL F 262144 0.1 400 Client Error: Bad Request for url: http://127.0.0.1:8080/v1/chat/completions
+[F] target=262144 pos=0.1 rep=0 ok=no pt= ttft= total= prefill= decode= needle=no
+FAIL F 262144 0.5 400 Client Error: Bad Request for url: http://127.0.0.1:8080/v1/chat/completions
+[F] target=262144 pos=0.5 rep=0 ok=no pt= ttft= total= prefill= decode= needle=no
+FAIL F 262144 0.9 400 Client Error: Bad Request for url: http://127.0.0.1:8080/v1/chat/completions
+[F] target=262144 pos=0.9 rep=0 ok=no pt= ttft= total= prefill= decode= needle=no
+DONE /mnt/data/strata/runs/20261015-iq3s-2gpu/matrix.csv

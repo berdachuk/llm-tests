@@ -1,0 +1,359 @@
+{
+  "tag": "strata-iq3s-mcp-longctx",
+  "url": "http://192.168.0.88:8080",
+  "model": "qwen3.8-flash-next-iq3_s",
+  "notes": "After stop GPU1 ASR/embeddings; LAN :8080 via iptables ACCEPT; Strata restarted; QUALBENCH_API_KEY; plan \u00a78",
+  "selected_categories": [
+    "mcp-tools",
+    "long-context"
+  ],
+  "timeout_override_s": null,
+  "runner_python": "3.12.3",
+  "suite_git_commit": "3d8d639504115ca31dfa6c5d1c015ab9a5931c46",
+  "suite_git_dirty": true,
+  "preflight": {
+    "checked_at": "2026-10-15T08:08:39.261515+00:00",
+    "models_url": "http://192.168.0.88:8080/v1/models",
+    "requested_model": "qwen3.8-flash-next-iq3_s",
+    "requested_model_found": true,
+    "available_model_ids": [
+      "qwen3.8-flash-next-iq3_s"
+    ],
+    "selected_model_entry": {
+      "id": "qwen3.8-flash-next-iq3_s",
+      "object": "model",
+      "status": {
+        "value": "loaded"
+      },
+      "meta": {
+        "n_ctx": 262144
+      },
+      "architecture": {
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ]
+      }
+    }
+  },
+  "started_at": "2026-10-15T08:08:39.294016+00:00",
+  "finished_at": "2026-10-15T08:15:31.290434+00:00",
+  "total_wall_s": 411.99637603759766,
+  "total_pass": 18,
+  "total_tasks": 18,
+  "categories": [
+    {
+      "category": "mcp-tools",
+      "n_pass": 8,
+      "n_total": 8,
+      "wall_s": 15.046059131622314,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-single-tool-required-args",
+          "passed": true,
+          "elapsed_s": 2.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-single-tool-required-args",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "get_weather"
+            ],
+            "response_excerpt": "The user wants to know the current weather in Tokyo in Fahrenheit. I need to use the get_weather tool with the city \"Tokyo\" and unit \"fahrenheit\".\n"
+          }
+        },
+        {
+          "id": "02-enum-selection",
+          "passed": true,
+          "elapsed_s": 2.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-enum-selection",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "create_ticket"
+            ],
+            "response_excerpt": "The user is reporting a critical production database outage that is blocking customer checkouts. This is clearly an emergency situation. They've asked me to file a ticket with the title 'Production DB outage' and treat it as an emergency. I should file this with \"urgent\" priority since it's a production outage affecting customers directly.\n"
+          }
+        },
+        {
+          "id": "03-numeric-coercion",
+          "passed": true,
+          "elapsed_s": 1.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-numeric-coercion",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "apply_discount"
+            ],
+            "response_excerpt": "The user wants me to apply a 15% discount to an item that costs $49.99. I need to convert $49.99 to cents, which is 4999 cents, and apply a discount rate of 0.15.\n"
+          }
+        },
+        {
+          "id": "04-nested-object-args",
+          "passed": true,
+          "elapsed_s": 2.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-nested-object-args",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "create_shipping_label"
+            ],
+            "response_excerpt": "The user wants me to create a shipping label for Maria Gonzalez with her address details. Let me map the information to the required parameters:\n\n- recipient_name: Maria Gonzalez\n- address:\n  - street: 42 Rue de Rivoli\n  - city: Paris\n  - postal_code: 75004\n  - country: France\n\nAll required fields are provided, so I can make the function call directly.\n"
+          }
+        },
+        {
+          "id": "05-tool-disambiguation",
+          "passed": true,
+          "elapsed_s": 1.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-tool-disambiguation",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "create_calendar_event"
+            ],
+            "response_excerpt": "The user wants me to create a new calendar event with the title \"Q3 Planning\" and start time \"2026-09-10T14:00:00Z\". This is straightforward - I'll use the create_calendar_event tool.\n"
+          }
+        },
+        {
+          "id": "06-missing-info-no-premature-call",
+          "passed": true,
+          "elapsed_s": 1.6,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-missing-info-no-premature-call",
+            "category": "mcp-tools",
+            "finish_reason": "stop",
+            "tool_call_count": 0,
+            "tool_call_names": [],
+            "response_excerpt": "I'd be happy to help you send $50 to Jake! However, I need his **account ID** to complete the transfer. Could you please provide Jake's account ID?"
+          }
+        },
+        {
+          "id": "07-multi-step-context-carry",
+          "passed": true,
+          "elapsed_s": 1.5,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-multi-step-context-carry",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "issue_refund"
+            ],
+            "response_excerpt": "I found the customer_id. Now I'll issue the $30 refund (3000 cents).\n"
+          }
+        },
+        {
+          "id": "08-array-argument",
+          "passed": true,
+          "elapsed_s": 1.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-array-argument",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "invite_to_meeting"
+            ],
+            "response_excerpt": "The user wants me to invite three people to meeting MTG-77. I have the meeting ID and the three email addresses. I can make this call directly.\n"
+          }
+        }
+      ],
+      "artifact_count": 8,
+      "logs": []
+    },
+    {
+      "category": "long-context",
+      "n_pass": 10,
+      "n_total": 10,
+      "wall_s": 396.9393618106842,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-8k-pos10",
+          "passed": true,
+          "elapsed_s": 8.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-8k-pos10",
+            "category": "long-context",
+            "expected_marker": "XK-1001-ALFA-9273-NEEDLE",
+            "target_tokens": 8000,
+            "position_pct": 0.1,
+            "response_length": 962,
+            "response_excerpt": "XK-1001-ALFA-9273-NEEDLE\n\nThe codebase is largely repetitive (the same 12 service modules are duplicated across shards with only numeric suffixes changed), and several recurring issues are present: the `InventoryService._get_lock` method has a race condition where two threads can simultaneously check `if key not in self._locks` and create separate lock objects for the same key, defeating the purpose of per-key locking; the `PaymentWebhookHandler` deduplication is not thread-safe (no lock around `_seen_recently`) and uses a non-unique key (provider+order+amount) that would incorrectly deduplicate legitimate distinct events; the `EventBus.publish` reads `_subscribers` without holding the lock, creating a potential race with concurrent `subscribe` calls; the `AuditLog` has no thread safety on `_buffer` and never clears it after `flush()`; and the `SearchIndexWriter` performs a full linear scan on every search with no indexing, which is O(n) per query.",
+            "first_line": "XK-1001-ALFA-9273-NEEDLE"
+          }
+        },
+        {
+          "id": "02-8k-pos50",
+          "passed": true,
+          "elapsed_s": 8.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-8k-pos50",
+            "category": "long-context",
+            "expected_marker": "XK-1002-BRAVO-4418-NEEDLE",
+            "target_tokens": 8000,
+            "position_pct": 0.5,
+            "response_length": 1016,
+            "response_excerpt": "XK-1002-BRAVO-4418-NEEDLE\n\nThe codebase is largely duplicated across shards (v0\u2013v37) with identical logic, which itself is a maintenance concern. Notable issues include: (1) `InventoryService._get_lock` is not thread-safe\u2014two threads can race to create the same lock, resulting in two different lock objects for the same key and thus a data race on `StockRecord`; (2) `PaymentWebhookHandler.handle` has no locking on `_seen_recently`, making deduplication racy under concurrent webhook delivery; (3) `EventBus.publish` reads `self._subscribers` without holding the lock, so a concurrent `subscribe` call can cause a `RuntimeError` (dict changed size during iteration) or missed handlers; (4) `AuditLog.record`/`flush` are not thread-safe\u2014concurrent calls can corrupt the buffer or double-flush; (5) `SearchIndexWriter` has no synchronization at all, making it unsafe for concurrent indexing and searching; (6) `AgentToolRouter.register_tool` mutates `_handlers` and `_in_flight` without the lock, racing with `call`.",
+            "first_line": "XK-1002-BRAVO-4418-NEEDLE"
+          }
+        },
+        {
+          "id": "03-8k-pos90",
+          "passed": true,
+          "elapsed_s": 7.9,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-8k-pos90",
+            "category": "long-context",
+            "expected_marker": "XK-1003-CHARLIE-8801-NEEDLE",
+            "target_tokens": 8000,
+            "position_pct": 0.9,
+            "response_length": 1053,
+            "response_excerpt": "XK-1003-CHARLIE-8801-NEEDLE\n\nThe codebase is largely repetitive (the same service patterns are duplicated across shards with only numeric suffixes changed), and several notable issues exist: the `InventoryService._get_lock` method has a race condition where two threads can simultaneously check `if key not in self._locks` and create separate locks for the same key, defeating the purpose of per-key locking; the `PaymentWebhookHandler` deduplication is not thread-safe (no lock around `_seen_recently`) and the dedupe key omits `event_id`, meaning two legitimately different events for the same order/amount/provider would be incorrectly deduplicated; the `EventBus.publish` reads `self._subscribers` without holding the lock, creating a potential race with concurrent `subscribe` calls; the `AuditLog` has no thread safety on `_buffer` and never clears the buffer after `flush()`, causing unbounded memory growth and duplicate writes; and the `SearchIndexWriter` performs a full linear scan on every search with no indexing, which is O(n\u00b7m) per query.",
+            "first_line": "XK-1003-CHARLIE-8801-NEEDLE"
+          }
+        },
+        {
+          "id": "04-64k-pos10",
+          "passed": true,
+          "elapsed_s": 36.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-64k-pos10",
+            "category": "long-context",
+            "expected_marker": "XK-2001-DELTA-5567-NEEDLE",
+            "target_tokens": 64000,
+            "position_pct": 0.1,
+            "response_length": 881,
+            "response_excerpt": "XK-2001-DELTA-5567-NEEDLE\n\nThe codebase is largely repetitive (the same 13 service templates are duplicated across ~300 shards with only numeric suffixes changed), which itself is a maintenance concern. Notable issues include: the `InventoryService._get_lock` method has a race condition (two threads can both see a key missing from `_locks` and create separate locks, defeating mutual exclusion); the `PaymentWebhookHandler` deduplication is not thread-safe and has no TTL-based eviction, causing unbounded memory growth; the `EventBus.publish` reads `_subscribers` without holding the lock, creating a potential race with concurrent `subscribe` calls; the `AuditLog` has no thread safety on `_buffer` and never clears it after `flush()`, causing duplicate writes; and the `SearchIndexWriter` performs a full linear scan on every search with no indexing, making it O(n) per query.",
+            "first_line": "XK-2001-DELTA-5567-NEEDLE"
+          }
+        },
+        {
+          "id": "05-64k-pos50",
+          "passed": true,
+          "elapsed_s": 36.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-64k-pos50",
+            "category": "long-context",
+            "expected_marker": "XK-2002-ECHO-3392-NEEDLE",
+            "target_tokens": 64000,
+            "position_pct": 0.5,
+            "response_length": 749,
+            "response_excerpt": "XK-2002-ECHO-3392-NEEDLE\n\nThe codebase is largely repetitive (the same 12 service templates are duplicated across ~300 shards with only numeric suffixes changed), which itself is a maintenance concern. Notable issues include: the `InventoryService._get_lock` method is not thread-safe (the check-then-create on `self._locks` has a race condition), the `PaymentWebhookHandler._seen_recently` dict grows unboundedly with no TTL eviction, the `EventBus.publish` reads `self._subscribers` without holding the lock (race with `subscribe`), the `AuditLog.flush` does not clear `self._buffer` after writing (causing duplicate writes on subsequent flushes), and the `SearchIndexWriter` performs a full linear scan on every search with no indexing structure.",
+            "first_line": "XK-2002-ECHO-3392-NEEDLE"
+          }
+        },
+        {
+          "id": "06-64k-pos90",
+          "passed": true,
+          "elapsed_s": 21.5,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-64k-pos90",
+            "category": "long-context",
+            "expected_marker": "XK-2003-FOXTROT-7714-NEEDLE",
+            "target_tokens": 64000,
+            "position_pct": 0.9,
+            "response_length": 767,
+            "response_excerpt": "XK-2003-FOXTROT-7714-NEEDLE\n\nThe codebase is largely repetitive boilerplate (the same 12 service classes duplicated ~25 times with only numeric suffixes changed), but several genuine issues are present across all instances: the `InventoryService._get_lock` method has a race condition (two threads can both see `key not in self._locks` and create separate locks for the same key), the `PaymentWebhookHandler._seen_recently` dict grows unboundedly with no TTL eviction, the `EventBus.publish` method reads `self._subscribers` without holding the lock (unlike `subscribe`), and the `AuditLog.flush` method clears the buffer only implicitly via reassignment but never actually clears `self._buffer` after writing, meaning entries are re-flushed on every subsequent call.",
+            "first_line": "XK-2003-FOXTROT-7714-NEEDLE"
+          }
+        },
+        {
+          "id": "07-150k-pos10",
+          "passed": true,
+          "elapsed_s": 77.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-150k-pos10",
+            "category": "long-context",
+            "expected_marker": "XK-3001-GOLF-2256-NEEDLE",
+            "target_tokens": 150000,
+            "position_pct": 0.1,
+            "response_length": 1149,
+            "response_excerpt": "XK-3001-GOLF-2256-NEEDLE\n\nThe codebase is largely repetitive boilerplate (the same 13 service classes duplicated hundreds of times with only numeric suffixes changed), but several genuine issues are present across all instances: (1) `InventoryService._get_lock` is not thread-safe \u2014 the check-then-create on `self._locks` has a race condition that can produce two different lock objects for the same key; (2) `PaymentWebhookHandler.handle` is not thread-safe (no lock around `_seen_recently`), and its dedup key omits `event_id`, meaning two legitimately different events for the same order/amount/provider would be incorrectly deduplicated; (3) `EventBus.publish` reads `self._subscribers` without holding the lock, creating a race with concurrent `subscribe` calls, and `_dead_letter` is appended without synchronization; (4) `AuditLog` has no lock protecting `_buffer`, so concurrent `record` calls can corrupt the buffer or cause double-flushes; (5) `SearchIndexWriter` has no thread safety at all; (6) `SagaOrchestrator` never actually executes steps or compensations \u2014 it only stores initial state, making it non-functional as an orchestrator.",
+            "first_line": "XK-3001-GOLF-2256-NEEDLE"
+          }
+        },
+        {
+          "id": "08-150k-pos50",
+          "passed": true,
+          "elapsed_s": 77.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-150k-pos50",
+            "category": "long-context",
+            "expected_marker": "XK-3002-HOTEL-9938-NEEDLE",
+            "target_tokens": 150000,
+            "position_pct": 0.5,
+            "response_length": 969,
+            "response_excerpt": "XK-3002-HOTEL-9938-NEEDLE\n\nThe codebase is largely repetitive boilerplate (the same 12 service classes duplicated hundreds of times with only numeric suffixes changed), but several genuine issues are present across all instances: the `InventoryService._get_lock` method has a race condition (check-then-create on `self._locks` without synchronization), the `PaymentWebhookHandler` deduplication is not thread-safe and uses a flawed key that ignores `event_id` (so two different events for the same order/amount/provider are incorrectly deduped), the `EventBus.publish` reads `self._subscribers` without holding the lock while `subscribe` writes under it, the `AuditLog` has no thread-safety on `_buffer` and never clears it after `flush()`, and the `SearchIndexWriter` has no locking at all despite being a mutable shared structure. The `AgentToolRouter` correctly uses a lock for its in-flight counter, and the `CacheLayer` and `RateLimiter` are properly synchronized.",
+            "first_line": "XK-3002-HOTEL-9938-NEEDLE"
+          }
+        },
+        {
+          "id": "09-distractor-64k",
+          "passed": true,
+          "elapsed_s": 37.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "09-distractor-64k",
+            "category": "long-context",
+            "expected_marker": "XK-4001-INDIA-6625-REAL",
+            "target_tokens": 64000,
+            "position_pct": 0.5,
+            "response_length": 1064,
+            "response_excerpt": "XK-4001-INDIA-6625-REAL\n\nNotable issues across the codebase: (1) The `InventoryService._get_lock` method has a race condition \u2014 two threads can simultaneously check `if key not in self._locks` and both create a new lock, meaning the per-key locking guarantee is broken. (2) The `PaymentWebhookHandler.handle` method is not thread-safe (no lock around `_seen_recently`), and its deduplication key omits `event_id`, so two legitimately different events for the same order/amount/provider would be incorrectly deduplicated. (3) The `EventBus.publish` method reads `self._subscribers` without holding the lock, creating a race with concurrent `subscribe` calls, and the `_dead_letter` list is also appended to without synchronization. (4) The `AuditLog` has no lock protecting `_buffer`, making concurrent `record` calls unsafe. (5) The `SearchIndexWriter` has no thread safety at all despite being a shared service. (6) The `SagaOrchestrator` only implements `start` with no actual step execution or compensation logic, making it non-functional as a saga coordinator.",
+            "first_line": "XK-4001-INDIA-6625-REAL"
+          }
+        },
+        {
+          "id": "10-distractor-150k",
+          "passed": true,
+          "elapsed_s": 86.0,
+          "reasons": [],
+          "artifact": {
+            "task_id": "10-distractor-150k",
+            "category": "long-context",
+            "expected_marker": "XK-4002-JULIET-1187-REAL",
+            "target_tokens": 150000,
+            "position_pct": 0.75,
+            "response_length": 1132,
+            "response_excerpt": "XK-4002-JULIET-1187-REAL\n\nThe codebase is largely repetitive boilerplate (the same 12 service classes duplicated hundreds of times with only numeric suffixes changed), but notable issues include: (1) `InventoryService._get_lock` is not thread-safe \u2014 the check-then-create on `self._locks` has a race condition that can produce two different lock objects for the same key; (2) `PaymentWebhookHandler.handle` has a TOCTOU race on `_seen_recently` (no lock protects the check-and-insert), and the dedup key omits `event_id`, so two legitimately different events for the same order/amount/provider would be incorrectly deduplicated; (3) `EventBus.publish` reads `self._subscribers` without holding the lock, creating a race with concurrent `subscribe` calls, and `_dead_letter` is appended without synchronization; (4) `AuditLog` has no lock protecting `_buffer`, making concurrent `record` calls unsafe; (5) `SearchIndexWriter` has no thread-safety at all despite being used in a multi-threaded context; (6) `SagaOrchestrator` never actually executes steps or compensations \u2014 `start` only records metadata, leaving the saga incomplete.",
+            "first_line": "XK-4002-JULIET-1187-REAL"
+          }
+        }
+      ],
+      "artifact_count": 10,
+      "logs": []
+    }
+  ]
+}

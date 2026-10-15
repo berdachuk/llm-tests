@@ -27,6 +27,8 @@ from pathlib import Path
 
 import requests
 
+from http_auth import auth_headers
+
 HERE = Path(__file__).parent
 QUALBENCH_ROOT = HERE.parent
 FIXTURES = QUALBENCH_ROOT / "fixtures"
@@ -71,7 +73,7 @@ def preflight_server(url: str, model: str, timeout_s: float) -> dict:
     endpoint = f"{url.rstrip('/')}/v1/models"
     checked_at = datetime.now(timezone.utc).isoformat()
     try:
-        resp = requests.get(endpoint, timeout=timeout_s)
+        resp = requests.get(endpoint, headers=auth_headers(), timeout=timeout_s)
         resp.raise_for_status()
     except Exception as exc:  # noqa: BLE001
         raise RuntimeError(f"failed to query {endpoint}: {exc}") from exc

@@ -10,7 +10,7 @@ variable driven (optionally via a local `.env` file -- see `.env.sample` in
 the repo root) so the same suite can be pointed at any compatible server
 without editing code:
 
-    AGENTBENCH_URL=http://192.168.0.88:8000   pytest agentbench/tests
+    AGENTBENCH_URL=http://192.168.0.175:8000   pytest agentbench/tests
     AGENTBENCH_MODEL=qwen3.6-35b-a3b
     AGENTBENCH_TIMEOUT=300
 

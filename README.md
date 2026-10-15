@@ -3,6 +3,13 @@
 **See [`TEST_RESULTS.md`](TEST_RESULTS.md) for the latest qualbench
 FP8-vs-NVFP4 comparative test results (50-task quality/regression eval).**
 
+**Strata IQ3_S on `.175` (production LLM, 2026-10-15):** how-to
+[`LLM_175_USAGE.md`](LLM_175_USAGE.md); runbook
+[`STRATA_88_PRODUCTION.md`](STRATA_88_PRODUCTION.md); stack snapshot
+[`STRATA_88_ACTIVE_STACK.md`](STRATA_88_ACTIVE_STACK.md); vs FreeToken
+[`STRATA_VS_FREETOKEN_4090_COMPARE.md`](STRATA_VS_FREETOKEN_4090_COMPARE.md).
+Served id `qwen3.8-flash-next-iq3_s`; qualbench-50 prod re-check **50/50 @ 685 s**.
+
 **Embeddings on `.88`:** usage/deploy guide [`EMBEDDINGS_88.md`](EMBEDDINGS_88.md);
 live compare report [`EMBEDDINGS_88_COMPARE.md`](EMBEDDINGS_88_COMPARE.md);
 pytest suite `embeddings/tests` (TEI `:8004` + EmbeddingGemma-2 `:8005`, formats + batches).
@@ -86,7 +93,7 @@ Or set variables directly on the command line, which always takes priority
 over `.env`:
 
 ```bash
-AGENTBENCH_URL=http://192.168.0.88:8000 \
+AGENTBENCH_URL=http://192.168.0.175:8000 \
 AGENTBENCH_MODEL=qwen3.6-35b-a3b \
 pytest agentbench/tests
 ```
