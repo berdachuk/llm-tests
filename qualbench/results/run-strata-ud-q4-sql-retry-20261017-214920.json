@@ -1,0 +1,240 @@
+{
+  "tag": "strata-ud-q4-sql-retry",
+  "url": "http://192.168.0.175:8080",
+  "model": "qwen3.8-flash-next-ud-q4_k_xl",
+  "notes": "",
+  "selected_categories": [
+    "sql-migrations"
+  ],
+  "timeout_override_s": null,
+  "runner_python": "3.12.3",
+  "suite_git_commit": "809da0309d4f20da1a8667f7994268fe69b47f5f",
+  "suite_git_dirty": true,
+  "preflight": {
+    "checked_at": "2026-10-17T18:48:23.410033+00:00",
+    "models_url": "http://192.168.0.175:8080/v1/models",
+    "requested_model": "qwen3.8-flash-next-ud-q4_k_xl",
+    "requested_model_found": true,
+    "available_model_ids": [
+      "qwen3.8-flash-next-ud-q4_k_xl"
+    ],
+    "selected_model_entry": {
+      "id": "qwen3.8-flash-next-ud-q4_k_xl",
+      "object": "model",
+      "status": {
+        "value": "loaded"
+      },
+      "meta": {
+        "n_ctx": 262144
+      },
+      "architecture": {
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ]
+      }
+    }
+  },
+  "started_at": "2026-10-17T18:48:23.483587+00:00",
+  "finished_at": "2026-10-17T18:49:20.152675+00:00",
+  "total_wall_s": 56.669068574905396,
+  "total_pass": 4,
+  "total_tasks": 6,
+  "categories": [
+    {
+      "category": "sql-migrations",
+      "n_pass": 4,
+      "n_total": 6,
+      "wall_s": 56.65979599952698,
+      "returncode": 1,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-add-column-not-null",
+          "passed": true,
+          "elapsed_s": 4.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-add-column-not-null",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/01-add-column-not-null",
+            "response_length": 103,
+            "response_excerpt": "```sql\nALTER TABLE orders ADD COLUMN IF NOT EXISTS shipping_status TEXT NOT NULL DEFAULT 'pending';\n```",
+            "candidate_sql": "ALTER TABLE orders ADD COLUMN IF NOT EXISTS shipping_status TEXT NOT NULL DEFAULT 'pending';\n",
+            "candidate_length": 93,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/01-add-column-not-null",
+                "up.candidate.sql"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "02-unique-constraint-dupes",
+          "passed": false,
+          "elapsed_s": 7.3,
+          "reasons": [
+            "verify.sh failed (exit 1):",
+            "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes =="
+          ],
+          "artifact": {
+            "task_id": "02-unique-constraint-dupes",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes",
+            "response_length": 221,
+            "response_excerpt": "```sql\nDELETE FROM users\nWHERE id NOT IN (\n    SELECT MIN(id) FROM users GROUP BY email\n);\n\nALTER TABLE users DROP CONSTRAINT IF EXISTS users_email_key;\nALTER TABLE users ADD CONSTRAINT users_email_key UNIQUE (email);\n```",
+            "candidate_sql": "DELETE FROM users\nWHERE id NOT IN (\n    SELECT MIN(id) FROM users GROUP BY email\n);\n\nALTER TABLE users DROP CONSTRAINT IF EXISTS users_email_key;\nALTER TABLE users ADD CONSTRAINT users_email_key UNIQUE (email);\n",
+            "candidate_length": 211,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes",
+                "up.candidate.sql"
+              ],
+              "returncode": 1,
+              "output_tail": "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes ==\n== Migration file: up.candidate.sql ==\nCREATE DATABASE\n-- Applying seed.sql --\nCREATE TABLE\nINSERT 0 4\n-- Applying up.candidate.sql (dry-run of the migration under test) --\nDELETE 1\nALTER TABLE\nALTER TABLE\n-- Running check.sql --\nno_rows_deleted|f\nunique_constraint_exists|t\nduplicate_insert_rejected|t\nFAIL: check 'no_rows_deleted' returned 'f' (expected 't')\npsql:/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes/up.candidate.sql:6: NOTICE:  constraint \"users_email_key\" of relation \"users\" does not exist, skipping"
+            }
+          }
+        },
+        {
+          "id": "03-rename-column-view",
+          "passed": true,
+          "elapsed_s": 14.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-rename-column-view",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view",
+            "response_length": 236,
+            "response_excerpt": "```sql\nDROP VIEW IF EXISTS low_stock_products;\nALTER TABLE products RENAME COLUMN qty TO quantity_in_stock;\nCREATE VIEW low_stock_products AS\n    SELECT id, name, quantity_in_stock\n    FROM products\n    WHERE quantity_in_stock < 10;\n```",
+            "candidate_sql": "DROP VIEW IF EXISTS low_stock_products;\nALTER TABLE products RENAME COLUMN qty TO quantity_in_stock;\nCREATE VIEW low_stock_products AS\n    SELECT id, name, quantity_in_stock\n    FROM products\n    WHERE quantity_in_stock < 10;\n",
+            "candidate_length": 226,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view",
+                "up.candidate.sql"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "04-non-idempotent-migration",
+          "passed": true,
+          "elapsed_s": 14.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-non-idempotent-migration",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/04-non-idempotent-migration",
+            "response_length": 345,
+            "response_excerpt": "```sql\nALTER TABLE accounts ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT true;\n\nCREATE INDEX IF NOT EXISTS idx_accounts_is_active ON accounts (is_active);\n\nCREATE TABLE IF NOT EXISTS account_tiers (\n    name TEXT PRIMARY KEY\n);\n\nINSERT INTO account_tiers (name) VALUES ('free'), ('pro'), ('enterprise') ON CONFLICT DO NOTHING;\n```",
+            "candidate_sql": "ALTER TABLE accounts ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT true;\n\nCREATE INDEX IF NOT EXISTS idx_accounts_is_active ON accounts (is_active);\n\nCREATE TABLE IF NOT EXISTS account_tiers (\n    name TEXT PRIMARY KEY\n);\n\nINSERT INTO account_tiers (name) VALUES ('free'), ('pro'), ('enterprise') ON CONFLICT DO NOTHING;\n",
+            "candidate_length": 335,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/04-non-idempotent-migration",
+                "up.candidate.sql"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "05-fk-missing-unique-target",
+          "passed": false,
+          "elapsed_s": 9.6,
+          "reasons": [
+            "verify.sh failed (exit 1):",
+            "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/05-fk-missing-unique-target ==",
+            "^"
+          ],
+          "artifact": {
+            "task_id": "05-fk-missing-unique-target",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/05-fk-missing-unique-target",
+            "response_length": 312,
+            "response_excerpt": "```sql\nALTER TABLE shipments ADD COLUMN IF NOT EXISTS warehouse_code TEXT;\n\nALTER TABLE warehouses ADD CONSTRAINT IF NOT EXISTS warehouses_code_unique UNIQUE (code);\n\nALTER TABLE shipments ADD CONSTRAINT IF NOT EXISTS fk_shipments_warehouse_code\n    FOREIGN KEY (warehouse_code) REFERENCES warehouses (code);\n```",
+            "candidate_sql": "ALTER TABLE shipments ADD COLUMN IF NOT EXISTS warehouse_code TEXT;\n\nALTER TABLE warehouses ADD CONSTRAINT IF NOT EXISTS warehouses_code_unique UNIQUE (code);\n\nALTER TABLE shipments ADD CONSTRAINT IF NOT EXISTS fk_shipments_warehouse_code\n    FOREIGN KEY (warehouse_code) REFERENCES warehouses (code);\n",
+            "candidate_length": 302,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/05-fk-missing-unique-target",
+                "up.candidate.sql"
+              ],
+              "returncode": 1,
+              "output_tail": "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/05-fk-missing-unique-target ==\n== Migration file: up.candidate.sql ==\nCREATE DATABASE\n-- Applying seed.sql --\nCREATE TABLE\nINSERT 0 2\nCREATE TABLE\n-- Applying up.candidate.sql (dry-run of the migration under test) --\nALTER TABLE\nFAIL: up.candidate.sql did not apply cleanly\npsql:/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/05-fk-missing-unique-target/up.candidate.sql:3: ERROR:  syntax error at or near \"EXISTS\"\nLINE 1: ALTER TABLE warehouses ADD CONSTRAINT IF NOT EXISTS warehous...\n                                                     ^"
+            }
+          }
+        },
+        {
+          "id": "06-bad-backfill-update",
+          "passed": true,
+          "elapsed_s": 5.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-bad-backfill-update",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/06-bad-backfill-update",
+            "response_length": 140,
+            "response_excerpt": "```sql\nUPDATE orders\nSET discount_percent = discount_codes.percent\nFROM discount_codes\nWHERE orders.discount_code = discount_codes.code;\n```",
+            "candidate_sql": "UPDATE orders\nSET discount_percent = discount_codes.percent\nFROM discount_codes\nWHERE orders.discount_code = discount_codes.code;\n",
+            "candidate_length": 130,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/06-bad-backfill-update",
+                "up.candidate.sql"
+              ],
+              "returncode": 0
+            }
+          }
+        }
+      ],
+      "artifact_count": 6,
+      "logs": [
+        "== Migration file: up.candidate.sql ==",
+        "CREATE DATABASE",
+        "-- Applying seed.sql --",
+        "CREATE TABLE",
+        "INSERT 0 4",
+        "-- Applying up.candidate.sql (dry-run of the migration under test) --",
+        "DELETE 1",
+        "ALTER TABLE",
+        "ALTER TABLE",
+        "-- Running check.sql --",
+        "no_rows_deleted|f",
+        "unique_constraint_exists|t",
+        "duplicate_insert_rejected|t",
+        "FAIL: check 'no_rows_deleted' returned 'f' (expected 't')",
+        "psql:/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes/up.candidate.sql:6: NOTICE:  constraint \"users_email_key\" of relation \"users\" does not exist, skipping",
+        "== Migration file: up.candidate.sql ==",
+        "CREATE DATABASE",
+        "-- Applying seed.sql --",
+        "CREATE TABLE",
+        "INSERT 0 2",
+        "CREATE TABLE",
+        "-- Applying up.candidate.sql (dry-run of the migration under test) --",
+        "ALTER TABLE",
+        "FAIL: up.candidate.sql did not apply cleanly",
+        "psql:/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/05-fk-missing-unique-target/up.candidate.sql:3: ERROR:  syntax error at or near \"EXISTS\"",
+        "LINE 1: ALTER TABLE warehouses ADD CONSTRAINT IF NOT EXISTS warehous..."
+      ]
+    }
+  ]
+}

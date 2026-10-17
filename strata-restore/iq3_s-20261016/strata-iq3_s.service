@@ -1,0 +1,26 @@
+[Unit]
+Description=Strata IQ3_S (Qwen3.8-Flash-Next) OpenAI API on :8080
+Documentation=file:///mnt/data/strata/runs/production
+After=network-online.target mnt-data.mount
+Wants=network-online.target
+# Do not Require firewall oneshot — Strata must start even if iptables helper fails.
+Wants=strata-open-8080.service
+
+[Service]
+Type=simple
+WorkingDirectory=/mnt/data/strata/Strata
+Environment=HOME=%h
+Environment=PATH=/mnt/data/strata/Strata/.venv/bin:/usr/local/cuda-13.0/bin:/usr/local/bin:/usr/bin:/bin
+Environment=CUDA_HOME=/usr/local/cuda-13.0
+Environment=LD_LIBRARY_PATH=/usr/local/cuda-13.0/lib64
+ExecStart=/mnt/data/strata/Strata/.venv/bin/python /mnt/data/strata/Strata/serve/server.py --engine strata --config /mnt/data/strata/Strata/strata-iq3_s.json --port 8080
+Restart=on-failure
+RestartSec=10
+TimeoutStartSec=900
+TimeoutStopSec=120
+KillSignal=SIGINT
+StandardOutput=append:/mnt/data/strata/runs/production/server.out
+StandardError=append:/mnt/data/strata/runs/production/server.out
+
+[Install]
+WantedBy=default.target

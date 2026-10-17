@@ -1,0 +1,32 @@
+# Fragment from /etc/nginx/sites-enabled/llm-88.berdachuk.com on .51 (2026-10-16)
+    location /v1/ {
+        if ($llm88_authorized = 0) {
+            add_header WWW-Authenticate 'Bearer realm="llm-88"' always;
+            return 401;
+        }
+
+        limit_req zone=llm88_per_ip burst=10 nodelay;
+        limit_req_status 429;
+        limit_conn llm88_conn_per_ip 4;
+        limit_conn_status 429;
+
+        proxy_pass http://192.168.0.175:8080;
+        proxy_http_version 1.1;
+
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
+
+        include /etc/nginx/snippets/strata-upstream-auth.conf;
+
+        proxy_buffering off;
+        proxy_request_buffering off;
+        proxy_cache off;
+        add_header X-Accel-Buffering no always;
+
+        proxy_connect_timeout 10s;
+        proxy_send_timeout 3600s;
+        proxy_read_timeout 3600s;
+        send_timeout 3600s;
+    }

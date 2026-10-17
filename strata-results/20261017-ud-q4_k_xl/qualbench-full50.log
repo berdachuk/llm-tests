@@ -1,0 +1,49 @@
+=== Preflight: checking server model list ===
+Preflight OK: model 'qwen3.8-flash-next-ud-q4_k_xl' is advertised (1 model(s) total).
+
+=== Running category: java-spring (per-task timeout 180s) ===
+--- java-spring: 10/10 passed (121.7s wall) ---
+
+=== Running category: ts-angular (per-task timeout 300s) ===
+--- ts-angular: 8/8 passed (78.1s wall) ---
+
+=== Running category: sql-migrations (per-task timeout 300s) ===
+    == Migration file: up.candidate.sql ==
+    FAIL: could not create scratch database
+    psql: error: connection to server at "127.0.0.1", port 15432 failed: Connection refused
+    	Is the server running on that host and accepting TCP/IP connections?
+    == Migration file: up.candidate.sql ==
+    FAIL: could not create scratch database
+    psql: error: connection to server at "127.0.0.1", port 15432 failed: Connection refused
+    	Is the server running on that host and accepting TCP/IP connections?
+    == Migration file: up.candidate.sql ==
+    FAIL: could not create scratch database
+    psql: error: connection to server at "127.0.0.1", port 15432 failed: Connection refused
+    	Is the server running on that host and accepting TCP/IP connections?
+    == Migration file: up.candidate.sql ==
+    FAIL: could not create scratch database
+    psql: error: connection to server at "127.0.0.1", port 15432 failed: Connection refused
+    	Is the server running on that host and accepting TCP/IP connections?
+    == Migration file: up.candidate.sql ==
+    FAIL: could not create scratch database
+    psql: error: connection to server at "127.0.0.1", port 15432 failed: Connection refused
+    	Is the server running on that host and accepting TCP/IP connections?
+    == Migration file: up.candidate.sql ==
+    FAIL: could not create scratch database
+    psql: error: connection to server at "127.0.0.1", port 15432 failed: Connection refused
+    	Is the server running on that host and accepting TCP/IP connections?
+--- sql-migrations: 0/6 passed (51.0s wall) ---
+
+=== Running category: mcp-tools (per-task timeout 120s) ===
+--- mcp-tools: 8/8 passed (22.6s wall) ---
+
+=== Running category: security-review (per-task timeout 180s) ===
+--- security-review: 8/8 passed (169.7s wall) ---
+
+=== Running category: long-context (per-task timeout 600s) ===
+--- long-context: 10/10 passed (693.5s wall) ---
+
+=== TOTAL: 44/50 passed (1136.7s wall) ===
+Report written to:
+  /home/berdachuk/projects-llm-test/llm-tests/qualbench/results/run-strata-ud-q4-full50-20261017-212452.json
+  /home/berdachuk/projects-llm-test/llm-tests/qualbench/results/run-strata-ud-q4-full50-20261017-212452.md

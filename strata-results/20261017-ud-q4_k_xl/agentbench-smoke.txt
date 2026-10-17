@@ -1,0 +1,141 @@
+.....F...F.sss.........................F..........F.....F.               [100%]
+=================================== FAILURES ===================================
+__________________ test_models_endpoint_reports_full_context ___________________
+
+client = <agentbench.client.AgentBenchClient object at 0x7c192aaae240>
+agent_model = 'qwen3.8-flash-next-ud-q4_k_xl', agent_min_context_tokens = 32000
+
+    def test_models_endpoint_reports_full_context(
+        client: AgentBenchClient, agent_model: str, agent_min_context_tokens: int
+    ):
+        data = client.list_models()
+        entry = next(m for m in data["data"] if m["id"] == agent_model)
+        # Regression guard: catches a misconfigured --max-seq-len-override / kv
+        # budget silently truncating the advertised context window.
+>       assert entry.get("max_model_len", 0) >= agent_min_context_tokens
+E       AssertionError: assert 0 >= 32000
+E        +  where 0 = <built-in method get of dict object at 0x7c192988c500>('max_model_len', 0)
+E        +    where <built-in method get of dict object at 0x7c192988c500> = {'id': 'qwen3.8-flash-next-ud-q4_k_xl', 'object': 'model', 'status': {'value': 'loaded'}, 'meta': {'n_ctx': 262144}, ...}.get
+
+agentbench/tests/test_basic_compat.py:30: AssertionError
+__________________________ test_messages_count_tokens __________________________
+
+client = <agentbench.client.AgentBenchClient object at 0x7c192aaae240>
+agent_url = 'http://192.168.0.175:8080'
+agent_model = 'qwen3.8-flash-next-ud-q4_k_xl', agent_short_timeout = 30.0
+
+    @pytest.mark.anthropic
+    def test_messages_count_tokens(client: AgentBenchClient, agent_url, agent_model, agent_short_timeout):
+        import requests
+    
+        r = requests.post(
+            f"{agent_url}/v1/messages/count_tokens",
+            json={
+                "model": agent_model,
+                "messages": [{"role": "user", "content": "Hello there, how are you?"}],
+            },
+            timeout=agent_short_timeout,
+        )
+>       r.raise_for_status()
+
+agentbench/tests/test_basic_compat.py:92: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <Response [401]>
+
+    def raise_for_status(self) -> None:
+        """Raises :class:`HTTPError`, if one occurred."""
+    
+        http_error_msg = ""
+        if isinstance(self.reason, bytes):
+            # We attempt to decode utf-8 first because some servers
+            # choose to localize their reason strings. If the string
+            # isn't utf-8, we fall back to iso-8859-1 for all other
+            # encodings. (See PR #3538)
+            try:
+                reason = self.reason.decode("utf-8")
+            except UnicodeDecodeError:
+                reason = self.reason.decode("iso-8859-1")
+        else:
+            reason = self.reason
+    
+        if 400 <= self.status_code < 500:
+            http_error_msg = (
+                f"{self.status_code} Client Error: {reason} for url: {self.url}"
+            )
+    
+        elif 500 <= self.status_code < 600:
+            http_error_msg = (
+                f"{self.status_code} Server Error: {reason} for url: {self.url}"
+            )
+    
+        if http_error_msg:
+>           raise HTTPError(http_error_msg, response=self)
+E           requests.exceptions.HTTPError: 401 Client Error: Unauthorized for url: http://192.168.0.175:8080/v1/messages/count_tokens
+
+.venv/lib/python3.12/site-packages/requests/models.py:1167: HTTPError
+_ TestInlineThinkTags.test_inline_think_off_tag_content_is_not_swallowed_into_reasoning _
+[XPASS(strict)] CONFIRMED SERVER BUG (2026-08-31, freetoken + froggeric v22.4 template, reasoning_parser=qwen3): when a request's message text contains the inline '<|think_off|>' control tag, the froggeric chat_template correctly disables the <think>...</think> wrapper (the model emits its answer with no think tags at all -- confirmed by direct template rendering and by raw model output). However, freetoken's server-side reasoning parser is instantiated with force_reasoning computed ONLY from chat_template_kwargs.get('enable_thinking') (see server/generation.py:_make_reasoning_parser, line ~349), which does not inspect inline '<|think_off|>' tags embedded in message *content*. The parser is therefore built with force_reasoning=True (thinking assumed on), starts 'inside' a reasoning block, never sees a '</think>' close marker (because the model never emitted '<think>' to begin with), and so attributes 100% of the model's visible answer to `reasoning_content` while `content` stays empty. 100% reproducible across multiple prompts/seeds. Root cause: generation.py's force_reasoning computation and chat_template.jinja's own inline-tag parsing (chat_template.jinja lines 38-49) are two independent, unsynchronized decisions about the same thing. Fix needs either (a) the server to also scan request message content for inline think-control tags before computing force_reasoning, or (b) the template to stop supporting inline tags and require chat_template_kwargs.enable_thinking=False instead. Affects any agent/proxy that relies on the documented inline-tag mechanism instead of chat_template_kwargs.
+________ TestToolChoiceForcing.test_tool_choice_required_forces_a_call _________
+[XPASS(strict)] CONFIRMED SERVER BUG (2026-08-31, freetoken openai_api.py): `tool_choice='required'` is accepted by the request schema (api_models.py ChatCompletionRequest.tool_choice: Literal['none','auto','required']) but there is no server-side code path that actually enforces it -- `_should_parse_tools()` only special-cases 'none' (disables tool parsing entirely) and `ToolChoiceObject` (filters `_tools_for_template` down to the named function), never 'required'. FreeToken has no constrained/guided decoding (openai_api.py:_response_format_unsupported comment confirms this explicitly for response_format, and the same limitation applies here), so there is no mechanism to force the model to emit a tool call at all -- 'required' silently behaves identically to 'auto'. Reproduced here with a greeting message that gives the model no reason to call a tool: it replies with plain text instead of being forced into a call. Any agent harness that relies on tool_choice='required' to guarantee a structured action (rather than free text) will get a plain-text response instead in this scenario.
+_ TestErrorLikeToolResultsDoNotConfuseModel.test_grep_style_result_with_word_error_is_treated_as_success _
+
+self = <agentbench.tests.test_tool_calling.TestErrorLikeToolResultsDoNotConfuseModel object at 0x7c19298878c0>
+client = <agentbench.client.AgentBenchClient object at 0x7c192aaae240>
+
+    def test_grep_style_result_with_word_error_is_treated_as_success(self, client: AgentBenchClient):
+        # NOTE: the user question must already be fully answerable from the
+        # single tool result, and must NOT itself invite further searching
+        # ("search for X, then summarize" legitimately encourages a thorough
+        # agent to broaden its search -- that's correct behavior, not a false-
+        # positive-error retry, and an earlier version of this test conflated
+        # the two). Here the question is narrow and closed so any further
+        # tool call would only be explained by mistaking "error" text for
+        # failure.
+        messages = [
+            {"role": "user", "content": "Run `grep -rn 'catch' src/` with run_command and tell me how many matching lines it found."},
+            {
+                "role": "assistant",
+                "content": None,
+                "tool_calls": [
+                    {
+                        "id": "call_grep1",
+                        "type": "function",
+                        "function": {"name": "run_command", "arguments": json.dumps({"command": "grep -rn 'catch' src/"})},
+                    }
+                ],
+            },
+            {
+                "role": "tool",
+                "tool_call_id": "call_grep1",
+                "content": (
+                    "src/handlers.js:42:  } catch (err) {\n"
+                    "src/handlers.js:43:    console.error('failed to process request', err);\n"
+                    "src/utils.js:10:  } catch (e) {\n"
+                    "src/utils.js:55:  } catch (error) {\n"
+                ),
+            },
+        ]
+        result = client.chat_completions(messages=messages, tools=[RUN_COMMAND_TOOL_OPENAI], max_tokens=500)
+        # The model should synthesize an answer, not re-issue the identical
+        # tool call because it thinks the previous one "failed".
+>       assert not result.tool_calls, (
+            f"model re-issued a tool call instead of answering from a successful "
+            f"grep result that merely contained the word 'error'; "
+            f"tool_calls={result.tool_calls!r}"
+        )
+E       AssertionError: model re-issued a tool call instead of answering from a successful grep result that merely contained the word 'error'; tool_calls=[ToolCall(id='call_af958ffedbe646bb989180fb', name='run_command', arguments='{"command":"grep -rn \'catch\' src/ | wc -l"}')]
+E       assert not [ToolCall(id='call_af958ffedbe646bb989180fb', name='run_command', arguments='{"command":"grep -rn \'catch\' src/ | wc -l"}')]
+E        +  where [ToolCall(id='call_af958ffedbe646bb989180fb', name='run_command', arguments='{"command":"grep -rn \'catch\' src/ | wc -l"}')] = ChatResult(content='', reasoning_content="The user asked how many matching lines. Let me count: 4 lines. But I should ...2, 'total_tokens': 603, 'prompt_tokens_details': {'cached_tokens': 0}}, elapsed_s=3.4107375144958496, stream_events=[]).tool_calls
+
+agentbench/tests/test_tool_calling.py:335: AssertionError
+=========================== short test summary info ============================
+SKIPPED [1] agentbench/tests/test_chat_template.py:42: set AGENTBENCH_TEMPLATE_PATH to a local chat_template.jinja (or model dir) to run chat-template installation checks
+SKIPPED [1] agentbench/tests/test_chat_template.py:50: set AGENTBENCH_TEMPLATE_PATH to a local chat_template.jinja (or model dir) to run chat-template installation checks
+SKIPPED [1] agentbench/tests/test_chat_template.py:60: set AGENTBENCH_TEMPLATE_PATH to a local chat_template.jinja (or model dir) to run chat-template installation checks
+FAILED agentbench/tests/test_basic_compat.py::test_models_endpoint_reports_full_context
+FAILED agentbench/tests/test_basic_compat.py::test_messages_count_tokens - re...
+FAILED agentbench/tests/test_reasoning.py::TestInlineThinkTags::test_inline_think_off_tag_content_is_not_swallowed_into_reasoning
+FAILED agentbench/tests/test_tool_calling.py::TestToolChoiceForcing::test_tool_choice_required_forces_a_call
+FAILED agentbench/tests/test_tool_calling.py::TestErrorLikeToolResultsDoNotConfuseModel::test_grep_style_result_with_word_error_is_treated_as_success
+5 failed, 50 passed, 3 skipped, 8 deselected in 96.01s (0:01:36)

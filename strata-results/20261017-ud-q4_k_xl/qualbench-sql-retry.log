@@ -1,0 +1,36 @@
+=== Preflight: checking server model list ===
+Preflight OK: model 'qwen3.8-flash-next-ud-q4_k_xl' is advertised (1 model(s) total).
+
+=== Running category: sql-migrations (per-task timeout 300s) ===
+    == Migration file: up.candidate.sql ==
+    CREATE DATABASE
+    -- Applying seed.sql --
+    CREATE TABLE
+    INSERT 0 4
+    -- Applying up.candidate.sql (dry-run of the migration under test) --
+    DELETE 1
+    ALTER TABLE
+    ALTER TABLE
+    -- Running check.sql --
+    no_rows_deleted|f
+    unique_constraint_exists|t
+    duplicate_insert_rejected|t
+    FAIL: check 'no_rows_deleted' returned 'f' (expected 't')
+    psql:/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes/up.candidate.sql:6: NOTICE:  constraint "users_email_key" of relation "users" does not exist, skipping
+    == Migration file: up.candidate.sql ==
+    CREATE DATABASE
+    -- Applying seed.sql --
+    CREATE TABLE
+    INSERT 0 2
+    CREATE TABLE
+    -- Applying up.candidate.sql (dry-run of the migration under test) --
+    ALTER TABLE
+    FAIL: up.candidate.sql did not apply cleanly
+    psql:/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/05-fk-missing-unique-target/up.candidate.sql:3: ERROR:  syntax error at or near "EXISTS"
+    LINE 1: ALTER TABLE warehouses ADD CONSTRAINT IF NOT EXISTS warehous...
+--- sql-migrations: 4/6 passed (56.7s wall) ---
+
+=== TOTAL: 4/6 passed (56.7s wall) ===
+Report written to:
+  /home/berdachuk/projects-llm-test/llm-tests/qualbench/results/run-strata-ud-q4-sql-retry-20261017-214920.json
+  /home/berdachuk/projects-llm-test/llm-tests/qualbench/results/run-strata-ud-q4-sql-retry-20261017-214920.md

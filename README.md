@@ -3,12 +3,14 @@
 **See [`TEST_RESULTS.md`](TEST_RESULTS.md) for the latest qualbench
 FP8-vs-NVFP4 comparative test results (50-task quality/regression eval).**
 
-**Strata IQ3_S on `.175` (production LLM, 2026-10-15):** how-to
+**Strata UD-Q4_K_XL on `.175` (production LLM, 2026-10-17):** how-to
 [`LLM_175_USAGE.md`](LLM_175_USAGE.md); runbook
 [`STRATA_88_PRODUCTION.md`](STRATA_88_PRODUCTION.md); stack snapshot
-[`STRATA_88_ACTIVE_STACK.md`](STRATA_88_ACTIVE_STACK.md); vs FreeToken
+[`STRATA_88_ACTIVE_STACK.md`](STRATA_88_ACTIVE_STACK.md); vs IQ3_S
+[`STRATA_IQ3S_VS_UD_Q4_COMPARE.md`](STRATA_IQ3S_VS_UD_Q4_COMPARE.md); vs FreeToken
 [`STRATA_VS_FREETOKEN_4090_COMPARE.md`](STRATA_VS_FREETOKEN_4090_COMPARE.md).
-Served id `qwen3.8-flash-next-iq3_s`; qualbench-50 prod re-check **50/50 @ 685 s**.
+Served id `qwen3.8-flash-next-ud-q4_k_xl`; qualbench-50 **48/50**; report
+[`STRATA_UD_Q4_K_XL_4090_TEST_REPORT.md`](STRATA_UD_Q4_K_XL_4090_TEST_REPORT.md).
 
 **Embeddings on `.88`:** usage/deploy guide [`EMBEDDINGS_88.md`](EMBEDDINGS_88.md);
 live compare report [`EMBEDDINGS_88_COMPARE.md`](EMBEDDINGS_88_COMPARE.md);

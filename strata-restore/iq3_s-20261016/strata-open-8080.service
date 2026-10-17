@@ -1,0 +1,13 @@
+[Unit]
+Description=Open LAN TCP 8080 for Strata (iptables, no Docker)
+After=network-online.target
+Wants=network-online.target
+# Never Before=strata — a slow/failing firewall must not block the LLM.
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/sudo /usr/local/sbin/open-strata-8080.sh
+RemainAfterExit=yes
+
+[Install]
+WantedBy=default.target

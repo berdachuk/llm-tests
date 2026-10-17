@@ -1,0 +1,45 @@
+{
+  "row": {
+    "ts": "2026-10-17T18:45:47.701016+00:00",
+    "tier": "E",
+    "quant": "UD-Q4_K_XL",
+    "context_limit": 262144,
+    "target_prompt_tokens": 131072,
+    "needle_pos": 0.9,
+    "prompt_tokens": 170357,
+    "gen_tokens": 15,
+    "ttft_s": 119.462,
+    "prefill_tps": 1284.2,
+    "decode_tps": 100.3,
+    "total_s": 120.113,
+    "finish_reason": "stop",
+    "vram_used_mib": 23974,
+    "ram_used_gib": 88.28,
+    "needle_ok": "yes",
+    "ok": "yes",
+    "notes": "rep=0"
+  },
+  "content": "N-62a396321691",
+  "reasoning": "",
+  "usage": {
+    "prompt_tokens": 170357,
+    "completion_tokens": 15,
+    "total_tokens": 170372,
+    "prompt_tokens_details": {
+      "cached_tokens": 16384
+    }
+  },
+  "timings": {
+    "cache_n": 16384,
+    "prompt_n": 153973,
+    "prompt_ms": 119897.3,
+    "prompt_per_token_ms": 0.779,
+    "prompt_per_second": 1284.2,
+    "predicted_n": 15,
+    "predicted_ms": 149.6,
+    "predicted_per_token_ms": 9.973,
+    "predicted_per_second": 100.3,
+    "draft_n": 10,
+    "draft_n_accepted": 10
+  }
+}
