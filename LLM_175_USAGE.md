@@ -13,7 +13,7 @@
 
 | Сервис | LAN | Публично (через nginx `.51`) | Model id |
 |---|---|---|---|
-| **Strata** (chat) | `http://192.168.0.175:8080` | `https://llm-88.berdachuk.com/v1` | `qwen3.8-flash-next-ud-q4_k_xl` |
+| **Strata** (chat) | `http://192.168.0.175:8080` | `https://llm-88.berdachuk.com/v1` | `qwen3.8-flash-next-iq3_s` |
 | Speaches ASR | `http://192.168.0.175:8002` | `https://llm-88.berdachuk.com/speaches/v1` | (см. `/v1/models` Speaches) |
 | GigaAM ASR | `http://192.168.0.175:8003` | `https://llm-88.berdachuk.com/gigaam/v1` | `gigaam-v3` |
 | TEI embeddings | `http://192.168.0.175:8004` | `https://llm-88.berdachuk.com/embedding/v1` | `Qwen/Qwen3-Embedding-0.6B` |
@@ -23,7 +23,7 @@
 
 | Назначение | Bifrost model id |
 |---|---|
-| Chat | `llm-88/qwen3.8-flash-next-ud-q4_k_xl` |
+| Chat | `llm-88/qwen3.8-flash-next-iq3_s` |
 | ASR RU | `gigaam-88/gigaam-v3` |
 | ASR multilingual | `audio-88/…` (faster-whisper) |
 | Embeddings text | `embedding-88/Qwen/Qwen3-Embedding-0.6B` |
@@ -90,7 +90,7 @@ curl -fsS http://192.168.0.175:8080/v1/chat/completions \
   -H "Authorization: Bearer $KEY" \
   -H 'Content-Type: application/json' \
   -d '{
-    "model": "qwen3.8-flash-next-ud-q4_k_xl",
+    "model": "qwen3.8-flash-next-iq3_s",
     "temperature": 0,
     "max_tokens": 64,
     "messages": [{"role": "user", "content": "Reply with exactly: pong"}]
@@ -112,7 +112,7 @@ curl -fsS https://llm.avroflex.ru/v1/chat/completions \
   -H "Authorization: Bearer $VK" \
   -H 'Content-Type: application/json' \
   -d '{
-    "model": "llm-88/qwen3.8-flash-next-ud-q4_k_xl",
+    "model": "llm-88/qwen3.8-flash-next-iq3_s",
     "temperature": 0,
     "max_tokens": 64,
     "messages": [{"role": "user", "content": "Reply with exactly: pong"}]
@@ -142,7 +142,7 @@ curl -fsS http://192.168.0.175:8005/health
 
 | Поле | Значение |
 |---|---|
-| Default model | `llm-88-local/qwen3.8-flash-next-ud-q4_k_xl` |
+| Default model | `llm-88-local/qwen3.8-flash-next-iq3_s` |
 | LAN baseURL | `http://192.168.0.175:8080/v1` |
 | Context limit | `248000` |
 | Запасные провайдеры | `llm-88` (HTTPS), `avroflex-llm88` (Bifrost) |
@@ -162,7 +162,7 @@ curl -fsS -o /dev/null -w 'tei=%{http_code}\n' http://192.168.0.175:8004/health
 curl -fsS -o /dev/null -w 'gemma=%{http_code}\n' http://192.168.0.175:8005/health
 
 # SSH / unit
-ssh berda@192.168.0.175 'systemctl --user is-active strata-ud-q4_k_xl.service'
+ssh berda@192.168.0.175 'systemctl --user is-active strata-iq3_s.service'
 ```
 
 Ожидаемо: HTTP **200** (для Strata root без ключа UI отдаётся; `/v1/*` без Bearer — **401**).
@@ -175,7 +175,7 @@ ssh berda@192.168.0.175 'systemctl --user is-active strata-ud-q4_k_xl.service'
 |---|---|
 | Не открывается `…88:8080` | Это Wi‑Fi IP; используйте **`.175`** |
 | Monitor пустой / 401 на API | Нет Bearer в Settings / неверный Strata key |
-| Bifrost 502/timeout на chat | nginx `.51` → `192.168.0.175:8080`; `strata-ud-q4_k_xl` active |
+| Bifrost 502/timeout на chat | nginx `.51` → `192.168.0.175:8080`; `strata-iq3_s` active |
 | TEI/Gemma недоступны с LAN | Publish только на `.175`, не на `0.0.0.0` и не на Wi‑Fi IP |
 | Prefill «медленный» на коротком промпте в Monitor | Нормально; на длинном контексте matrix ~1.9–2.1k t/s |
 

@@ -1,4 +1,4 @@
-# Active stack snapshot — Strata UD-Q4_K_XL **1×4090 production** (2026-10-17)
+# Active stack snapshot — Strata IQ3_S **1×4090 production** (2026-10-17 restore)
 
 Bifrost `llm-88` → nginx `.51` → Strata on **ethernet** `192.168.0.175:8080`. FreeToken off.
 
@@ -16,14 +16,14 @@ Compare: [`STRATA_VS_FREETOKEN_4090_COMPARE.md`](STRATA_VS_FREETOKEN_4090_COMPAR
 | Item | Value |
 |---|---|
 | Engine | Strata **v0.1.44.1** (`/mnt/data/strata/Strata`) |
-| Config | `/mnt/data/strata/Strata/strata-ud-q4_k_xl.json` → `"gpu": 0`, **no** `layer_split` |
-| Served model id | **`qwen3.8-flash-next-ud-q4_k_xl`** |
-| Bifrost | `llm-88/qwen3.8-flash-next-ud-q4_k_xl` |
-| systemd | `strata-ud-q4_k_xl` + `strata-open-8080` (user, linger, enabled); IQ3_S disabled (restore snapshot available) |
+| Config | `/mnt/data/strata/Strata/strata-iq3_s.json` → `"gpu": 0`, **no** `layer_split` |
+| Served model id | **`qwen3.8-flash-next-iq3_s`** |
+| Bifrost | `llm-88/qwen3.8-flash-next-iq3_s` |
+| systemd | `strata-iq3_s` + `strata-open-8080` (user, linger, enabled); UD-Q4 unit disabled |
 | Bind | `0.0.0.0:8080` |
 | VRAM | GPU0 ~**23 GiB** |
 | Context | advertised 262144; practical ~**248K** |
-| Qualbench-50 | **48/50** (sql 4/6) — [`STRATA_UD_Q4_K_XL_4090_TEST_REPORT.md`](STRATA_UD_Q4_K_XL_4090_TEST_REPORT.md) |
+| Qualbench-50 | **50/50** @ **685 s** (prior prod); Q4 A/B: [`STRATA_IQ3S_VS_UD_Q4_COMPARE.md`](STRATA_IQ3S_VS_UD_Q4_COMPARE.md) |
 | IQ3_S restore | [`STRATA_IQ3S_RESTORE_SNAPSHOT.md`](STRATA_IQ3S_RESTORE_SNAPSHOT.md) |
 
 ## GPU1 — ASR / embeddings
@@ -43,5 +43,5 @@ Compare: [`STRATA_VS_FREETOKEN_4090_COMPARE.md`](STRATA_VS_FREETOKEN_4090_COMPAR
 
 | Client | Setting |
 |---|---|
-| OpenCode | default `llm-88-local/qwen3.8-flash-next-ud-q4_k_xl`, limit **248000**; baseURL `http://192.168.0.175:8080/v1` |
+| OpenCode | default `llm-88-local/qwen3.8-flash-next-iq3_s`, limit **248000**; baseURL `http://192.168.0.175:8080/v1` |
 | Direct LAN | `http://192.168.0.175:8080` + production Bearer |
