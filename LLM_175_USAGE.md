@@ -1,11 +1,15 @@
 # Как пользоваться LLM-сервисами на `llm-server` (`.175`)
 
-> **Дата:** 2026-10-15  
+> **Дата:** 2026-10-18 (restore IQ3_S + full recheck **50/50**)  
 > Хост: `llm-server`, основной LAN IP — ethernet **`192.168.0.175`**.  
 > Wi‑Fi может быть поднят как backup, но **nginx и Docker publish смотрят только на `.175`**.  
 > Секреты в эту инструкцию не входят — ключи только на хосте / в менеджере паролей / в локальных `~/.config/…` вне git.
 
-Связанные runbook’и: [`STRATA_88_PRODUCTION.md`](STRATA_88_PRODUCTION.md), [`STRATA_88_ACTIVE_STACK.md`](STRATA_88_ACTIVE_STACK.md), [`EMBEDDINGS_88.md`](EMBEDDINGS_88.md), `avroflex-infra/docs/bifrost-llm88-asr-stack.md`.
+Связанные runbook’и: [`STRATA_88_PRODUCTION.md`](STRATA_88_PRODUCTION.md), [`STRATA_88_ACTIVE_STACK.md`](STRATA_88_ACTIVE_STACK.md), [`EMBEDDINGS_88.md`](EMBEDDINGS_88.md), `avroflex-infra/docs/bifrost-llm88-asr-stack.md`.  
+A/B Unsloth (не прод): [`STRATA_IQ3S_VS_UD_IQ4_XS_COMPARE.md`](STRATA_IQ3S_VS_UD_IQ4_XS_COMPARE.md), [`STRATA_IQ3S_VS_UD_Q4_COMPARE.md`](STRATA_IQ3S_VS_UD_Q4_COMPARE.md).  
+Recheck после restore: [`STRATA_IQ3S_RECHECK_20261018.md`](STRATA_IQ3S_RECHECK_20261018.md).  
+FRIDA-Decisions (`:8006`, decision model): live — см. §1 и
+`avroflex-infra/docs/frida-decisions-deployment-plan.md`.
 
 ---
 
@@ -18,6 +22,7 @@
 | GigaAM ASR | `http://192.168.0.175:8003` | `https://llm-88.berdachuk.com/gigaam/v1` | `gigaam-v3` |
 | TEI embeddings | `http://192.168.0.175:8004` | `https://llm-88.berdachuk.com/embedding/v1` | `Qwen/Qwen3-Embedding-0.6B` |
 | EmbeddingGemma-2 | `http://192.168.0.175:8005` | `https://llm-88.berdachuk.com/embedding-gemma2/v1` | `google/embeddinggemma-2` |
+| **FRIDA-Decisions** | `http://192.168.0.175:8006` | `https://llm-88.berdachuk.com/frida` · `https://llm.avroflex.ru/frida` | `ai-forever/FRIDA-Decisions` (`POST /pooling`, не chat) |
 
 Через Bifrost (`https://llm.avroflex.ru/v1`) те же backend’ы с префиксами провайдера:
 
@@ -55,8 +60,9 @@ SSH: `ssh llm-server` или `ssh berda@192.168.0.175`.
 |---|---|
 | LAN Strata `:8080` | Bearer = Strata API key |
 | `llm-88.berdachuk.com` | Bearer = `LLM_88_API_KEY` (nginx map / Bifrost provider key) |
-| `llm.avroflex.ru` | Bearer = Virtual Key Bifrost (например VK coding) |
-| LAN TEI/Gemma/ASR `:8002–8005` | без auth |
+| `llm.avroflex.ru` `/v1` | Bearer = Virtual Key Bifrost (например VK coding) |
+| `llm.avroflex.ru` `/frida` | Bearer = `LLM_88_API_KEY` (как llm-88; path минует Bifrost) |
+| LAN TEI/Gemma/ASR/FRIDA `:8002–8006` | без auth |
 
 Ключи **не коммитить** (`k8s/secrets/` в `.gitignore`). Локальный склад на станции оператора:
 
@@ -129,7 +135,24 @@ curl -fsS http://192.168.0.175:8004/v1/embeddings \
 curl -fsS http://192.168.0.175:8005/health
 ```
 
-### 4.6. Monitor UI
+### 4.6. FRIDA-Decisions (`POST /pooling`, не chat)
+
+```bash
+# LAN
+curl -fsS http://192.168.0.175:8006/pooling \
+  -H 'Content-Type: application/json' \
+  -d '{"data":{"state":"Не приходит код подтверждения.","questions":{"spam":{"type":"noul","instructions":"Спам?"}}}}'
+
+# Public (Bearer = LLM_88_API_KEY)
+curl -fsS https://llm.avroflex.ru/frida/pooling \
+  -H "Authorization: Bearer $LLM_88_API_KEY" \
+  -H 'Content-Type: application/json' \
+  -d '{"data":{"state":"Не приходит код подтверждения.","questions":{"spam":{"type":"noul","instructions":"Спам?"}}}}'
+```
+
+Типы вопросов: `choice` | `score` | `noul` | `ranking`. IaC: `avroflex-infra/llm-88/frida-decisions/`.
+
+### 4.7. Monitor UI
 
 Открыть: **http://192.168.0.175:8080/#monitor**  
 Вставить Strata Bearer в настройках Monitor (без ключа UI/метрики не заработают).
@@ -160,6 +183,7 @@ curl -fsS -o /dev/null -w 'speaches=%{http_code}\n' http://192.168.0.175:8002/v1
 curl -fsS -o /dev/null -w 'gigaam=%{http_code}\n' http://192.168.0.175:8003/health
 curl -fsS -o /dev/null -w 'tei=%{http_code}\n' http://192.168.0.175:8004/health
 curl -fsS -o /dev/null -w 'gemma=%{http_code}\n' http://192.168.0.175:8005/health
+curl -fsS -o /dev/null -w 'frida=%{http_code}\n' http://192.168.0.175:8006/health
 
 # SSH / unit
 ssh berda@192.168.0.175 'systemctl --user is-active strata-iq3_s.service'
