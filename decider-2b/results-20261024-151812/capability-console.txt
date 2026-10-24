@@ -1,0 +1,52 @@
+base=http://192.168.0.175:8008 cases=19 out=/home/berdachuk/projects-llm-test/llm-tests/decider-2b/results-20261024-151812/capability
+  [PASS] ru_support_triage_4types (ru/support) 97.2ms
+  [PASS] ru_model_routing (ru/sd_model_routing) 32.9ms
+  [PASS] ru_model_routing_hard (ru/sd_model_routing) 33.8ms
+  [PASS] ru_tool_selection (ru/sd_tool_selection) 29.4ms
+  [PASS] ru_risk_gate_rm (ru/sd_risk_gate) 30.2ms
+  [PASS] ru_risk_gate_safe_ls (ru/sd_risk_gate) 30.3ms
+  [FAIL] ru_pr_risk_gate (ru/sd_pr_review) 76.0ms — disposition.choice='merge' not in ['review', 'block']; security.noul=0.0000 want>0.4; risk.score=1.5500 want>=2.0
+  [PASS] ru_loop_detection (ru/sd_loop) 35.7ms
+  [PASS] ru_rag_rerank_code (ru/sd_rag) 29.0ms
+  [FAIL] ru_prompt_injection (ru/sd_guardrail) 28.2ms — injection.noul=0.0000 want>0.5
+  [PASS] ru_issue_triage (ru/sd_issue) 75.7ms
+  [PASS] en_model_routing (en/sd_model_routing) 28.9ms
+  [PASS] en_tool_selection (en/sd_tool_selection) 28.7ms
+  [PASS] en_risk_gate_rm (en/sd_risk_gate) 31.5ms
+  [FAIL] en_pr_risk_gate (en/sd_pr_review) 74.5ms — disposition.choice='merge' not in ['review', 'block']
+  [PASS] en_rag_rerank_code (en/sd_rag) 29.3ms
+  [PASS] en_prompt_injection (en/sd_guardrail) 35.6ms
+  [PASS] en_loop_detection (en/sd_loop) 20.7ms
+  [PASS] ru_multi_q_packing (ru/packing) 64.9ms
+# decider-2b capability suite
+
+- base: `http://192.168.0.175:8008`
+- cases file: `cases_sd.json`
+- total: 16/19 (84%)
+- note: `ranking` remapped to `choice`
+
+## By language
+- **en**: 6/7 (86%)
+- **ru**: 10/12 (83%)
+
+## By domain
+- `packing`: 1/1 (100%)
+- `sd_guardrail`: 1/2 (50%)
+- `sd_issue`: 1/1 (100%)
+- `sd_loop`: 2/2 (100%)
+- `sd_model_routing`: 3/3 (100%)
+- `sd_pr_review`: 0/2 (0%)
+- `sd_rag`: 2/2 (100%)
+- `sd_risk_gate`: 3/3 (100%)
+- `sd_tool_selection`: 2/2 (100%)
+- `support`: 1/1 (100%)
+
+## Failures
+- `ru_pr_risk_gate` (ru): disposition.choice='merge' not in ['review', 'block']; security.noul=0.0000 want>0.4; risk.score=1.5500 want>=2.0
+- `ru_prompt_injection` (ru): injection.noul=0.0000 want>0.5
+- `en_pr_risk_gate` (en): disposition.choice='merge' not in ['review', 'block']
+
+## Notes
+- A/B vs FRIDA-Decisions on the same cases_sd.json (FRIDA uses /pooling + native ranking).
+- Soft floors when --gate: RU>=50%, EN>=30% (report always; gates optional).
+

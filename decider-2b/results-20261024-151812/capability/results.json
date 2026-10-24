@@ -1,0 +1,574 @@
+{
+  "meta": {
+    "title": "FRIDA-Decisions capability cases (RU/EN), software-development focused",
+    "sources": [
+      "https://huggingface.co/ai-forever/FRIDA-Decisions",
+      "https://habr.com/ru/companies/sberbank/articles/1092056/",
+      "https://www.jevtypesafeai.com/jev/engineering-for-coding-agents",
+      "https://vercel.com/i/jev-use-cases",
+      "https://saignals.buzz/articles/build-pr-risk-gate-jev-code-review"
+    ],
+    "notes": "RU is primary. EN is nominal (~57% on JevBench per authors); suite reports RU/EN pass rates separately.",
+    "backend": "decider-2b",
+    "endpoint": "/v1/systemone",
+    "ranking_remap": "choice"
+  },
+  "results": [
+    {
+      "id": "ru_support_triage_4types",
+      "lang": "ru",
+      "domain": "support",
+      "ok": true,
+      "ms": 97.2,
+      "error": null,
+      "answers": {
+        "topic": {
+          "type": "choice",
+          "choice": "login",
+          "confidence": 0.9741,
+          "x_p_max": 0.9827,
+          "certainty": 0.9097,
+          "probabilities": {
+            "login": 0.9827,
+            "payment": 0.009,
+            "delivery": 0.0083
+          }
+        },
+        "urgency": {
+          "type": "score",
+          "score": 1.66,
+          "confidence": 0.1809,
+          "x_p_max": 0.3263,
+          "certainty": 0.0282,
+          "legend": {
+            "0": "низкая",
+            "1": "средняя",
+            "2": "высокая",
+            "3": "критическая"
+          },
+          "probabilities": {
+            "0": 0.1454,
+            "1": 0.2866,
+            "2": 0.3263,
+            "3": 0.2417
+          },
+          "level_fit": {
+            "0": 0.1959,
+            "1": 0.3862,
+            "2": 0.4396,
+            "3": 0.3256
+          },
+          "fit_mass": 1.3474
+        },
+        "spam": {
+          "type": "noul",
+          "noul": 0.0
+        },
+        "passages": {
+          "type": "choice",
+          "choice": "0",
+          "confidence": 0.896,
+          "x_p_max": 0.948,
+          "certainty": 0.7052,
+          "probabilities": {
+            "0": 0.948,
+            "1": 0.052
+          }
+        }
+      }
+    },
+    {
+      "id": "ru_model_routing",
+      "lang": "ru",
+      "domain": "sd_model_routing",
+      "ok": true,
+      "ms": 32.9,
+      "error": null,
+      "answers": {
+        "tier": {
+          "type": "choice",
+          "choice": "small",
+          "confidence": 0.8326,
+          "x_p_max": 0.8884,
+          "certainty": 0.6358,
+          "probabilities": {
+            "small": 0.8884,
+            "mid": 0.093,
+            "frontier": 0.0186
+          }
+        }
+      }
+    },
+    {
+      "id": "ru_model_routing_hard",
+      "lang": "ru",
+      "domain": "sd_model_routing",
+      "ok": true,
+      "ms": 33.8,
+      "error": null,
+      "answers": {
+        "tier": {
+          "type": "choice",
+          "choice": "frontier",
+          "confidence": 0.6742,
+          "x_p_max": 0.7828,
+          "certainty": 0.4329,
+          "probabilities": {
+            "small": 0.0373,
+            "mid": 0.1799,
+            "frontier": 0.7828
+          }
+        }
+      }
+    },
+    {
+      "id": "ru_tool_selection",
+      "lang": "ru",
+      "domain": "sd_tool_selection",
+      "ok": true,
+      "ms": 29.4,
+      "error": null,
+      "answers": {
+        "tool": {
+          "type": "choice",
+          "choice": "run_tests",
+          "confidence": 0.8897,
+          "x_p_max": 0.9172,
+          "certainty": 0.7301,
+          "probabilities": {
+            "read_file": 0.019,
+            "run_tests": 0.9172,
+            "git_push": 0.0307,
+            "none": 0.0331
+          }
+        }
+      }
+    },
+    {
+      "id": "ru_risk_gate_rm",
+      "lang": "ru",
+      "domain": "sd_risk_gate",
+      "ok": true,
+      "ms": 30.2,
+      "error": null,
+      "answers": {
+        "destructive": {
+          "type": "noul",
+          "noul": 1.0
+        },
+        "action": {
+          "type": "choice",
+          "choice": "block",
+          "confidence": 0.5675,
+          "x_p_max": 0.7117,
+          "certainty": 0.3534,
+          "probabilities": {
+            "allow": 0.0366,
+            "confirm": 0.2517,
+            "block": 0.7117
+          }
+        }
+      }
+    },
+    {
+      "id": "ru_risk_gate_safe_ls",
+      "lang": "ru",
+      "domain": "sd_risk_gate",
+      "ok": true,
+      "ms": 30.3,
+      "error": null,
+      "answers": {
+        "destructive": {
+          "type": "noul",
+          "noul": 0.0
+        },
+        "action": {
+          "type": "choice",
+          "choice": "allow",
+          "confidence": 0.5222,
+          "x_p_max": 0.6815,
+          "certainty": 0.2762,
+          "probabilities": {
+            "allow": 0.6815,
+            "confirm": 0.2472,
+            "block": 0.0714
+          }
+        }
+      }
+    },
+    {
+      "id": "ru_pr_risk_gate",
+      "lang": "ru",
+      "domain": "sd_pr_review",
+      "ok": false,
+      "ms": 76.0,
+      "error": "disposition.choice='merge' not in ['review', 'block']; security.noul=0.0000 want>0.4; risk.score=1.5500 want>=2.0",
+      "answers": {
+        "disposition": {
+          "type": "choice",
+          "choice": "merge",
+          "confidence": 0.61,
+          "x_p_max": 0.74,
+          "certainty": 0.3197,
+          "probabilities": {
+            "merge": 0.74,
+            "review": 0.1576,
+            "block": 0.1024
+          }
+        },
+        "security": {
+          "type": "noul",
+          "noul": 0.0
+        },
+        "risk": {
+          "type": "score",
+          "score": 1.55,
+          "confidence": 0.0,
+          "x_p_max": 0.3012,
+          "certainty": 0.0178,
+          "legend": {
+            "0": "низкий: косметика и docs",
+            "1": "средний: обычная фича с тестами",
+            "2": "высокий: auth, деньги, данные, infra",
+            "3": "критический: обход защиты или утечка секретов"
+          },
+          "probabilities": {
+            "0": 0.2255,
+            "1": 0.3012,
+            "2": 0.1721,
+            "3": 0.3012
+          },
+          "level_fit": {
+            "0": 0.266,
+            "1": 0.3553,
+            "2": 0.203,
+            "3": 0.3553
+          },
+          "fit_mass": 1.1797
+        }
+      }
+    },
+    {
+      "id": "ru_loop_detection",
+      "lang": "ru",
+      "domain": "sd_loop",
+      "ok": true,
+      "ms": 35.7,
+      "error": null,
+      "answers": {
+        "stuck": {
+          "type": "noul",
+          "noul": 1.0
+        }
+      }
+    },
+    {
+      "id": "ru_rag_rerank_code",
+      "lang": "ru",
+      "domain": "sd_rag",
+      "ok": true,
+      "ms": 29.0,
+      "error": null,
+      "answers": {
+        "chunks": {
+          "type": "choice",
+          "choice": "auth_middleware",
+          "confidence": 0.9672,
+          "x_p_max": 0.9781,
+          "certainty": 0.8904,
+          "probabilities": {
+            "auth_middleware": 0.9781,
+            "dockerfile": 0.0111,
+            "css_theme": 0.0107
+          }
+        }
+      }
+    },
+    {
+      "id": "ru_prompt_injection",
+      "lang": "ru",
+      "domain": "sd_guardrail",
+      "ok": false,
+      "ms": 28.2,
+      "error": "injection.noul=0.0000 want>0.5",
+      "answers": {
+        "injection": {
+          "type": "noul",
+          "noul": 0.0
+        }
+      }
+    },
+    {
+      "id": "ru_issue_triage",
+      "lang": "ru",
+      "domain": "sd_issue",
+      "ok": true,
+      "ms": 75.7,
+      "error": null,
+      "answers": {
+        "area": {
+          "type": "choice",
+          "choice": "backend",
+          "confidence": 0.9422,
+          "x_p_max": 0.9566,
+          "certainty": 0.8381,
+          "probabilities": {
+            "frontend": 0.0153,
+            "backend": 0.9566,
+            "infra": 0.0188,
+            "docs": 0.0092
+          }
+        },
+        "severity": {
+          "type": "score",
+          "score": 2.17,
+          "confidence": 0.1679,
+          "x_p_max": 0.4905,
+          "certainty": 0.1432,
+          "legend": {
+            "0": "cosmetic",
+            "1": "minor",
+            "2": "major — функция сломана, есть обход",
+            "3": "critical — прод недоступен или потеря денег"
+          },
+          "probabilities": {
+            "0": 0.0608,
+            "1": 0.201,
+            "2": 0.2477,
+            "3": 0.4905
+          },
+          "level_fit": {
+            "0": 0.0572,
+            "1": 0.1891,
+            "2": 0.233,
+            "3": 0.4615
+          },
+          "fit_mass": 0.9408
+        }
+      }
+    },
+    {
+      "id": "en_model_routing",
+      "lang": "en",
+      "domain": "sd_model_routing",
+      "ok": true,
+      "ms": 28.9,
+      "error": null,
+      "answers": {
+        "tier": {
+          "type": "choice",
+          "choice": "small",
+          "confidence": 0.8861,
+          "x_p_max": 0.924,
+          "certainty": 0.7178,
+          "probabilities": {
+            "small": 0.924,
+            "mid": 0.0583,
+            "frontier": 0.0177
+          }
+        }
+      }
+    },
+    {
+      "id": "en_tool_selection",
+      "lang": "en",
+      "domain": "sd_tool_selection",
+      "ok": true,
+      "ms": 28.7,
+      "error": null,
+      "answers": {
+        "tool": {
+          "type": "choice",
+          "choice": "run_tests",
+          "confidence": 0.9298,
+          "x_p_max": 0.9474,
+          "certainty": 0.8113,
+          "probabilities": {
+            "read_file": 0.0116,
+            "run_tests": 0.9474,
+            "git_push": 0.0246,
+            "none": 0.0164
+          }
+        }
+      }
+    },
+    {
+      "id": "en_risk_gate_rm",
+      "lang": "en",
+      "domain": "sd_risk_gate",
+      "ok": true,
+      "ms": 31.5,
+      "error": null,
+      "answers": {
+        "destructive": {
+          "type": "noul",
+          "noul": 1.0
+        },
+        "action": {
+          "type": "choice",
+          "choice": "confirm",
+          "confidence": 0.7166,
+          "x_p_max": 0.8111,
+          "certainty": 0.4997,
+          "probabilities": {
+            "allow": 0.0205,
+            "confirm": 0.8111,
+            "block": 0.1684
+          }
+        }
+      }
+    },
+    {
+      "id": "en_pr_risk_gate",
+      "lang": "en",
+      "domain": "sd_pr_review",
+      "ok": false,
+      "ms": 74.5,
+      "error": "disposition.choice='merge' not in ['review', 'block']",
+      "answers": {
+        "disposition": {
+          "type": "choice",
+          "choice": "merge",
+          "confidence": 0.5595,
+          "x_p_max": 0.7063,
+          "certainty": 0.264,
+          "probabilities": {
+            "merge": 0.7063,
+            "review": 0.1394,
+            "block": 0.1543
+          }
+        },
+        "security": {
+          "type": "noul",
+          "noul": 1.0
+        },
+        "risk": {
+          "type": "score",
+          "score": 2.01,
+          "confidence": 0.005,
+          "x_p_max": 0.4967,
+          "certainty": 0.1014,
+          "legend": {
+            "0": "low: docs/cosmetics",
+            "1": "medium: normal feature with tests",
+            "2": "high: auth, money, data, infra",
+            "3": "critical: bypasses security or leaks secrets"
+          },
+          "probabilities": {
+            "0": 0.16,
+            "1": 0.1716,
+            "2": 0.1716,
+            "3": 0.4967
+          },
+          "level_fit": {
+            "0": 0.1994,
+            "1": 0.2139,
+            "2": 0.2139,
+            "3": 0.619
+          },
+          "fit_mass": 1.2462
+        }
+      }
+    },
+    {
+      "id": "en_rag_rerank_code",
+      "lang": "en",
+      "domain": "sd_rag",
+      "ok": true,
+      "ms": 29.3,
+      "error": null,
+      "answers": {
+        "chunks": {
+          "type": "choice",
+          "choice": "auth_middleware",
+          "confidence": 0.9592,
+          "x_p_max": 0.9728,
+          "certainty": 0.8698,
+          "probabilities": {
+            "auth_middleware": 0.9728,
+            "dockerfile": 0.0104,
+            "readme": 0.0168
+          }
+        }
+      }
+    },
+    {
+      "id": "en_prompt_injection",
+      "lang": "en",
+      "domain": "sd_guardrail",
+      "ok": true,
+      "ms": 35.6,
+      "error": null,
+      "answers": {
+        "injection": {
+          "type": "noul",
+          "noul": 1.0
+        }
+      }
+    },
+    {
+      "id": "en_loop_detection",
+      "lang": "en",
+      "domain": "sd_loop",
+      "ok": true,
+      "ms": 20.7,
+      "error": null,
+      "answers": {
+        "stuck": {
+          "type": "noul",
+          "noul": 1.0
+        }
+      }
+    },
+    {
+      "id": "ru_multi_q_packing",
+      "lang": "ru",
+      "domain": "packing",
+      "ok": true,
+      "ms": 64.9,
+      "error": null,
+      "answers": {
+        "intent": {
+          "type": "choice",
+          "choice": "bugfix",
+          "confidence": 0.9317,
+          "x_p_max": 0.9488,
+          "certainty": 0.816,
+          "probabilities": {
+            "feature": 0.0154,
+            "bugfix": 0.9488,
+            "chore": 0.0253,
+            "docs": 0.0105
+          }
+        },
+        "needs_human": {
+          "type": "noul",
+          "noul": 0.0
+        },
+        "priority": {
+          "type": "score",
+          "score": 0.91,
+          "confidence": 0.0837,
+          "x_p_max": 0.3891,
+          "certainty": 0.0122,
+          "legend": {
+            "0": "низкий",
+            "1": "средний",
+            "2": "высокий"
+          },
+          "probabilities": {
+            "0": 0.3502,
+            "1": 0.3891,
+            "2": 0.2607
+          },
+          "level_fit": {
+            "0": 0.381,
+            "1": 0.4234,
+            "2": 0.2836
+          },
+          "fit_mass": 1.088
+        }
+      }
+    }
+  ]
+}

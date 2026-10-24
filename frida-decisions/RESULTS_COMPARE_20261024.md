@@ -139,6 +139,11 @@ FRIDA реализует тот же **Jev-совместимый** контра
 
 ---
 
+## 5b. Live A/B с Mapika/decider-2b (2026-10-24)
+
+Прогон тех же 19 кейсов на `:8008`: **16/19 (84%)** — fails: PR risk (RU/EN), RU injection.  
+Подробности: [`../decider-2b/RESULTS_COMPARE_20261024.md`](../decider-2b/RESULTS_COMPARE_20261024.md).
+
 ## 6. Рекомендации
 
 1. В coding-агентах (AF Code / OpenCode hooks): вызывать `POST /frida/pooling` для tool/risk/PR gate **до** shell; пороги калибровать на своих логах.  
