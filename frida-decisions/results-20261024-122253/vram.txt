@@ -1,0 +1,3 @@
+index, name, memory.used [MiB], memory.free [MiB]
+0, NVIDIA GeForce RTX 4090, 23830 MiB, 254 MiB
+1, NVIDIA GeForce RTX 5060 Ti, 8364 MiB, 7486 MiB

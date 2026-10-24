@@ -152,6 +152,9 @@ curl -fsS https://llm.avroflex.ru/frida/pooling \
 
 Типы вопросов: `choice` | `score` | `noul` | `ranking`. IaC: `avroflex-infra/llm-88/frida-decisions/`.
 
+Расширенные кейсы RU/EN (routing, tools, risk/PR gate, RAG, injection):  
+`llm-tests/frida-decisions/run_capability_suite.py` + `cases_sd.json` (см. README там).
+
 ### 4.7. Monitor UI
 
 Открыть: **http://192.168.0.175:8080/#monitor**  

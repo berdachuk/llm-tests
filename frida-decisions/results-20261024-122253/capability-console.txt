@@ -1,0 +1,49 @@
+base=http://192.168.0.175:8006 cases=19 out=/home/berdachuk/projects-llm-test/llm-tests/frida-decisions/results-20261024-122253/capability
+  [PASS] ru_support_triage_4types (ru/support) 105.1ms
+  [PASS] ru_model_routing (ru/sd_model_routing) 19.7ms
+  [PASS] ru_model_routing_hard (ru/sd_model_routing) 27.9ms
+  [PASS] ru_tool_selection (ru/sd_tool_selection) 17.7ms
+  [PASS] ru_risk_gate_rm (ru/sd_risk_gate) 22.1ms
+  [PASS] ru_risk_gate_safe_ls (ru/sd_risk_gate) 22.8ms
+  [PASS] ru_pr_risk_gate (ru/sd_pr_review) 26.1ms
+  [PASS] ru_loop_detection (ru/sd_loop) 25.9ms
+  [PASS] ru_rag_rerank_code (ru/sd_rag) 24.4ms
+  [PASS] ru_prompt_injection (ru/sd_guardrail) 18.6ms
+  [PASS] ru_issue_triage (ru/sd_issue) 34.2ms
+  [PASS] en_model_routing (en/sd_model_routing) 40.0ms
+  [PASS] en_tool_selection (en/sd_tool_selection) 23.5ms
+  [PASS] en_risk_gate_rm (en/sd_risk_gate) 24.9ms
+  [PASS] en_pr_risk_gate (en/sd_pr_review) 24.4ms
+  [PASS] en_rag_rerank_code (en/sd_rag) 24.2ms
+  [PASS] en_prompt_injection (en/sd_guardrail) 18.8ms
+  [PASS] en_loop_detection (en/sd_loop) 15.1ms
+  [PASS] ru_multi_q_packing (ru/packing) 32.3ms
+# FRIDA-Decisions capability suite
+
+- base: `http://192.168.0.175:8006`
+- cases file: `cases_sd.json`
+- total: 19/19 (100%)
+
+## By language
+- **en**: 7/7 (100%)
+- **ru**: 12/12 (100%)
+
+## By domain
+- `packing`: 1/1 (100%)
+- `sd_guardrail`: 2/2 (100%)
+- `sd_issue`: 1/1 (100%)
+- `sd_loop`: 2/2 (100%)
+- `sd_model_routing`: 3/3 (100%)
+- `sd_pr_review`: 2/2 (100%)
+- `sd_rag`: 2/2 (100%)
+- `sd_risk_gate`: 3/3 (100%)
+- `sd_tool_selection`: 2/2 (100%)
+- `support`: 1/1 (100%)
+
+## Failures
+- none
+
+## Notes
+- RU is the primary language of FRIDA-Decisions; EN is nominal (~57% JevBench per authors).
+- SD cases map to Jev coding-agent surfaces: model routing, tool choice, risk gate, PR gate, loop detect, RAG rank, injection.
+

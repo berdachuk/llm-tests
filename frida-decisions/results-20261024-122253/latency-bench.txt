@@ -1,0 +1,3 @@
+short_choice n=30 p50=14.4ms p95=22.0ms mean=16.4ms
+pr_gate_3q n=20 p50=24.1ms p95=31.8ms mean=25.7ms
+catalog_50 wall=55.0ms

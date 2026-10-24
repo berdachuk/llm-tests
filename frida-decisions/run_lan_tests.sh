@@ -94,6 +94,16 @@ PY
 if [[ $? -eq 0 ]]; then ok "catalog 50 intents < 2s"; else bad "catalog"; fi
 note ""
 
+note "## Capability suite (RU/EN, software-dev)"
+HERE="$(cd "$(dirname "$0")" && pwd)"
+CAP_OUT="$OUT_DIR/capability"
+if python3 "$HERE/run_capability_suite.py" --base "$BASE" --out "$CAP_OUT" | tee -a "$REPORT"; then
+  ok "capability suite gates"
+else
+  bad "capability suite gates"
+fi
+note ""
+
 note "## VRAM"
 vram_cmd=(nvidia-smi --query-gpu=index,name,memory.used,memory.free --format=csv)
 if command -v nvidia-smi >/dev/null 2>&1; then
