@@ -3,13 +3,20 @@
 **See [`TEST_RESULTS.md`](TEST_RESULTS.md) for the latest qualbench
 FP8-vs-NVFP4 comparative test results (50-task quality/regression eval).**
 
-**Strata IQ3_S on `.175` (production LLM, restored 2026-10-17):** how-to
+**Strata IQ3_S on `.175` (production LLM, engine v0.2.7.1):** how-to
 [`LLM_175_USAGE.md`](LLM_175_USAGE.md); runbook
 [`STRATA_88_PRODUCTION.md`](STRATA_88_PRODUCTION.md); stack snapshot
-[`STRATA_88_ACTIVE_STACK.md`](STRATA_88_ACTIVE_STACK.md); Q4 A/B
-[`STRATA_IQ3S_VS_UD_Q4_COMPARE.md`](STRATA_IQ3S_VS_UD_Q4_COMPARE.md); vs FreeToken
+[`STRATA_88_ACTIVE_STACK.md`](STRATA_88_ACTIVE_STACK.md); Unsloth A/B —
+IQ4 [`STRATA_IQ3S_VS_UD_IQ4_XS_COMPARE.md`](STRATA_IQ3S_VS_UD_IQ4_XS_COMPARE.md),
+Q4 [`STRATA_IQ3S_VS_UD_Q4_COMPARE.md`](STRATA_IQ3S_VS_UD_Q4_COMPARE.md); vs FreeToken
 [`STRATA_VS_FREETOKEN_4090_COMPARE.md`](STRATA_VS_FREETOKEN_4090_COMPARE.md).
-Served id `qwen3.8-flash-next-iq3_s`; qualbench-50 prod **50/50 @ 685 s**.
+Served id `qwen3.8-flash-next-iq3_s`; qualbench-50 **50/50 @ 639–644 s**
+(post-Maya recheck [`STRATA_IQ3S_RECHECK_20261030.md`](STRATA_IQ3S_RECHECK_20261030.md);
+earlier [`STRATA_IQ3S_RECHECK_20261018.md`](STRATA_IQ3S_RECHECK_20261018.md)).
+Side runs: Maya GLM-5.3-Flash
+[`MAYA_GLM53_FLASH_175_REPORT.md`](MAYA_GLM53_FLASH_175_REPORT.md);
+gpu-unlock A/B on 4090 (**neutral**, rolled back)
+[`GPU_UNLOCK_4090_STRATA_REPORT.md`](GPU_UNLOCK_4090_STRATA_REPORT.md).
 
 **Embeddings on `.88`:** usage/deploy guide [`EMBEDDINGS_88.md`](EMBEDDINGS_88.md);
 live compare report [`EMBEDDINGS_88_COMPARE.md`](EMBEDDINGS_88_COMPARE.md);

