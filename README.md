@@ -1,5 +1,7 @@
 # llm-tests
 
+**Glossary:** [`THESAURUS.md`](THESAURUS.md) — hosts, engines, model ids, ports, suites.
+
 **See [`TEST_RESULTS.md`](TEST_RESULTS.md) for the latest qualbench
 FP8-vs-NVFP4 comparative test results (50-task quality/regression eval).**
 
