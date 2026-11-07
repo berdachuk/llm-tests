@@ -17,7 +17,7 @@ Client → https://llm.avroflex.ru/v1  (Bifrost)
 | Firewall | `strata-open-8080.service` still enabled |
 | Model path | `/mnt/data/berda-models/huggingface/google/gemma-4-31B-it-qat-w4a16-ct` |
 | Served ids | `gemma-4-31b-it-qat` + alias `qwen3.8-flash-next-iq3_s` |
-| Context | `max-model-len=2048`, `max-num-seqs=1`, `gpu-memory-utilization=0.95` |
+| Context | `max-model-len=3072`, `max-num-seqs=1`, `gpu-memory-utilization=0.98` |
 | Auth | same Strata API key (nginx Bearer injection unchanged) |
 | nvidia-guard | prefers Gemma if unit enabled; GPU1 compose loop untouched. Backup: `/usr/local/sbin/restart-gpu-services.sh.bak-pre-gemma4-*` |
 
