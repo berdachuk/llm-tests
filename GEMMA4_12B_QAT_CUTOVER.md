@@ -17,9 +17,9 @@ Client → https://llm.avroflex.ru/v1  (Bifrost)
 
 | Item | Value |
 |---|---|
-| Unit | `gemma4-12b-qat.service` (user, enabled, linger) |
-| Previous | `gemma4-31b-qat.service` **disabled** (inactive) |
-| Strata | still **masked** (`strata-iq3_s.service` bak-gemma4-cutover) |
+| Unit | `gemma4-12b-qat.service` (user; **disabled** after restore 2026-11-07) |
+| Previous | `gemma4-31b-qat.service` **disabled** |
+| Strata | **restored** on `:8080` (see [`STRATA_RESTORE_20261107.md`](STRATA_RESTORE_20261107.md); archive [`GEMMA4_FUTURE_TESTS.md`](GEMMA4_FUTURE_TESTS.md)) |
 | Model path | `/mnt/data/berda-models/huggingface/google/gemma-4-12B-it-qat-w4a16-ct` |
 | Served ids | `gemma-4-12b-it-qat` + alias `qwen3.8-flash-next-iq3_s` |
 | Context | **`max-model-len=131072`** (live; smoke OK) |
