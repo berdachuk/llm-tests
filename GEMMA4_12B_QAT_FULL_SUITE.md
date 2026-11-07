@@ -60,15 +60,35 @@ Harness: temporary strip of `reasoning_effort` in checkers (Gemma empties `conte
 
 Artifact: `strata-results/20261107-gemma4-12b-qat/speed-probe.json`.
 
+## Coding-session wall (measured)
+
+Same formula as Strata UI (**output_sum / Σ request duration**). Synthetic
+proxy with growing context + substantial patches (not a 2 h OpenCode log).
+
+| Session | n | Prompt range | Out sum | Σ dur | Wall tok/s |
+|---|---:|---|---:|---:|---:|
+| Strata IQ3_S real UI (ref) | 351 | 357–108945 | 319588 | 7351 s | **≈ 43.5** |
+| Gemma 12B gen-heavy v2 | 20 | 1297–68819 | 10072 | 217 s | **≈ 46.4** |
+| Gemma 12B long-ctx ≥20K | 12 | — | — | — | **≈ 43.8** |
+| Gemma 12B ack-heavy v1 | 24 | 774–61704 | 1637 | 168 s | **≈ 9.8** |
+
+Artifacts: `coding-wall-session.json`, `coding-wall-session-v2.json`.
+Peak decode still ~**51** vs Strata ~**90–180**; wall can look tied when both
+are prefill-taxed on patch-heavy work.
+
 ## Isolation
 
 GPU1 VRAM stayed ~8356 MiB; ports 8002–8006 listening.
 
-## Compare
+## Compare vs Strata IQ3_S
 
-| Stack | Qualbench | Context |
-|---|---|---|
-| Strata IQ3_S (prod) | **50/50** @ ~600 s | 262K / ~248K |
-| Maya GLM-5.3-Flash | **41/50** | 32K |
-| Gemma-4 31B QAT | **37/40** (~37/50) | **3072** |
-| **Gemma-4 12B QAT** | **42/50** @ **461 s** | **131072** |
+| Axis | Strata IQ3_S | Gemma-4 12B QAT | Verdict |
+|---|---|---|---|
+| Qualbench | **50/50** @ ~600 s | **42/50** @ **461 s** | **Strata** (−8 on Gemma) |
+| Peak decode | ~**90–180** t/s | ~**51** t/s | **Strata** (~2–3×) |
+| Coding wall | UI **~43.5** | proxy **~46** (gen-heavy) | **~tie** when prefill-taxed |
+| Prefill (mid) | ~1.9–4.6k class | ~**5.2–6.5k** | competitive |
+| Context | ~**248K** practical | **131072** | **Strata** ceiling; both ≥32K/128K bar |
+| Role | prod Bifrost / OpenCode | Kaggle-legal experiment | restore Strata for prod |
+
+Also vs Maya **41/50** @ 32K and Gemma-31B ~**37/50** @ **3072** (context-killed).
