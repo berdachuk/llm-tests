@@ -1,0 +1,172 @@
+=== agentbench fast 2026-11-11T15:55:14+03:00 ===
+FFFF.......sss.........F...ssssssss............F...F...FFFxFFFFFFF       [100%]
+=================================== FAILURES ===================================
+E   agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+/home/berdachuk/projects-llm-test/llm-tests/agentbench/client.py:443: agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+E   agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+/home/berdachuk/projects-llm-test/llm-tests/agentbench/client.py:443: agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+E   agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+/home/berdachuk/projects-llm-test/llm-tests/agentbench/client.py:443: agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+E   agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+/home/berdachuk/projects-llm-test/llm-tests/agentbench/client.py:443: agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+E   agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+/home/berdachuk/projects-llm-test/llm-tests/agentbench/client.py:443: agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+[XPASS(strict)] CONFIRMED SERVER BUG (2026-08-31, freetoken + froggeric v22.4 template, reasoning_parser=qwen3): when a request's message text contains the inline '<|think_off|>' control tag, the froggeric chat_template correctly disables the <think>...</think> wrapper (the model emits its answer with no think tags at all -- confirmed by direct template rendering and by raw model output). However, freetoken's server-side reasoning parser is instantiated with force_reasoning computed ONLY from chat_template_kwargs.get('enable_thinking') (see server/generation.py:_make_reasoning_parser, line ~349), which does not inspect inline '<|think_off|>' tags embedded in message *content*. The parser is therefore built with force_reasoning=True (thinking assumed on), starts 'inside' a reasoning block, never sees a '</think>' close marker (because the model never emitted '<think>' to begin with), and so attributes 100% of the model's visible answer to `reasoning_content` while `content` stays empty. 100% reproducible across multiple prompts/seeds. Root cause: generation.py's force_reasoning computation and chat_template.jinja's own inline-tag parsing (chat_template.jinja lines 38-49) are two independent, unsynchronized decisions about the same thing. Fix needs either (a) the server to also scan request message content for inline think-control tags before computing force_reasoning, or (b) the template to stop supporting inline tags and require chat_template_kwargs.enable_thinking=False instead. Affects any agent/proxy that relies on the documented inline-tag mechanism instead of chat_template_kwargs.
+[XPASS(strict)] CONFIRMED SERVER BUG (2026-08-31, 
+E   agentbench.client.AgentBenchError: HTTP 400: {'type': 'error', 'error': {'type': 'BadRequestError', 'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set'}}
+/home/berdachuk/projects-llm-test/llm-tests/agentbench/client.py:443: agentbench.client.AgentBenchError: HTTP 400: {'type': 'error', 'error': {'type': 'BadRequestError', 'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set'}}
+E   agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+/home/berdachuk/projects-llm-test/llm-tests/agentbench/client.py:443: agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+E   agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+/home/berdachuk/projects-llm-test/llm-tests/agentbench/client.py:443: agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+E   agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+/home/berdachuk/projects-llm-test/llm-tests/agentbench/client.py:443: agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+E   agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+/home/berdachuk/projects-llm-test/llm-tests/agentbench/client.py:443: agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+E   agentbench.client.AgentBenchError: HTTP 400: {'type': 'error', 'error': {'type': 'BadRequestError', 'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set'}}
+/home/berdachuk/projects-llm-test/llm-tests/agentbench/client.py:443: agentbench.client.AgentBenchError: HTTP 400: {'type': 'error', 'error': {'type': 'BadRequestError', 'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set'}}
+E   AssertionError: no function_call item; content='call:read_file{path:/etc/hostname}'
+    assert []
+     +  where [] = ChatResult(content='call:read_file{path:/etc/hostname}', reasoning_content='', tool_calls=[], finish_reason='completed...er_turn': [], 'tool_output_tokens_per_turn': []}, 'total_tokens': 104}, elapsed_s=0.7025940418243408, stream_events=[]).tool_calls
+/home/berdachuk/projects-llm-test/llm-tests/agentbench/tests/test_tool_calling.py:222: AssertionError: no function_call item; content='call:read_file{path:/etc/hostname}'
+E   agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+/home/berdachuk/projects-llm-test/llm-tests/agentbench/client.py:443: agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+E   agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+/home/berdachuk/projects-llm-test/llm-tests/agentbench/client.py:443: agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+E   agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+/home/berdachuk/projects-llm-test/llm-tests/agentbench/client.py:443: agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+E   agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+/home/berdachuk/projects-llm-test/llm-tests/agentbench/client.py:443: agentbench.client.AgentBenchError: HTTP 400: {'error': {'message': '"auto" tool choice requires --enable-auto-tool-choice and --tool-call-parser to be set', 'type': 'BadRequestError', 'param': None, 'code': 400}}
+=========================== short test summary info ============================
+SKIPPED [1] agentbench/tests/test_chat_template.py:42: set AGENTBENCH_TEMPLATE_PATH to a local chat_template.jinja (or model dir) to run chat-template installation checks
+SKIPPED [1] agentbench/tests/test_chat_template.py:50: set AGENTBENCH_TEMPLATE_PATH to a local chat_template.jinja (or model dir) to run chat-template installation checks
+SKIPPED [1] agentbench/tests/test_chat_template.py:60: set AGENTBENCH_TEMPLATE_PATH to a local chat_template.jinja (or model dir) to run chat-template installation checks
+SKIPPED [3] agentbench/tests/test_concurrency.py: need --run-concurrency to run parallel-request tests
+SKIPPED [5] agentbench/tests/test_large_context.py: need --run-slow to run large-context tests
+XFAIL agentbench/tests/test_tool_calling.py::TestToolChoiceForcing::test_tool_choice_required_forces_a_call - CONFIRMED SERVER BUG (2026-08-31, freetoken openai_api.py): `tool_choice='required'` is accepted by the request schema (api_models.py ChatCompletionRequest.tool_choice: Literal['none','auto','required']) but there is no server-side code path that actually enforces it -- `_should_parse_tools()` only special-cases 'none' (disables tool parsing entirely) and `ToolChoiceObject` (filters `_tools_for_template` down to the named function), never 'required'. FreeToken has no constrained/guided decoding (openai_api.py:_response_format_unsupported comment confirms this explicitly for response_format, and the same limitation applies here), so there is no mechanism to force the model to emit a tool call at all -- 'required' silently behaves identically to 'auto'. Reproduced here with a greeting message that gives the model no reason to call a tool: it replies with plain text instead of being forced into a call. Any agent harness that relies on tool_choice='required' to guarantee a structured action (rather than free text) will get a plain-text response instead in this scenario.
+FAILED agentbench/tests/test_agentic_sessions.py::TestBugfixWorkflow::test_full_bugfix_loop_completes_with_final_summary
+FAILED agentbench/tests/test_agentic_sessions.py::TestErrorRecoveryWorkflow::test_recovers_from_a_genuine_tool_error
+FAILED agentbench/tests/test_agentic_sessions.py::TestLongMultiToolSession::test_six_turn_session_stays_coherent
+FAILED agentbench/tests/test_agentic_sessions.py::TestReasoningPersistsAcrossToolCalls::test_reasoning_plus_tool_call_replays_cleanly
+FAILED agentbench/tests/test_code_edge_cases.py::TestEmptyAndNullishInputs::test_assistant_message_with_null_content_and_tool_calls_only
+FAILED agentbench/tests/test_reasoning.py::TestInlineThinkTags::test_inline_think_off_tag_content_is_not_swallowed_into_reasoning
+FAILED agentbench/tests/test_streaming_and_cancellation.py::TestMidStreamToolCallStreaming::test_anthropic_stream_reconstructs_tool_use_input_json
+FAILED agentbench/tests/test_tool_calling.py::TestSingleToolCallOpenAI::test_model_calls_the_only_available_tool
+FAILED agentbench/tests/test_tool_calling.py::TestSingleToolCallOpenAI::test_tool_call_id_is_present_and_stable_for_response_matching
+FAILED agentbench/tests/test_tool_calling.py::TestSingleToolCallStreaming::test_streamed_tool_call_arguments_reassemble_to_valid_json
+FAILED agentbench/tests/test_tool_calling.py::TestMultiTurnToolRoundTrip::test_full_round_trip_openai
+FAILED agentbench/tests/test_tool_calling.py::TestMultiTurnToolRoundTrip::test_full_round_trip_anthropic
+FAILED agentbench/tests/test_tool_calling.py::TestMultiTurnToolRoundTrip::test_full_round_trip_responses
+FAILED agentbench/tests/test_tool_calling.py::TestParallelToolCalls::test_model_can_request_two_independent_tools
+FAILED agentbench/tests/test_tool_calling.py::TestMalformedHistoryReplay::test_history_with_stringified_tool_arguments_does_not_error
+FAILED agentbench/tests/test_tool_calling.py::TestErrorLikeToolResultsDoNotConfuseModel::test_grep_style_result_with_word_error_is_treated_as_success
+FAILED agentbench/tests/test_tool_calling.py::TestRepeatedFailingToolCallDoesNotStall::test_second_consecutive_failure_produces_a_response
+17 failed, 37 passed, 11 skipped, 1 xfailed in 134.31s (0:02:14)
+=== agentbench fast (re-run w/ tool-parser) 2026-11-11T16:02:11+03:00 ===
+
+==================================== ERRORS ====================================
+___________ ERROR collecting agentbench/tests/test_large_context.py ____________
+ImportError while importing test module '/home/berdachuk/projects-llm-test/llm-tests/agentbench/tests/test_large_context.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+agentbench/tests/test_large_context.py:27: in <module>
+    import gen_256k_prompt  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^
+gen_256k_prompt.py:5: in <module>
+    import tiktoken
+../../.local/lib/python3.10/site-packages/tiktoken/__init__.py:2: in <module>
+    from .core import Encoding as Encoding
+../../.local/lib/python3.10/site-packages/tiktoken/core.py:7: in <module>
+    import regex
+../../.local/lib/python3.10/site-packages/regex/__init__.py:1: in <module>
+    import regex._main
+../../.local/lib/python3.10/site-packages/regex/_main.py:427: in <module>
+    from regex import _regex_core
+../../.local/lib/python3.10/site-packages/regex/_regex_core.py:21: in <module>
+    from regex import _regex
+E   ImportError: cannot import name '_regex' from partially initialized module 'regex' (most likely due to a circular import) (/home/berdachuk/.local/lib/python3.10/site-packages/regex/__init__.py)
+=========================== short test summary info ============================
+ERROR agentbench/tests/test_large_context.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.17s
+agentbench_fast_exit=2
+=== agentbench concurrency 2026-11-11T16:02:11+03:00 ===
+...                                                                      [100%]
+3 passed in 5.16s
+agentbench_concurrency_exit=0
+=== qualbench 2026-11-11T16:02:17+03:00 ===
+=== agentbench fast CLEAN 2026-11-11T16:02:38+03:00 ===
+agentbench_fast_exit=1
+...........sss.............ssssssss............F..........x.......       [100%]
+=================================== FAILURES ===================================
+[XPASS(strict)] CONFIRMED SERVER BUG (2026-08-31, freetoken + froggeric v22.4 template, reasoning_parser=qwen3): when a request's message text contains the inline '<|think_off|>' control tag, the froggeric chat_template correctly disables the <think>...</think> wrapper (the model emits its answer with no think tags at all -- confirmed by direct template rendering and by raw model output). However, freetoken's server-side reasoning parser is instantiated with force_reasoning computed ONLY from chat_template_kwargs.get('enable_thinking') (see server/generation.py:_make_reasoning_parser, line ~349), which does not inspect inline '<|think_off|>' tags embedded in message *content*. The parser is therefore built with force_reasoning=True (thinking assumed on), starts 'inside' a reasoning block, never sees a '</think>' close marker (because the model never emitted '<think>' to begin with), and so attributes 100% of the model's visible answer to `reasoning_content` while `content` stays empty. 100% reproducible across multiple prompts/seeds. Root cause: generation.py's force_reasoning computation and chat_template.jinja's own inline-tag parsing (chat_template.jinja lines 38-49) are two independent, unsynchronized decisions about the same thing. Fix needs either (a) the server to also scan request message content for inline think-control tags before computing force_reasoning, or (b) the template to stop supporting inline tags and require chat_template_kwargs.enable_thinking=False instead. Affects any agent/proxy that relies on the documented inline-tag mechanism instead of chat_template_kwargs.
+[XPASS(strict)] CONFIRMED SERVER BUG (2026-08-31, 
+=========================== short test summary info ============================
+SKIPPED [1] agentbench/tests/test_chat_template.py:42: set AGENTBENCH_TEMPLATE_PATH to a local chat_template.jinja (or model dir) to run chat-template installation checks
+SKIPPED [1] agentbench/tests/test_chat_template.py:50: set AGENTBENCH_TEMPLATE_PATH to a local chat_template.jinja (or model dir) to run chat-template installation checks
+SKIPPED [1] agentbench/tests/test_chat_template.py:60: set AGENTBENCH_TEMPLATE_PATH to a local chat_template.jinja (or model dir) to run chat-template installation checks
+SKIPPED [3] agentbench/tests/test_concurrency.py: need --run-concurrency to run parallel-request tests
+SKIPPED [5] agentbench/tests/test_large_context.py: need --run-slow to run large-context tests
+XFAIL agentbench/tests/test_tool_calling.py::TestToolChoiceForcing::test_tool_choice_required_forces_a_call - CONFIRMED SERVER BUG (2026-08-31, freetoken openai_api.py): `tool_choice='required'` is accepted by the request schema (api_models.py ChatCompletionRequest.tool_choice: Literal['none','auto','required']) but there is no server-side code path that actually enforces it -- `_should_parse_tools()` only special-cases 'none' (disables tool parsing entirely) and `ToolChoiceObject` (filters `_tools_for_template` down to the named function), never 'required'. FreeToken has no constrained/guided decoding (openai_api.py:_response_format_unsupported comment confirms this explicitly for response_format, and the same limitation applies here), so there is no mechanism to force the model to emit a tool call at all -- 'required' silently behaves identically to 'auto'. Reproduced here with a greeting message that gives the model no reason to call a tool: it replies with plain text instead of being forced into a call. Any agent harness that relies on tool_choice='required' to guarantee a structured action (rather than free text) will get a plain-text response instead in this scenario.
+FAILED agentbench/tests/test_reasoning.py::TestInlineThinkTags::test_inline_think_off_tag_content_is_not_swallowed_into_reasoning
+1 failed, 53 passed, 11 skipped, 1 xfailed in 159.94s (0:02:39)
+=== agentbench concurrency CLEAN 2026-11-11T16:05:18+03:00 ===
+agentbench_concurrency_exit=0
+...                                                                      [100%]
+3 passed in 5.08s
+=== qualbench CLEAN 2026-11-11T16:05:23+03:00 ===
+qualbench_exit=1
+    WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+    WARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/home/berdachuk/soft/apache-maven-3.9.11/lib/guice-5.1.0-classes.jar)
+    WARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner
+    WARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release
+--- java-spring: 8/10 passed (117.3s wall) ---
+
+=== Running category: ts-angular (per-task timeout 300s) ===
+--- ts-angular: 0/0 passed (4.8s wall) ---
+
+=== Running category: sql-migrations (per-task timeout 300s) ===
+    == Migration file: up.candidate.sql ==
+    CREATE DATABASE
+    -- Applying seed.sql --
+    CREATE TABLE
+    INSERT 0 4
+    -- Applying up.candidate.sql (dry-run of the migration under test) --
+    DELETE 3
+    ALTER TABLE
+    -- Running check.sql --
+    FAIL: check.sql itself errored
+    psql:/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes/check.sql:25: ERROR:  expected unique_violation but insert succeeded
+    CONTEXT:  PL/pgSQL function inline_code_block line 5 at RAISE
+    == Migration file: up.candidate.sql ==
+    CREATE DATABASE
+    -- Applying seed.sql --
+    CREATE TABLE
+    INSERT 0 3
+    CREATE VIEW
+    -- Applying up.candidate.sql (dry-run of the migration under test) --
+    ALTER TABLE
+    UPDATE 3
+    FAIL: up.candidate.sql did not apply cleanly
+    psql:/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view/up.candidate.sql:3: ERROR:  cannot drop column qty of table products because other objects depend on it
+    DETAIL:  view low_stock_products depends on column qty of table products
+    HINT:  Use DROP ... CASCADE to drop the dependent objects too.
+--- sql-migrations: 4/6 passed (16.2s wall) ---
+
+=== Running category: mcp-tools (per-task timeout 120s) ===
+--- mcp-tools: 8/8 passed (10.4s wall) ---
+
+=== Running category: security-review (per-task timeout 180s) ===
+--- security-review: 8/8 passed (304.3s wall) ---
+
+=== Running category: long-context (per-task timeout 600s) ===
+--- long-context: 7/10 passed (312.6s wall) ---
+
+=== TOTAL: 35/42 passed (765.6s wall) ===
+Report written to:
+  /home/berdachuk/projects-llm-test/llm-tests/qualbench/results/run-gemma4-12b-ct-73-full50-20261111-161809.json
+  /home/berdachuk/projects-llm-test/llm-tests/qualbench/results/run-gemma4-12b-ct-73-full50-20261111-161809.md
+DONE

@@ -1,0 +1,19 @@
+=== Preflight: checking server model list ===
+Preflight OK: model 'gemma-4-12B-it-qat-w4a16-ct' is advertised (1 model(s) total).
+
+=== Running category: ts-angular (per-task timeout 300s) ===
+    ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+     FAIL  |base| src/app/bugs/shopping-cart.spec.ts > ShoppingCart > recomputes the total after removing an item
+    AssertionError: expected [Function computed] to be 300 // Object.is equality
+    - Expected:
+    300
+    + Received:
+    [Function computed]
+     ❯ src/app/bugs/shopping-cart.spec.ts:31:24
+    ⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+--- ts-angular: 7/8 passed (91.1s wall) ---
+
+=== TOTAL: 7/8 passed (91.1s wall) ===
+Report written to:
+  /home/berdachuk/projects-llm-test/llm-tests/qualbench/results/run-gemma4-12b-ct-73-ts-retry-20261111-162025.json
+  /home/berdachuk/projects-llm-test/llm-tests/qualbench/results/run-gemma4-12b-ct-73-ts-retry-20261111-162025.md

@@ -1,0 +1,92 @@
+=== agentbench fast CLEAN 2026-11-11T16:02:38+03:00 ===
+agentbench_fast_exit=1
+...........sss.............ssssssss............F..........x.......       [100%]
+=================================== FAILURES ===================================
+[XPASS(strict)] CONFIRMED SERVER BUG (2026-08-31, freetoken + froggeric v22.4 template, reasoning_parser=qwen3): when a request's message text contains the inline '<|think_off|>' control tag, the froggeric chat_template correctly disables the <think>...</think> wrapper (the model emits its answer with no think tags at all -- confirmed by direct template rendering and by raw model output). However, freetoken's server-side reasoning parser is instantiated with force_reasoning computed ONLY from chat_template_kwargs.get('enable_thinking') (see server/generation.py:_make_reasoning_parser, line ~349), which does not inspect inline '<|think_off|>' tags embedded in message *content*. The parser is therefore built with force_reasoning=True (thinking assumed on), starts 'inside' a reasoning block, never sees a '</think>' close marker (because the model never emitted '<think>' to begin with), and so attributes 100% of the model's visible answer to `reasoning_content` while `content` stays empty. 100% reproducible across multiple prompts/seeds. Root cause: generation.py's force_reasoning computation and chat_template.jinja's own inline-tag parsing (chat_template.jinja lines 38-49) are two independent, unsynchronized decisions about the same thing. Fix needs either (a) the server to also scan request message content for inline think-control tags before computing force_reasoning, or (b) the template to stop supporting inline tags and require chat_template_kwargs.enable_thinking=False instead. Affects any agent/proxy that relies on the documented inline-tag mechanism instead of chat_template_kwargs.
+[XPASS(strict)] CONFIRMED SERVER BUG (2026-08-31, 
+=========================== short test summary info ============================
+SKIPPED [1] agentbench/tests/test_chat_template.py:42: set AGENTBENCH_TEMPLATE_PATH to a local chat_template.jinja (or model dir) to run chat-template installation checks
+SKIPPED [1] agentbench/tests/test_chat_template.py:50: set AGENTBENCH_TEMPLATE_PATH to a local chat_template.jinja (or model dir) to run chat-template installation checks
+SKIPPED [1] agentbench/tests/test_chat_template.py:60: set AGENTBENCH_TEMPLATE_PATH to a local chat_template.jinja (or model dir) to run chat-template installation checks
+SKIPPED [3] agentbench/tests/test_concurrency.py: need --run-concurrency to run parallel-request tests
+SKIPPED [5] agentbench/tests/test_large_context.py: need --run-slow to run large-context tests
+XFAIL agentbench/tests/test_tool_calling.py::TestToolChoiceForcing::test_tool_choice_required_forces_a_call - CONFIRMED SERVER BUG (2026-08-31, freetoken openai_api.py): `tool_choice='required'` is accepted by the request schema (api_models.py ChatCompletionRequest.tool_choice: Literal['none','auto','required']) but there is no server-side code path that actually enforces it -- `_should_parse_tools()` only special-cases 'none' (disables tool parsing entirely) and `ToolChoiceObject` (filters `_tools_for_template` down to the named function), never 'required'. FreeToken has no constrained/guided decoding (openai_api.py:_response_format_unsupported comment confirms this explicitly for response_format, and the same limitation applies here), so there is no mechanism to force the model to emit a tool call at all -- 'required' silently behaves identically to 'auto'. Reproduced here with a greeting message that gives the model no reason to call a tool: it replies with plain text instead of being forced into a call. Any agent harness that relies on tool_choice='required' to guarantee a structured action (rather than free text) will get a plain-text response instead in this scenario.
+FAILED agentbench/tests/test_reasoning.py::TestInlineThinkTags::test_inline_think_off_tag_content_is_not_swallowed_into_reasoning
+1 failed, 53 passed, 11 skipped, 1 xfailed in 159.94s (0:02:39)
+=== agentbench concurrency CLEAN 2026-11-11T16:05:18+03:00 ===
+agentbench_concurrency_exit=0
+...                                                                      [100%]
+3 passed in 5.08s
+=== qualbench CLEAN 2026-11-11T16:05:23+03:00 ===
+qualbench_exit=1
+    WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+    WARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/home/berdachuk/soft/apache-maven-3.9.11/lib/guice-5.1.0-classes.jar)
+    WARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner
+    WARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release
+--- java-spring: 8/10 passed (117.3s wall) ---
+
+=== Running category: ts-angular (per-task timeout 300s) ===
+--- ts-angular: 0/0 passed (4.8s wall) ---
+
+=== Running category: sql-migrations (per-task timeout 300s) ===
+    == Migration file: up.candidate.sql ==
+    CREATE DATABASE
+    -- Applying seed.sql --
+    CREATE TABLE
+    INSERT 0 4
+    -- Applying up.candidate.sql (dry-run of the migration under test) --
+    DELETE 3
+    ALTER TABLE
+    -- Running check.sql --
+    FAIL: check.sql itself errored
+    psql:/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes/check.sql:25: ERROR:  expected unique_violation but insert succeeded
+    CONTEXT:  PL/pgSQL function inline_code_block line 5 at RAISE
+    == Migration file: up.candidate.sql ==
+    CREATE DATABASE
+    -- Applying seed.sql --
+    CREATE TABLE
+    INSERT 0 3
+    CREATE VIEW
+    -- Applying up.candidate.sql (dry-run of the migration under test) --
+    ALTER TABLE
+    UPDATE 3
+    FAIL: up.candidate.sql did not apply cleanly
+    psql:/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view/up.candidate.sql:3: ERROR:  cannot drop column qty of table products because other objects depend on it
+    DETAIL:  view low_stock_products depends on column qty of table products
+    HINT:  Use DROP ... CASCADE to drop the dependent objects too.
+--- sql-migrations: 4/6 passed (16.2s wall) ---
+
+=== Running category: mcp-tools (per-task timeout 120s) ===
+--- mcp-tools: 8/8 passed (10.4s wall) ---
+
+=== Running category: security-review (per-task timeout 180s) ===
+--- security-review: 8/8 passed (304.3s wall) ---
+
+=== Running category: long-context (per-task timeout 600s) ===
+--- long-context: 7/10 passed (312.6s wall) ---
+
+=== TOTAL: 35/42 passed (765.6s wall) ===
+Report written to:
+  /home/berdachuk/projects-llm-test/llm-tests/qualbench/results/run-gemma4-12b-ct-73-full50-20261111-161809.json
+  /home/berdachuk/projects-llm-test/llm-tests/qualbench/results/run-gemma4-12b-ct-73-full50-20261111-161809.md
+{
+  "warm": {
+    "elapsed_s": 0.10916502399777528,
+    "prompt": 18,
+    "completion": 2,
+    "content": "pong"
+  },
+  "short_decode": {
+    "elapsed_s": 3.2445347329921788,
+    "prompt": 25,
+    "completion": 96,
+    "content": "Rust\u2019s ownership system is a unique memory management model that ensures safety "
+  },
+  "mid_prefill": {
+    "elapsed_s": 1.1058460710046347,
+    "prompt": 1820,
+    "completion": 2,
+    "content": "OK"
+  }
+}
+DONE

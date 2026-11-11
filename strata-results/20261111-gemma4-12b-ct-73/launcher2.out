@@ -1,0 +1,36 @@
+=== agentbench fast (re-run w/ tool-parser) 2026-11-11T16:02:11+03:00 ===
+
+==================================== ERRORS ====================================
+___________ ERROR collecting agentbench/tests/test_large_context.py ____________
+ImportError while importing test module '/home/berdachuk/projects-llm-test/llm-tests/agentbench/tests/test_large_context.py'.
+Hint: make sure your test modules/packages have valid Python names.
+Traceback:
+/usr/lib/python3.12/importlib/__init__.py:90: in import_module
+    return _bootstrap._gcd_import(name[level:], package, level)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+agentbench/tests/test_large_context.py:27: in <module>
+    import gen_256k_prompt  # noqa: E402
+    ^^^^^^^^^^^^^^^^^^^^^^
+gen_256k_prompt.py:5: in <module>
+    import tiktoken
+../../.local/lib/python3.10/site-packages/tiktoken/__init__.py:2: in <module>
+    from .core import Encoding as Encoding
+../../.local/lib/python3.10/site-packages/tiktoken/core.py:7: in <module>
+    import regex
+../../.local/lib/python3.10/site-packages/regex/__init__.py:1: in <module>
+    import regex._main
+../../.local/lib/python3.10/site-packages/regex/_main.py:427: in <module>
+    from regex import _regex_core
+../../.local/lib/python3.10/site-packages/regex/_regex_core.py:21: in <module>
+    from regex import _regex
+E   ImportError: cannot import name '_regex' from partially initialized module 'regex' (most likely due to a circular import) (/home/berdachuk/.local/lib/python3.10/site-packages/regex/__init__.py)
+=========================== short test summary info ============================
+ERROR agentbench/tests/test_large_context.py
+!!!!!!!!!!!!!!!!!!!! Interrupted: 1 error during collection !!!!!!!!!!!!!!!!!!!!
+1 error in 0.17s
+agentbench_fast_exit=2
+=== agentbench concurrency 2026-11-11T16:02:11+03:00 ===
+...                                                                      [100%]
+3 passed in 5.16s
+agentbench_concurrency_exit=0
+=== qualbench 2026-11-11T16:02:17+03:00 ===

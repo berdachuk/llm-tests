@@ -1,0 +1,85 @@
+=== Preflight: checking server model list ===
+Preflight OK: model 'gemma-4-12B-it-qat-w4a16-ct' is advertised (1 model(s) total).
+
+=== Running category: java-spring (per-task timeout 180s) ===
+    [ERROR] /home/berdachuk/tmp/qualbench-java-03-inventory-counter-r4a42kzi/src/main/java/com/qualbench/bugs/InventoryCounter.java:[26,13] cannot assign a value to final variable available
+    [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project java-spring-fixture: Compilation failure
+    [ERROR] /home/berdachuk/tmp/qualbench-java-03-inventory-counter-r4a42kzi/src/main/java/com/qualbench/bugs/InventoryCounter.java:[26,13] cannot assign a value to final variable available
+    [ERROR] 
+    [ERROR] -> [Help 1]
+    [ERROR] 
+    [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+    [ERROR] Re-run Maven using the -X switch to enable full debug logging.
+    [ERROR] 
+    [ERROR] For more information about the errors and possible solutions, please read the following articles:
+    [ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+    Picked up JAVA_TOOL_OPTIONS: -Xms1024m -Xmx8192m
+    Picked up _JAVA_OPTIONS: -Xms1024m -Xmx8192m
+    WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+    WARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/home/berdachuk/soft/apache-maven-3.9.11/lib/guice-5.1.0-classes.jar)
+    WARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner
+    WARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release
+    [ERROR] /home/berdachuk/tmp/qualbench-java-08-retrying-operation-4f8v4vwr/src/main/java/com/qualbench/bugs/RetryingOperation.java:[33,24] incompatible types: java.lang.Exception cannot be converted to java.lang.Error
+    [ERROR] /home/berdachuk/tmp/qualbench-java-08-retrying-operation-4f8v4vwr/src/main/java/com/qualbench/bugs/RetryingOperation.java:[34,31] incompatible types: java.lang.Exception cannot be converted to java.lang.Error
+    [ERROR] Failed to execute goal org.apache.maven.plugins:maven-compiler-plugin:3.13.0:compile (default-compile) on project java-spring-fixture: Compilation failure: Compilation failure: 
+    [ERROR] /home/berdachuk/tmp/qualbench-java-08-retrying-operation-4f8v4vwr/src/main/java/com/qualbench/bugs/RetryingOperation.java:[33,24] incompatible types: java.lang.Exception cannot be converted to java.lang.Error
+    [ERROR] /home/berdachuk/tmp/qualbench-java-08-retrying-operation-4f8v4vwr/src/main/java/com/qualbench/bugs/RetryingOperation.java:[34,31] incompatible types: java.lang.Exception cannot be converted to java.lang.Error
+    [ERROR] -> [Help 1]
+    [ERROR] 
+    [ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+    [ERROR] Re-run Maven using the -X switch to enable full debug logging.
+    [ERROR] 
+    [ERROR] For more information about the errors and possible solutions, please read the following articles:
+    [ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException
+    Picked up JAVA_TOOL_OPTIONS: -Xms1024m -Xmx8192m
+    Picked up _JAVA_OPTIONS: -Xms1024m -Xmx8192m
+    WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+    WARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/home/berdachuk/soft/apache-maven-3.9.11/lib/guice-5.1.0-classes.jar)
+    WARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner
+    WARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release
+--- java-spring: 8/10 passed (117.3s wall) ---
+
+=== Running category: ts-angular (per-task timeout 300s) ===
+--- ts-angular: 0/0 passed (4.8s wall) ---
+
+=== Running category: sql-migrations (per-task timeout 300s) ===
+    == Migration file: up.candidate.sql ==
+    CREATE DATABASE
+    -- Applying seed.sql --
+    CREATE TABLE
+    INSERT 0 4
+    -- Applying up.candidate.sql (dry-run of the migration under test) --
+    DELETE 3
+    ALTER TABLE
+    -- Running check.sql --
+    FAIL: check.sql itself errored
+    psql:/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/02-unique-constraint-dupes/check.sql:25: ERROR:  expected unique_violation but insert succeeded
+    CONTEXT:  PL/pgSQL function inline_code_block line 5 at RAISE
+    == Migration file: up.candidate.sql ==
+    CREATE DATABASE
+    -- Applying seed.sql --
+    CREATE TABLE
+    INSERT 0 3
+    CREATE VIEW
+    -- Applying up.candidate.sql (dry-run of the migration under test) --
+    ALTER TABLE
+    UPDATE 3
+    FAIL: up.candidate.sql did not apply cleanly
+    psql:/home/berdachuk/projects-llm-test/llm-tests/qualbench/fixtures/sql-migrations/03-rename-column-view/up.candidate.sql:3: ERROR:  cannot drop column qty of table products because other objects depend on it
+    DETAIL:  view low_stock_products depends on column qty of table products
+    HINT:  Use DROP ... CASCADE to drop the dependent objects too.
+--- sql-migrations: 4/6 passed (16.2s wall) ---
+
+=== Running category: mcp-tools (per-task timeout 120s) ===
+--- mcp-tools: 8/8 passed (10.4s wall) ---
+
+=== Running category: security-review (per-task timeout 180s) ===
+--- security-review: 8/8 passed (304.3s wall) ---
+
+=== Running category: long-context (per-task timeout 600s) ===
+--- long-context: 7/10 passed (312.6s wall) ---
+
+=== TOTAL: 35/42 passed (765.6s wall) ===
+Report written to:
+  /home/berdachuk/projects-llm-test/llm-tests/qualbench/results/run-gemma4-12b-ct-73-full50-20261111-161809.json
+  /home/berdachuk/projects-llm-test/llm-tests/qualbench/results/run-gemma4-12b-ct-73-full50-20261111-161809.md

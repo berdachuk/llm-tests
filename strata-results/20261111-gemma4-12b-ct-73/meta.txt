@@ -1,0 +1,7 @@
+stamp=2026-11-11T15:55:14+03:00
+model=gemma-4-12B-it-qat-w4a16-ct url=http://192.168.0.73:8012 ctx=131072 host=.73
+gemma-4-12B-it-qat-w4a16-ct 131072
+'pong'
+SMOKE_OK
+restart=2026-11-11T16:02:11+03:00 flags=--enable-auto-tool-choice --tool-call-parser gemma4 --reasoning-parser gemma4
+gemma-4-12B-it-qat-w4a16-ct 131072

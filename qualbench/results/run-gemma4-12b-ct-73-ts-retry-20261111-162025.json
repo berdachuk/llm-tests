@@ -1,0 +1,296 @@
+{
+  "tag": "gemma4-12b-ct-73-ts-retry",
+  "url": "http://192.168.0.73:8012",
+  "model": "gemma-4-12B-it-qat-w4a16-ct",
+  "notes": "ts-angular retry with nvm node in PATH",
+  "selected_categories": [
+    "ts-angular"
+  ],
+  "timeout_override_s": null,
+  "runner_python": "3.12.3",
+  "suite_git_commit": "db9233a134e6c1f4a72e8551677905736b93f48d",
+  "suite_git_dirty": true,
+  "preflight": {
+    "checked_at": "2026-11-11T13:18:54.852476+00:00",
+    "models_url": "http://192.168.0.73:8012/v1/models",
+    "requested_model": "gemma-4-12B-it-qat-w4a16-ct",
+    "requested_model_found": true,
+    "available_model_ids": [
+      "gemma-4-12B-it-qat-w4a16-ct"
+    ],
+    "selected_model_entry": {
+      "id": "gemma-4-12B-it-qat-w4a16-ct",
+      "object": "model",
+      "created": 1794403134,
+      "owned_by": "vllm",
+      "root": "/mnt/nvme1n1p1/models/gemma4-12b-ct",
+      "parent": null,
+      "max_model_len": 131072,
+      "permission": [
+        {
+          "id": "modelperm-86a86c6e6fa5174a",
+          "object": "model_permission",
+          "created": 1794403134,
+          "allow_create_engine": false,
+          "allow_sampling": true,
+          "allow_logprobs": true,
+          "allow_search_indices": false,
+          "allow_view": true,
+          "allow_fine_tuning": false,
+          "organization": "*",
+          "group": null,
+          "is_blocking": false
+        }
+      ]
+    }
+  },
+  "started_at": "2026-11-11T13:18:54.855228+00:00",
+  "finished_at": "2026-11-11T13:20:25.979322+00:00",
+  "total_wall_s": 91.12407946586609,
+  "total_pass": 7,
+  "total_tasks": 8,
+  "categories": [
+    {
+      "category": "ts-angular",
+      "n_pass": 7,
+      "n_total": 8,
+      "wall_s": 91.11765360832214,
+      "returncode": 1,
+      "timed_out": false,
+      "tasks": [
+        {
+          "id": "01-price-formatter",
+          "passed": true,
+          "elapsed_s": 7.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "01-price-formatter",
+            "category": "ts-angular",
+            "file_name": "price-formatter.ts",
+            "spec_name": "price-formatter.spec.ts",
+            "response_length": 349,
+            "response_excerpt": "```ts\n/**\n * Formats a price in cents (integer) as a currency string, e.g.\n * formatPrice(1050) -> \"$10.50\", formatPrice(5) -> \"$0.05\".\n */\nexport function formatPrice(cents: number): string {\n  const dollars = Math.floor(cents / 100);\n  const remainder = Math.abs(cents % 100);\n  return `$${dollars}.${remainder.toString().padStart(2, '0')}`;\n}\n```",
+            "candidate_ts": "/**\n * Formats a price in cents (integer) as a currency string, e.g.\n * formatPrice(1050) -> \"$10.50\", formatPrice(5) -> \"$0.05\".\n */\nexport function formatPrice(cents: number): string {\n  const dollars = Math.floor(cents / 100);\n  const remainder = Math.abs(cents % 100);\n  return `$${dollars}.${remainder.toString().padStart(2, '0')}`;\n}\n",
+            "candidate_length": 340,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/price-formatter.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "02-search-service",
+          "passed": true,
+          "elapsed_s": 16.9,
+          "reasons": [],
+          "artifact": {
+            "task_id": "02-search-service",
+            "category": "ts-angular",
+            "file_name": "search.service.ts",
+            "spec_name": "search.service.spec.ts",
+            "response_length": 1531,
+            "response_excerpt": "```ts\nimport { Injectable } from '@angular/core';\nimport { Observable, Subject } from 'rxjs';\nimport { switchMap, map } from 'rxjs/operators';\n\n/**\n * A minimal \"search as you type\" service: emits the latest search results\n * for the most recently issued query term, discarding results from any\n * earlier, now-superseded queries (a classic race condition when a slow\n * earlier request resolves AFTER a fast later request).\n */\n@Injectable({ providedIn: 'root' })\nexport class SearchService {\n  private readonly queries = new Subject<string>();\n\n  /** Simulates a backend call whose latency depends on the query string. */\n  search(term: string): Observable<string[]> {\n    return new Observable<string[]>((subscriber) => {\n      const delayMs = term.length * 10;\n      const timer = setTimeout(() => {\n        subscriber.next([`${term}-result-1`, `${term}-result-2`]);\n        subscriber.complete();\n      }, delayMs);\n      return () => clearTimeout(timer);\n    });\n  }\n\n  /** Call this whenever the user types a new query term. */\n  setQuery(term: string): void {\n    this.queries.next(term);\n  }\n\n  /**\n   * Stream of results for the LATEST issued query only. If an older query\n   * is still in flight when a newer one is issued, the older query's\n   * results must never be emitted here -- only the newest query's results\n   * should ever reach subscribers.\n   */\n  results(): Observable<string[]> {\n    return this.queries.pipe(\n      switchMap((term) => this.search(term)),\n      map((results) => results),\n    );\n  }\n}\n```",
+            "candidate_ts": "import { Injectable } from '@angular/core';\nimport { Observable, Subject } from 'rxjs';\nimport { switchMap, map } from 'rxjs/operators';\n\n/**\n * A minimal \"search as you type\" service: emits the latest search results\n * for the most recently issued query term, discarding results from any\n * earlier, now-superseded queries (a classic race condition when a slow\n * earlier request resolves AFTER a fast later request).\n */\n@Injectable({ providedIn: 'root' })\nexport class SearchService {\n  private readonly queries = new Subject<string>();\n\n  /** Simulates a backend call whose latency depends on the query string. */\n  search(term: string): Observable<string[]> {\n    return new Observable<string[]>((subscriber) => {\n      const delayMs = term.length * 10;\n      const timer = setTimeout(() => {\n        subscriber.next([`${term}-result-1`, `${term}-result-2`]);\n        subscriber.complete();\n      }, delayMs);\n      return () => clearTimeout(timer);\n    });\n  }\n\n  /** Call this whenever the user types a new query term. */\n  setQuery(term: string): void {\n    this.queries.next(term);\n  }\n\n  /**\n   * Stream of results for the LATEST issued query only. If an older query\n   * is still in flight when a newer one is issued, the older query's\n   * results must never be emitted here -- only the newest query's results\n   * should ever reach subscribers.\n   */\n  results(): Observable<string[]> {\n    return this.queries.pipe(\n      switchMap((term) => this.search(term)),\n      map((results) => results),\n    );\n  }\n}\n",
+            "candidate_length": 1522,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/search.service.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "03-shopping-cart",
+          "passed": false,
+          "elapsed_s": 11.1,
+          "reasons": [
+            "ng test failed (exit 1):",
+            "|                        ^",
+            "25|   });",
+            "26|",
+            "29|     cart.addItem({ id: 'b', price: 300, quantity: 1 });",
+            "30|     cart.removeItem('a');",
+            "31|     expect(cart.total).toBe(300);",
+            "|                        ^",
+            "32|   });",
+            "33| });"
+          ],
+          "artifact": {
+            "task_id": "03-shopping-cart",
+            "category": "ts-angular",
+            "file_name": "shopping-cart.ts",
+            "spec_name": "shopping-cart.spec.ts",
+            "response_length": 818,
+            "response_excerpt": "```ts\nimport { Injectable, computed, signal } from '@angular/core';\n\nexport interface CartItem {\n  id: string;\n  price: number; // in cents\n  quantity: number;\n}\n\n/**\n * Signal-based shopping cart. `total` must always reflect the current sum\n * of price * quantity across all items, recomputed reactively whenever\n * items change.\n */\n@Injectable({ providedIn: 'root' })\nexport class ShoppingCart {\n  private readonly _items = signal<CartItem[]>([]);\n  readonly items = this._items.asReadonly();\n\n  readonly total = computed(() => \n    this._items().reduce((sum, item) => sum + item.price * item.quantity, 0)\n  );\n\n  addItem(item: CartItem): void {\n    this._items.update((items) => [...items, item]);\n  }\n\n  removeItem(id: string): void {\n    this._items.update((items) => items.filter((i) => i.id !== id));\n  }\n}\n```",
+            "candidate_ts": "import { Injectable, computed, signal } from '@angular/core';\n\nexport interface CartItem {\n  id: string;\n  price: number; // in cents\n  quantity: number;\n}\n\n/**\n * Signal-based shopping cart. `total` must always reflect the current sum\n * of price * quantity across all items, recomputed reactively whenever\n * items change.\n */\n@Injectable({ providedIn: 'root' })\nexport class ShoppingCart {\n  private readonly _items = signal<CartItem[]>([]);\n  readonly items = this._items.asReadonly();\n\n  readonly total = computed(() => \n    this._items().reduce((sum, item) => sum + item.price * item.quantity, 0)\n  );\n\n  addItem(item: CartItem): void {\n    this._items.update((items) => [...items, item]);\n  }\n\n  removeItem(id: string): void {\n    this._items.update((items) => items.filter((i) => i.id !== id));\n  }\n}\n",
+            "candidate_length": 809,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/shopping-cart.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 1,
+              "output_tail": "       |                        ^\n     25|   });\n     26|\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/4]\u23af\n\n FAIL  |base| src/app/bugs/shopping-cart.spec.ts > ShoppingCart > recomputes the total after removing an item\nAssertionError: expected [Function computed] to be 300 // Object.is equality\n\n- Expected:\n300\n\n+ Received:\n[Function computed]\n\n \u276f src/app/bugs/shopping-cart.spec.ts:31:24\n     29|     cart.addItem({ id: 'b', price: 300, quantity: 1 });\n     30|     cart.removeItem('a');\n     31|     expect(cart.total).toBe(300);\n       |                        ^\n     32|   });\n     33| });\n\n\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/4]\u23af\n"
+            }
+          }
+        },
+        {
+          "id": "04-password-match-validator",
+          "passed": true,
+          "elapsed_s": 11.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "04-password-match-validator",
+            "category": "ts-angular",
+            "file_name": "password-match.validator.ts",
+            "spec_name": "password-match.validator.spec.ts",
+            "response_length": 1105,
+            "response_excerpt": "```ts\nimport { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';\n\n/**\n * A cross-field validator to be applied at the FormGroup level, checking\n * that the 'password' and 'confirmPassword' controls have matching\n * values. Should set a `passwordMismatch` error on the confirmPassword\n * control when they differ, and clear it when they match.\n */\nexport function passwordMatchValidator(): ValidatorFn {\n  return (group: AbstractControl): ValidationErrors | null => {\n    const password = group.get('password');\n    const confirmPassword = group.get('confirmPassword');\n    if (!password || !confirmPassword) {\n      return null;\n    }\n\n    if (password.value !== confirmPassword.value) {\n      confirmPassword.setErrors({ ...confirmPassword.errors, passwordMismatch: true });\n      return { passwordMismatch: true };\n    }\n\n    if (confirmPassword.hasError('passwordMismatch')) {\n      const errors = { ...confirmPassword.errors };\n      delete errors['passwordMismatch'];\n      confirmPassword.setErrors(Object.keys(errors).length ? errors : null);\n    }\n    return null;\n  };\n}\n```",
+            "candidate_ts": "import { AbstractControl, ValidationErrors, ValidatorFn } from '@angular/forms';\n\n/**\n * A cross-field validator to be applied at the FormGroup level, checking\n * that the 'password' and 'confirmPassword' controls have matching\n * values. Should set a `passwordMismatch` error on the confirmPassword\n * control when they differ, and clear it when they match.\n */\nexport function passwordMatchValidator(): ValidatorFn {\n  return (group: AbstractControl): ValidationErrors | null => {\n    const password = group.get('password');\n    const confirmPassword = group.get('confirmPassword');\n    if (!password || !confirmPassword) {\n      return null;\n    }\n\n    if (password.value !== confirmPassword.value) {\n      confirmPassword.setErrors({ ...confirmPassword.errors, passwordMismatch: true });\n      return { passwordMismatch: true };\n    }\n\n    if (confirmPassword.hasError('passwordMismatch')) {\n      const errors = { ...confirmPassword.errors };\n      delete errors['passwordMismatch'];\n      confirmPassword.setErrors(Object.keys(errors).length ? errors : null);\n    }\n    return null;\n  };\n}\n",
+            "candidate_length": 1096,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/password-match.validator.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "05-ticker-component",
+          "passed": true,
+          "elapsed_s": 10.8,
+          "reasons": [],
+          "artifact": {
+            "task_id": "05-ticker-component",
+            "category": "ts-angular",
+            "file_name": "ticker.component.ts",
+            "spec_name": "ticker.component.spec.ts",
+            "response_length": 952,
+            "response_excerpt": "```ts\nimport { Component, OnDestroy, OnInit, signal } from '@angular/core';\nimport { Subscription, interval } from 'rxjs';\n\n/**\n * Displays a tick counter that increments once per second while the\n * component is alive. The subscription to the ticking interval MUST be\n * torn down when the component is destroyed -- otherwise the interval\n * keeps firing and updating state forever, leaking memory/CPU for every\n * instance ever created (a very common Angular component bug).\n */\n@Component({\n  selector: 'app-ticker',\n  standalone: true,\n  template: `<span>{{ count() }}</span>`,\n})\nexport class TickerComponent implements OnInit, OnDestroy {\n  readonly count = signal(0);\n\n  private subscription?: Subscription;\n\n  ngOnInit(): void {\n    this.subscription = interval(1000).subscribe(() => {\n      this.count.update((c) => c + 1);\n    });\n  }\n\n  ngOnDestroy(): void {\n    this.subscription?.unsubscribe();\n    this.subscription = undefined;\n  }\n}\n```",
+            "candidate_ts": "import { Component, OnDestroy, OnInit, signal } from '@angular/core';\nimport { Subscription, interval } from 'rxjs';\n\n/**\n * Displays a tick counter that increments once per second while the\n * component is alive. The subscription to the ticking interval MUST be\n * torn down when the component is destroyed -- otherwise the interval\n * keeps firing and updating state forever, leaking memory/CPU for every\n * instance ever created (a very common Angular component bug).\n */\n@Component({\n  selector: 'app-ticker',\n  standalone: true,\n  template: `<span>{{ count() }}</span>`,\n})\nexport class TickerComponent implements OnInit, OnDestroy {\n  readonly count = signal(0);\n\n  private subscription?: Subscription;\n\n  ngOnInit(): void {\n    this.subscription = interval(1000).subscribe(() => {\n      this.count.update((c) => c + 1);\n    });\n  }\n\n  ngOnDestroy(): void {\n    this.subscription?.unsubscribe();\n    this.subscription = undefined;\n  }\n}\n",
+            "candidate_length": 943,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/ticker.component.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "06-todo-list-component",
+          "passed": true,
+          "elapsed_s": 15.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "06-todo-list-component",
+            "category": "ts-angular",
+            "file_name": "todo-list.component.ts",
+            "spec_name": "todo-list.component.spec.ts",
+            "response_length": 1285,
+            "response_excerpt": "```ts\nimport { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';\n\nexport interface Todo {\n  id: number;\n  text: string;\n  done: boolean;\n}\n\n/**\n * An OnPush component that displays a list of todos and lets the parent\n * toggle one via `toggle`. Because it runs OnPush, Angular only checks\n * this component for changes when one of its @Input() REFERENCES changes\n * (or a signal/event fires) -- mutating the existing array/object in\n * place is not enough to trigger a re-render from a parent's perspective,\n * and (worse here) corrupts the parent's original array unexpectedly.\n */\n@Component({\n  selector: 'app-todo-list',\n  standalone: true,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    @for (todo of todos; track todo.id) {\n      <label>\n        <input type=\"checkbox\" [checked]=\"todo.done\" (change)=\"onToggle(todo.id)\" />\n        {{ todo.text }}\n      </label>\n    }\n  `,\n})\nexport class TodoListComponent {\n  @Input() todos: Todo[] = [];\n  @Output() toggle = new EventEmitter<Todo[]>();\n\n  onToggle(id: number): void {\n    const newTodos = this.todos.map((todo) => {\n      if (todo.id === id) {\n        return { ...todo, done: !todo.done };\n      }\n      return todo;\n    });\n    this.toggle.emit(newTodos);\n  }\n}\n```",
+            "candidate_ts": "import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';\n\nexport interface Todo {\n  id: number;\n  text: string;\n  done: boolean;\n}\n\n/**\n * An OnPush component that displays a list of todos and lets the parent\n * toggle one via `toggle`. Because it runs OnPush, Angular only checks\n * this component for changes when one of its @Input() REFERENCES changes\n * (or a signal/event fires) -- mutating the existing array/object in\n * place is not enough to trigger a re-render from a parent's perspective,\n * and (worse here) corrupts the parent's original array unexpectedly.\n */\n@Component({\n  selector: 'app-todo-list',\n  standalone: true,\n  changeDetection: ChangeDetectionStrategy.OnPush,\n  template: `\n    @for (todo of todos; track todo.id) {\n      <label>\n        <input type=\"checkbox\" [checked]=\"todo.done\" (change)=\"onToggle(todo.id)\" />\n        {{ todo.text }}\n      </label>\n    }\n  `,\n})\nexport class TodoListComponent {\n  @Input() todos: Todo[] = [];\n  @Output() toggle = new EventEmitter<Todo[]>();\n\n  onToggle(id: number): void {\n    const newTodos = this.todos.map((todo) => {\n      if (todo.id === id) {\n        return { ...todo, done: !todo.done };\n      }\n      return todo;\n    });\n    this.toggle.emit(newTodos);\n  }\n}\n",
+            "candidate_length": 1276,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/todo-list.component.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "07-counter-display-component",
+          "passed": true,
+          "elapsed_s": 8.3,
+          "reasons": [],
+          "artifact": {
+            "task_id": "07-counter-display-component",
+            "category": "ts-angular",
+            "file_name": "counter-display.component.ts",
+            "spec_name": "counter-display.component.spec.ts",
+            "response_length": 611,
+            "response_excerpt": "```ts\nimport { Component } from '@angular/core';\nimport { CounterService } from './counter.service';\n\n/**\n * Displays and increments the shared app-wide counter. Every instance of\n * this component (e.g. two siblings on the same page) must read/write the\n * SAME underlying counter, since CounterService is `providedIn: 'root'`.\n */\n@Component({\n  selector: 'app-counter-display',\n  standalone: true,\n  template: `\n    <button (click)=\"counter.increment()\">+1</button>\n    <span>{{ counter.count() }}</span>\n  `,\n})\nexport class CounterDisplayComponent {\n  constructor(readonly counter: CounterService) {}\n}\n```",
+            "candidate_ts": "import { Component } from '@angular/core';\nimport { CounterService } from './counter.service';\n\n/**\n * Displays and increments the shared app-wide counter. Every instance of\n * this component (e.g. two siblings on the same page) must read/write the\n * SAME underlying counter, since CounterService is `providedIn: 'root'`.\n */\n@Component({\n  selector: 'app-counter-display',\n  standalone: true,\n  template: `\n    <button (click)=\"counter.increment()\">+1</button>\n    <span>{{ counter.count() }}</span>\n  `,\n})\nexport class CounterDisplayComponent {\n  constructor(readonly counter: CounterService) {}\n}\n",
+            "candidate_length": 602,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/counter-display.component.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        },
+        {
+          "id": "08-batch-processor",
+          "passed": true,
+          "elapsed_s": 8.4,
+          "reasons": [],
+          "artifact": {
+            "task_id": "08-batch-processor",
+            "category": "ts-angular",
+            "file_name": "batch-processor.ts",
+            "spec_name": "batch-processor.spec.ts",
+            "response_length": 594,
+            "response_excerpt": "```ts\n/**\n * Processes a list of items one at a time by calling an async\n * `processOne` function for each, collecting all results in the same\n * order as the input. If any item fails, the whole batch should fail\n * (reject) with that error -- partial/incomplete results must never be\n * returned as if the batch succeeded.\n */\nexport async function processBatch<T, R>(\n  items: T[],\n  processOne: (item: T) => Promise<R>,\n): Promise<R[]> {\n  const results: R[] = [];\n  for (const item of items) {\n    const result = await processOne(item);\n    results.push(result);\n  }\n  return results;\n}\n```",
+            "candidate_ts": "/**\n * Processes a list of items one at a time by calling an async\n * `processOne` function for each, collecting all results in the same\n * order as the input. If any item fails, the whole batch should fail\n * (reject) with that error -- partial/incomplete results must never be\n * returned as if the batch succeeded.\n */\nexport async function processBatch<T, R>(\n  items: T[],\n  processOne: (item: T) => Promise<R>,\n): Promise<R[]> {\n  const results: R[] = [];\n  for (const item of items) {\n    const result = await processOne(item);\n    results.push(result);\n  }\n  return results;\n}\n",
+            "candidate_length": 585,
+            "verifier": {
+              "command": [
+                "npx",
+                "ng",
+                "test",
+                "--include=src/app/bugs/batch-processor.spec.ts",
+                "--watch=false"
+              ],
+              "returncode": 0
+            }
+          }
+        }
+      ],
+      "artifact_count": 8,
+      "logs": [
+        "\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[3/4]\u23af",
+        " FAIL  |base| src/app/bugs/shopping-cart.spec.ts > ShoppingCart > recomputes the total after removing an item",
+        "AssertionError: expected [Function computed] to be 300 // Object.is equality",
+        "- Expected:",
+        "300",
+        "+ Received:",
+        "[Function computed]",
+        " \u276f src/app/bugs/shopping-cart.spec.ts:31:24",
+        "\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af\u23af[4/4]\u23af"
+      ]
+    }
+  ]
+}

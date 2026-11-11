@@ -1,0 +1,20 @@
+{
+  "warm": {
+    "elapsed_s": 0.10916502399777528,
+    "prompt": 18,
+    "completion": 2,
+    "content": "pong"
+  },
+  "short_decode": {
+    "elapsed_s": 3.2445347329921788,
+    "prompt": 25,
+    "completion": 96,
+    "content": "Rust\u2019s ownership system is a unique memory management model that ensures safety "
+  },
+  "mid_prefill": {
+    "elapsed_s": 1.1058460710046347,
+    "prompt": 1820,
+    "completion": 2,
+    "content": "OK"
+  }
+}
